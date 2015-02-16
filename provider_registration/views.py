@@ -14,3 +14,7 @@ def index(request):
 def detail(request, provider_name):
     provider = get_object_or_404(RegistrationInfo, provider_name=provider_name)
     return render(request, 'provider_registration/detail.html', {'provider': provider})
+
+
+def self_register(request):
+    return render(request, 'provider_registration/self_registration_form.html')
