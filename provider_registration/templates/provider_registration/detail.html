@@ -1,6 +1,10 @@
 <h1>{{ provider.provider_name }}</h1>
 <ul>
-    <li>Base url: {{ provider.base_url }}</li>
+    <li>Base url: <a href="{{ provider.base_url }}">{{ provider.base_url }}</a></li>
     <li>Approved sets: {{ provider.approved_sets }}</li>
     <li>Property List: {{ provider.property_list }}</li>
 </ul>
+
+<div>
+    <a href="/provider_registration">Back to provider list</a>
+</div>
