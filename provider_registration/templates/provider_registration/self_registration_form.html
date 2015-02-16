@@ -4,17 +4,8 @@
 
 <form action="{% url 'provider_registration:self_register' %}" method="post">
 {% csrf_token %}
-    <input type="text" name="provider_name"/>
-    <labelfor="provider_name">Provider Name</label><br/>
 
-    <input type="text" name="base_url"/>
-    <labelfor="base_url">Base URL</label><br/>
-
-    <input type="text" name="property_list"/>
-    <labelfor="base_url">Property List</label><br/>
-
-    <input type="text" name="approved_sets"/>
-    <labelfor="base_url">Approved Sets</label><br/>
+    {{ form.as_p }}
 
 <input type="submit" value="OK" />
 </form>

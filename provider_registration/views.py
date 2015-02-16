@@ -1,7 +1,9 @@
+
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render
 
+from provider_registration.forms import ProviderForm
 from provider_registration.models import RegistrationInfo
 
 
@@ -15,13 +17,20 @@ def index(request):
 
 def detail(request, provider_name):
     provider = get_object_or_404(RegistrationInfo, provider_name=provider_name)
-    return render(request, 'provider_registration/detail.html', {'provider': provider})
+    return render(
+        request,
+        'provider_registration/detail.html',
+        {'provider': provider}
+    )
 
 
 def register_provider(request):
     if request.method == 'POST':
-        form_data = request.POST
+        form_data = ProviderForm(request.POST)
+        form_data.is_valid()  # TODO - fix this
+        form_data = form_data.clean()
 
+        # check to see if provider with that name exists
         try:
             RegistrationInfo.objects.get(provider_name=form_data['provider_name'])
             return render(request, 'provider_registration/already_exists.html', {'provider': form_data['provider_name']})
@@ -34,6 +43,14 @@ def register_provider(request):
                 registration_date=timezone.now()
             ).save()
 
-            return render(request, 'provider_registration/confirmation.html', {'provider': form_data['provider_name']})
+            return render(
+                request,
+                'provider_registration/confirmation.html',
+                {'provider': form_data['provider_name']}
+            )
     else:
-        return render(request, 'provider_registration/self_registration_form.html')
+        form = ProviderForm()
+        return render(
+            request,
+            'provider_registration/self_registration_form.html',
+            {'form': form})
