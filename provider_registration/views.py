@@ -88,19 +88,29 @@ def save_provider_info(provider_name, base_url):
 
 def register_provider(request):
     if request.method == 'POST':
-        if request.path == u'/provider_registration/self_register':
+        # import ipdb; ipdb.set_trace()
+        if not request.POST.get('approved_sets'):
+            print('Initial registration!')
             name = request.POST['provider_name']
             url = request.POST['base_url']
+            print("About to save {}".format(name))
             save_provider_info(name, url)
             pre_saved_data = RegistrationInfo.objects.get(provider_name=name)
+
+            approved_set_list = pre_saved_data.approved_sets.split(',')
+            enumerated_list = set(enumerate(approved_set_list))
+            # approved_set = set([(item, item) for item in approved_set_list])
+
+            # import ipdb; ipdb.set_trace()
 
             form = ProviderForm(
                 {
                     'provider_name': name,
                     'base_url': url,
-                    'approved_sets': pre_saved_data.approved_sets,
                     'property_list': pre_saved_data.property_list
-                }
+                    # 'approved_sets': pre_saved_data.approved_sets,
+                },
+                choices=enumerated_list
             )
 
             return render(
@@ -110,14 +120,12 @@ def register_provider(request):
             )
         else:
             print('Now Updating data!')
-            form_data = ProviderForm(request.POST)
-            form_data.is_valid()  # TODO - fix this
-            form_data = form_data.clean()
+            form_data = ProviderForm(request.POST, choices=set(enumerate(request.POST['approved_sets'])))
 
-            object_to_update = RegistrationInfo.objects.get(provider_name=form_data['provider_name'])
+            object_to_update = RegistrationInfo.objects.get(provider_name=form_data['provider_name'].value())
 
-            object_to_update.property_list = form_data['property_list']
-            object_to_update.approved_sets = form_data['approved_sets']
+            object_to_update.property_list = form_data['property_list'].value()
+            object_to_update.approved_sets = str(form_data['approved_sets'].value())
 
             object_to_update.save()
 

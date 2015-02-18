@@ -12,12 +12,17 @@ class ListField(forms.Field):
 
 
 class ProviderForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.choices = kwargs.pop('choices')
+        super(ProviderForm, self).__init__(*args, **kwargs)
+        self.fields['approved_sets'].choices = self.choices
+
     provider_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
     property_list = forms.CharField(widget=forms.Textarea)
-    # approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+    approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
 
-    approved_sets = forms.CharField(widget=forms.Textarea)
+    # approved_sets = forms.CharField(widget=forms.Textarea)
 
     # def to_python(self, value):
     #     "Normalize data to a list of strings"
