@@ -2,7 +2,7 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'provider_registration:self_register' %}" method="get">
+<form action="{% url 'provider_registration:self_register' %}" method="post">
 {% csrf_token %}
 
     {{ form.as_p }}

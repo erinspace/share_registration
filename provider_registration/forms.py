@@ -15,13 +15,15 @@ class ProviderForm(forms.Form):
     provider_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
     property_list = forms.CharField(widget=forms.Textarea)
+    # approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+
     approved_sets = forms.CharField(widget=forms.Textarea)
 
-    def to_python(self, value):
-        "Normalize data to a list of strings"
+    # def to_python(self, value):
+    #     "Normalize data to a list of strings"
 
-    def is_valid(self):
-        pass
+    # def is_valid(self):
+    #     pass
 
 
 class InitialProviderForm(forms.Form):
