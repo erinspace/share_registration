@@ -5,7 +5,7 @@ from lxml import etree
 
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, render_to_response
 
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import ProviderForm, InitialProviderForm
@@ -59,8 +59,21 @@ def save_provider_info(provider_name, base_url):
     set_names = all_content.xpath('//oai_dc:setSpec/node()', namespaces=NAMESPACES)
     set_names = [name.replace('publication:', '') for name in set_names]
 
-    # request 2 for records 10 days back just in case
-    start_date = str(date.today() - timedelta(10))
+    all_sets = all_content.xpath('//oai_dc:set', namespaces=NAMESPACES)
+    all_set_info = [one.getchildren() for one in all_sets]
+
+    set_groups = []
+    for item in all_set_info:
+        print(len(item))
+        one_group = (item[0].text, item[1].text)
+        set_groups.append(one_group)
+
+    new_groups = [(set_item[0] + set_item[1], set_item[0]) for  set_item in set_groups]
+
+    import ipdb; ipdb.set_trace()
+
+    # request 2 for records 30 days back just in case
+    start_date = str(date.today() - timedelta(30))
     prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}T00:00:00Z'.format(start_date)
     prop_data_request = requests.get(prop_url)
     all_prop_content = etree.XML(prop_data_request.content)
@@ -71,24 +84,22 @@ def save_provider_info(provider_name, base_url):
     # check to see if provider with that name exists
     try:
         RegistrationInfo.objects.get(provider_name=provider_name)
-        # TODO - fix this
         print('{} already exists'.format(provider_name))
-        return None
-        # return render(request, 'provider_registration/already_exists.html', {'provider': provider_name})
+        return render_to_response('provider_registration/already_exists.html', {'provider': provider_name})
     except ObjectDoesNotExist:
         print('SAVING {}'.format(provider_name))
         RegistrationInfo(
             provider_name=provider_name,
             base_url=base_url,
             property_list=property_names,
-            approved_sets=set_names,
+            # approved_sets=set_names,
+            approved_sets=set_groups,
             registration_date=timezone.now()
         ).save()
 
 
 def register_provider(request):
     if request.method == 'POST':
-        # import ipdb; ipdb.set_trace()
         if not request.POST.get('approved_sets'):
             print('Initial registration!')
             name = request.POST['provider_name']
@@ -97,7 +108,11 @@ def register_provider(request):
             save_provider_info(name, url)
             pre_saved_data = RegistrationInfo.objects.get(provider_name=name)
 
-            approved_set_list = pre_saved_data.approved_sets.split(',')
+            # import pdb; pdb.set_trace()
+
+            # approved_set_list = pre_saved_data.approved_sets.split(',')
+            # this is terrible I am sorry...
+            approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
             approved_set_set = set([(item, item) for item in approved_set_list])
 
             form = ProviderForm(
@@ -129,5 +144,5 @@ def register_provider(request):
             return render(
                 request,
                 'provider_registration/confirmation.html',
-                {'provider': form_data['provider_name']}
+                {'provider': form_data['provider_name'].value()}
             )
