@@ -98,19 +98,15 @@ def register_provider(request):
             pre_saved_data = RegistrationInfo.objects.get(provider_name=name)
 
             approved_set_list = pre_saved_data.approved_sets.split(',')
-            enumerated_list = set(enumerate(approved_set_list))
-            # approved_set = set([(item, item) for item in approved_set_list])
-
-            # import ipdb; ipdb.set_trace()
+            approved_set_set = set([(item, item) for item in approved_set_list])
 
             form = ProviderForm(
                 {
                     'provider_name': name,
                     'base_url': url,
                     'property_list': pre_saved_data.property_list
-                    # 'approved_sets': pre_saved_data.approved_sets,
                 },
-                choices=enumerated_list
+                choices=approved_set_set
             )
 
             return render(
@@ -120,7 +116,8 @@ def register_provider(request):
             )
         else:
             print('Now Updating data!')
-            form_data = ProviderForm(request.POST, choices=set(enumerate(request.POST['approved_sets'])))
+            choices = set([(item, item) for item in request.POST['approved_sets']])
+            form_data = ProviderForm(request.POST, choices=choices)
 
             object_to_update = RegistrationInfo.objects.get(provider_name=form_data['provider_name'].value())
 
