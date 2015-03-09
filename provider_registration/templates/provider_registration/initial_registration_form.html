@@ -1,11 +1,75 @@
-<h1>Register a Provider</h1>
+{% extends "provider_registration/base.html" %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block content %}
+<div class="container">
+<h1>
+    Register a Provider<br>
+    <small>Use this form to register a provider for SHARE Notify</small>
+</h1>
 
-<form action="{% url 'provider_registration:self_register' %}" method="post">
-{% csrf_token %}
+<br>
 
-    {{ form.as_p }}
+    <div class="container">
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<input type="submit" value="OK" />
-</form>
+        <form action="{% url 'provider_registration:self_register' %}" method="post">
+        {% csrf_token %}
+
+        <div class="container">
+            <h2>Basic Provider Information</h2>
+            <div class="field_entry">
+                <p>Provider Name</p>
+                {{ form.provider_name }}
+            </div>
+
+            <div class="field_entry">
+                <p>Base URL</p>
+                <p><small>Enter the base URL for your content provider. If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.</small></p>
+                {{ form.base_url }}
+            </div>
+
+            <div class="field_entry">
+                <p>Description</p>
+                {{ form.description }}
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Metadata Sharing Questions</h2>
+            <p class="lead">SHARE Notify will gather together research release event reports from the metadata you provide. Since we will be reusing your metadata and then retransmitting it to others as notifications, we need to be sure the rights to use that metadata are not encumbered.</p>
+                <div class="field_entry">
+                <p>Does metadata gathering violate your Terms of Service?</p>
+                {{ form.meta_tos }}
+                </div>
+
+                <div class="field_entry">
+                    <p>Does metadata gathering violate your Privacy Policy?</p>
+                    {{ form.meta_privacy }}
+                </div>
+
+                <div class="field_entry">
+                <p>Does our sharing your metadata violate your Privacy Policy?</p>
+                {{ form.meta_sharing_tos }}
+                </div>
+
+                <div class="field_entry">
+                <p>What is the license of the metadata?</p>
+                {{ form.meta_license }}
+                </div>
+
+                <div class="field_entry">
+                <p>Does that license extend to those beyond the group that gathered it?</p>
+                {{ form.meta_license_extended }}
+                </div>
+
+                <div class="field_entry">
+                <p>If unlicensed, will you explicitly license the content?</p>
+                {{ form.meta_future_license }}
+                </div>
+            </div>
+
+        <input type="submit" value="Submit" />
+        </form>
+    </div>
+</div>
+{% endblock %}
