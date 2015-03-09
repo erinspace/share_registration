@@ -68,9 +68,7 @@ def save_provider_info(provider_name, base_url):
         one_group = (item[0].text, item[1].text)
         set_groups.append(one_group)
 
-    new_groups = [(set_item[0] + set_item[1], set_item[0]) for  set_item in set_groups]
-
-    import ipdb; ipdb.set_trace()
+    new_groups = [(set_item[0] + set_item[1], set_item[0]) for set_item in set_groups]
 
     # request 2 for records 30 days back just in case
     start_date = str(date.today() - timedelta(30))
