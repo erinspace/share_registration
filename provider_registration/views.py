@@ -108,7 +108,7 @@ def register_provider(request):
 
             # import pdb; pdb.set_trace()
 
-            # approved_set_list = pre_saved_data.approved_sets.split(',')
+            approved_set_list = pre_saved_data.approved_sets.split(',')
             # this is terrible I am sorry...
             approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
             approved_set_set = set([(item, item) for item in approved_set_list])
