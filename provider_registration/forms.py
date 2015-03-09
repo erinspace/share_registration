@@ -1,6 +1,12 @@
 from django import forms
 
 
+YES_NO_CHOICES = (
+    ('Y', 'yes'),
+    ('N', 'no')
+)
+
+
 class ListField(forms.Field):
     def to_python(self, value):
         "Normalize data to a list of strings."
@@ -19,10 +25,9 @@ class ProviderForm(forms.Form):
 
     provider_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
+
     property_list = forms.CharField(widget=forms.Textarea)
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-
-    # approved_sets = forms.CharField(widget=forms.Textarea)
 
     # def to_python(self, value):
     #     "Normalize data to a list of strings"
@@ -34,3 +39,12 @@ class ProviderForm(forms.Form):
 class InitialProviderForm(forms.Form):
     provider_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
+    description = forms.CharField(widget=forms.Textarea)
+
+    # Terms of Service and Metadata Permissions Questions
+    meta_tos = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
+    meta_privacy = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
+    meta_sharing_tos = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
+    meta_license = forms.CharField(max_length=50)
+    meta_license_extended = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
+    meta_future_license = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
