@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+
+class PushedData(models.Model):
+    data = models.TextField()  # TODO: make this a json field?
