@@ -5,7 +5,7 @@ from push_endpoint.models import PushedData
 
 class PushedDataSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
-    data = serializers.TextField()
+    data = serializers.CharField()
 
     def create(self, validated_data):
         return PushedData.objects.create(**validated_data)
