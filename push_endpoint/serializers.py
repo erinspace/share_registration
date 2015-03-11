@@ -6,4 +6,5 @@ from push_endpoint.models import PushedData
 class PushedDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PushedData
-        fields = ('id', 'data')
+        fields = ('id', 'description', 'contributors', 'tags', 'source',
+                  'title', 'dateUpdated', 'url', 'serviceID', 'doi')
