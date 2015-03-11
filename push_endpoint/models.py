@@ -2,7 +2,7 @@ from django.db import models
 
 
 class PushedData(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='push_endpoint')
+    owner = models.ForeignKey('auth.User', related_name='data')
     description = models.TextField()
     contributors = models.TextField()
     tags = models.TextField()
