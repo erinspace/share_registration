@@ -1,6 +1,7 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+# from django.contrib.auth.models import User
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import PushedDataSerializer
 
