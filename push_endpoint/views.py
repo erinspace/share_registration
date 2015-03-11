@@ -1,22 +1,23 @@
+from django.http import Http404
 from rest_framework import status
-# from django.contrib.auth.models import User
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import PushedDataSerializer
 
 
-@api_view(['GET', 'POST'])
-def data_list(request, format=None):
+class DataList(APIView):
     """
     List all pushed data, or push to the API
     """
-    if request.method == 'GET':
+
+    def get(self, request, format=None):
         data_objects = PushedData.objects.all()
         serializer = PushedDataSerializer(data_objects, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = PushedDataSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -24,27 +25,30 @@ def data_list(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def data_detail(request, pk, format=None):
+class DataDetail(APIView):
     """
     Retrieve, update or delete pushed data
     """
-    try:
-        pushed_objects = PushedData.objects.get(pk=pk)
-    except PushedData.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    def get_object(self, pk):
+        try:
+            return PushedData.objects.get(pk=pk)
+        except PushedData.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk, format=None):
+        pushed_objects = self.get_object(pk)
         serializer = PushedDataSerializer(pushed_objects)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = PushedDataSerializer(pushed_objects, data=request.data)
+    def put(self, request, pk, format=None):
+        pushed_object = self.get_object(pk)
+        serializer = PushedDataSerializer(pushed_object, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        pushed_objects.delete()
+    def delete(self, request, pk, format=None):
+        pushed_object = self.get_object(pk)
+        pushed_object.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
