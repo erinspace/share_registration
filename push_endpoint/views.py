@@ -40,7 +40,7 @@ def data_list(request):
 @csrf_exempt
 def data_detail(request, pk):
     """
-    Retrieve, update or delete a code snippet.
+    Retrieve, update or delete pushed data
     """
     try:
         pushed_objects = PushedData.objects.get(pk=pk)
