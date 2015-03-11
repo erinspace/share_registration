@@ -3,8 +3,9 @@ from rest_framework import permissions
 from django.contrib.auth.models import User
 
 from push_endpoint.models import PushedData
-from push_endpoint.serializers import PushedDataSerializer
 from push_endpoint.serializers import UserSerializer
+from push_endpoint.permissions import IsOwnerOrReadOnly
+from push_endpoint.serializers import PushedDataSerializer
 
 
 class DataList(generics.ListCreateAPIView):
@@ -25,7 +26,8 @@ class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
 
 
 class UserList(generics.ListAPIView):

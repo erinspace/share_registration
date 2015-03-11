@@ -1,7 +1,7 @@
-from rest_framework import permssions
+from rest_framework import permissions
 
 
-class IsOwnerORReadOnly(permssions.BasePermission):
+class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow owners of pushed data to edit it
     """
@@ -9,7 +9,7 @@ class IsOwnerORReadOnly(permssions.BasePermission):
         # Read permissions are allowed to view any request, always allow
         # GET, HEAD or OPTIONS requests
 
-        if request.method in permssions.SAFE_METHODS:
+        if request.method in permissions.SAFE_METHODS:
             return True
 
         # Write permissions are only allowed to the owner of the data
