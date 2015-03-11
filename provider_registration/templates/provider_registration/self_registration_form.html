@@ -28,14 +28,7 @@
 
         <div class="field_entry">
             <h2>Approved Sets</h2>
-            <p>Length: {{ form.approved_sets|length }}</p>
-            <div class="row-fluid">
-                {% for set in form.approved_sets %}
-                <div class="span6">
-                    {{ set }}
-                </div>
-                {% endfor %}
-            </div>
+            {{ form.approved_sets }}
         </div>
 
     </div>
