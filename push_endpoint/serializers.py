@@ -5,16 +5,17 @@ from rest_framework import serializers
 from push_endpoint.models import PushedData
 
 
-class PushedDataSerializer(serializers.ModelSerializer):
+class PushedDataSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = PushedData
         fields = ('id', 'description', 'contributors', 'tags', 'source',
                   'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'owner')
-        owner = serializers.ReadOnlyField(source='owner.username')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    data = serializers.PrimaryKeyRelatedField(many=True, queryset=PushedData.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    data = serializers.HyperlinkedRelatedField(many=True, view_name='data-detail', read_only=True)
 
     class Meta:
         model = User
