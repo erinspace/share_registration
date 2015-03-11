@@ -6,7 +6,7 @@ from push_endpoint.serializers import PushedDataSerializer
 
 
 @api_view(['GET', 'POST'])
-def data_list(request):
+def data_list(request, format=None):
     """
     List all pushed data, or push to the API
     """
@@ -24,7 +24,7 @@ def data_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def data_detail(request, pk):
+def data_detail(request, pk, format=None):
     """
     Retrieve, update or delete pushed data
     """
