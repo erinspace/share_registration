@@ -9,7 +9,8 @@ class PushedDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PushedData
         fields = ('id', 'description', 'contributors', 'tags', 'source',
-                  'title', 'dateUpdated', 'url', 'serviceID', 'doi')
+                  'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'owner')
+        owner = serializers.ReadOnlyField(source='owner.username')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -13,6 +13,9 @@ class DataList(generics.ListCreateAPIView):
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     """
