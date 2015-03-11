@@ -1,6 +1,9 @@
 from rest_framework import generics
+from django.contrib.auth.models import User
+
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import PushedDataSerializer
+from push_endpoint.serializers import UserSerializer
 
 
 class DataList(generics.ListCreateAPIView):
@@ -17,3 +20,13 @@ class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

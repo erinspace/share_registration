@@ -13,8 +13,8 @@ class PushedDataSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=PushedData.objects.all())
+    data = serializers.PrimaryKeyRelatedField(many=True, queryset=PushedData.objects.all())
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'push_endpoint')
+        fields = ('id', 'username', 'data')

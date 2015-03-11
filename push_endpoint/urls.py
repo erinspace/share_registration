@@ -5,6 +5,8 @@ from push_endpoint import views
 urlpatterns = [
     url(r'^pushed_data/$', views.DataList.as_view()),
     url(r'^pushed_data/(?P<pk>[0-9]+)/$', views.DataDetail.as_view()),
+    url(r'^users/$', views.UserList.as_view()),
+    url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
