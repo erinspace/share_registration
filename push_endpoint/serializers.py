@@ -3,14 +3,7 @@ from rest_framework import serializers
 from push_endpoint.models import PushedData
 
 
-class PushedDataSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    data = serializers.CharField()
-
-    def create(self, validated_data):
-        return PushedData.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.data = validated_data.get('data', instance.data)
-        instance.save()
-        return instance
+class PushedDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PushedData
+        fields = ('id', 'data')
