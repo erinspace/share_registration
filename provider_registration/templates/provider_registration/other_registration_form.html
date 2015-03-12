@@ -7,7 +7,7 @@
 
     {% if error_message %}<h2><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'provider_registration:self_register' %}" method="post">
+    <form action="{% url 'provider_registration:register' %}" method="post">
     {% csrf_token %}
 
     <div class="container">
@@ -24,11 +24,6 @@
         <div class="field_entry">
             <h2>Property List</h2>
             {{ form.property_list }}
-        </div>
-
-        <div class="field_entry">
-            <h2>Approved Sets</h2>
-            {{ form.approved_sets }}
         </div>
 
     </div>

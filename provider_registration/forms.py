@@ -17,10 +17,10 @@ class ListField(forms.Field):
         return value.split(',')
 
 
-class ProviderForm(forms.Form):
+class OAIProviderForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.choices = kwargs.pop('choices')
-        super(ProviderForm, self).__init__(*args, **kwargs)
+        super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
     provider_long_name = forms.CharField(max_length=100)
@@ -40,6 +40,7 @@ class ProviderForm(forms.Form):
 class InitialProviderForm(forms.Form):
     provider_long_name = forms.CharField(max_length=100)
     provider_short_name = forms.CharField(max_length=50)
+    oai_provider = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
     base_url = forms.URLField()
     description = forms.CharField(widget=forms.Textarea)
 
@@ -50,3 +51,12 @@ class InitialProviderForm(forms.Form):
     meta_license = forms.CharField(max_length=50)
     meta_license_extended = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
     meta_future_license = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
+
+
+class OtherProviderForm(forms.Form):
+
+    provider_long_name = forms.CharField(max_length=100)
+    provider_short_name = forms.CharField(max_length=50)
+    base_url = forms.URLField()
+
+    property_list = forms.CharField(widget=forms.Textarea)

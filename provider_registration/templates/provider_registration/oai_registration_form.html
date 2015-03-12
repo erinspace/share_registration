@@ -1,0 +1,40 @@
+{% extends "provider_registration/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Register a Provider</h1>
+
+    {% if error_message %}<h2><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'provider_registration:register' %}" method="post">
+    {% csrf_token %}
+
+    <div class="container">
+        <div class="field_entry">
+            <h2>Provider Name</h2>
+            {{ form.provider_short_name }}
+        </div>
+
+        <div class="field_entry">
+            <h2>Base URL</h2>
+            {{ form.base_url }}
+        </div>
+
+        <div class="field_entry">
+            <h2>Property List</h2>
+            {{ form.property_list }}
+        </div>
+
+        <div class="field_entry">
+            <h2>Approved Sets</h2>
+            {{ form.approved_sets }}
+        </div>
+
+    </div>
+
+    <input type="submit" value="OK" />
+    </form>
+</div>
+
+{% endblock %}
