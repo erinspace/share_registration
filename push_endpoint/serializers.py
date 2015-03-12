@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from push_endpoint.models import PushedData
 
+from push_endpoint.validators import ValidDOI
+
 
 class PushedDataSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -12,6 +14,10 @@ class PushedDataSerializer(serializers.HyperlinkedModelSerializer):
         model = PushedData
         fields = ('id', 'description', 'contributors', 'tags', 'source',
                   'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'owner')
+
+        validators = [
+            ValidDOI()
+        ]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
