@@ -23,7 +23,8 @@ class ProviderForm(forms.Form):
         super(ProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
-    provider_name = forms.CharField(max_length=50)
+    provider_long_name = forms.CharField(max_length=100)
+    provider_short_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
 
     property_list = forms.CharField(widget=forms.Textarea)
@@ -37,7 +38,8 @@ class ProviderForm(forms.Form):
 
 
 class InitialProviderForm(forms.Form):
-    provider_name = forms.CharField(max_length=50)
+    provider_long_name = forms.CharField(max_length=100)
+    provider_short_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
     description = forms.CharField(widget=forms.Textarea)
 

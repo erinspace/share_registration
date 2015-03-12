@@ -12,7 +12,8 @@ YES_NO_CHOICES = (
 class RegistrationInfo(models.Model):
 
     # Basic Information
-    provider_name = models.CharField(max_length=100, primary_key=True)
+    provider_short_name = models.CharField(max_length=50, primary_key=True)
+    provider_long_name = models.CharField(max_length=100)
     base_url = models.URLField()
     description = models.TextField()
 
@@ -24,13 +25,13 @@ class RegistrationInfo(models.Model):
     meta_license_extended = models.CharField(max_length=1, choices=YES_NO_CHOICES)
     meta_future_license = models.CharField(max_length=1, choices=YES_NO_CHOICES)
 
-    # # Harvester Information
+    # OAI Harvester Information
     property_list = models.TextField()
     approved_sets = models.TextField()
     registration_date = models.DateTimeField('date registered')
 
     def __unicode__(self):
-        return self.provider_name
+        return self.provider_short_name
 
     def was_registered_recently(self):
         return self.registration_date >= timezone.now() - datetime.timedelta(days=1)

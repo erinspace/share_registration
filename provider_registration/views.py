@@ -24,8 +24,8 @@ def index(request):
     return render(request, 'provider_registration/index.html', context)
 
 
-def detail(request, provider_name):
-    provider = get_object_or_404(RegistrationInfo, provider_name=provider_name)
+def detail(request, provider_short_name):
+    provider = get_object_or_404(RegistrationInfo, provider_short_name=provider_short_name)
     return render(
         request,
         'provider_registration/detail.html',
@@ -44,7 +44,7 @@ def get_provider_info(request):
     )
 
 
-def save_provider_info(provider_name, base_url):
+def save_provider_info(provider_short_name, base_url):
     """ Makes 2 requests to the provided base URL:
         1 for the sets available
         1 for the list of properties
@@ -81,13 +81,13 @@ def save_provider_info(provider_name, base_url):
 
     # check to see if provider with that name exists
     try:
-        RegistrationInfo.objects.get(provider_name=provider_name)
-        print('{} already exists'.format(provider_name))
-        return render_to_response('provider_registration/already_exists.html', {'provider': provider_name})
+        RegistrationInfo.objects.get(provider_short_name=provider_short_name)
+        print('{} already exists'.format(provider_short_name))
+        return render_to_response('provider_registration/already_exists.html', {'provider': provider_short_name})
     except ObjectDoesNotExist:
-        print('SAVING {}'.format(provider_name))
+        print('SAVING {}'.format(provider_short_name))
         RegistrationInfo(
-            provider_name=provider_name,
+            provider_short_name=provider_short_name,
             base_url=base_url,
             property_list=property_names,
             # approved_sets=set_names,
@@ -100,11 +100,11 @@ def register_provider(request):
     if request.method == 'POST':
         if not request.POST.get('approved_sets'):
             print('Initial registration!')
-            name = request.POST['provider_name']
+            name = request.POST['provider_short_name']
             url = request.POST['base_url']
             print("About to save {}".format(name))
             save_provider_info(name, url)
-            pre_saved_data = RegistrationInfo.objects.get(provider_name=name)
+            pre_saved_data = RegistrationInfo.objects.get(provider_short_name=name)
 
             # import pdb; pdb.set_trace()
 
@@ -115,7 +115,7 @@ def register_provider(request):
 
             form = ProviderForm(
                 {
-                    'provider_name': name,
+                    'provider_short_name': name,
                     'base_url': url,
                     'property_list': pre_saved_data.property_list
                 },
@@ -132,7 +132,7 @@ def register_provider(request):
             choices = set([(item, item) for item in request.POST['approved_sets']])
             form_data = ProviderForm(request.POST, choices=choices)
 
-            object_to_update = RegistrationInfo.objects.get(provider_name=form_data['provider_name'].value())
+            object_to_update = RegistrationInfo.objects.get(provider_short_name=form_data['provider_short_name'].value())
 
             object_to_update.property_list = form_data['property_list'].value()
             object_to_update.approved_sets = str(form_data['approved_sets'].value())
@@ -142,5 +142,5 @@ def register_provider(request):
             return render(
                 request,
                 'provider_registration/confirmation.html',
-                {'provider': form_data['provider_name'].value()}
+                {'provider': form_data['provider_short_name'].value()}
             )
