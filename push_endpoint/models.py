@@ -7,7 +7,7 @@ class PushedData(models.Model):
     contributors = models.TextField()
     tags = models.TextField()
     title = models.TextField()
-    dateUpdated = models.DateField()
+    dateUpdated = models.DateField(auto_now_add=True)
     url = models.URLField()
     serviceID = models.TextField()
     doi = models.TextField()
