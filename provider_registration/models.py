@@ -13,7 +13,7 @@ class RegistrationInfo(models.Model):
 
     # Basic Information
     provider_name = models.CharField(max_length=100, primary_key=True)
-    base_url = models.CharField(max_length=100)
+    base_url = models.URLField()
     description = models.TextField()
 
     # Terms of Service and Metadata Permissions Questions
