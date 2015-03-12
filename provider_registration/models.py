@@ -16,6 +16,7 @@ class RegistrationInfo(models.Model):
     provider_long_name = models.CharField(max_length=100)
     base_url = models.URLField()
     description = models.TextField()
+    oai_provider = models.CharField(max_length=1, choices=YES_NO_CHOICES)
 
     # Terms of Service and Metadata Permissions Questions
     meta_tos = models.CharField(max_length=1, choices=YES_NO_CHOICES)

@@ -28,8 +28,13 @@
             </div>
 
             <div class="field_entry">
+                <p>Is your content provider based on OAI-PMH Standards?</p>
+                {{ form.oai_provider}}
+            </div>
+
+            <div class="field_entry">
                 <p>Base URL</p>
-                <p><small>Enter the base URL for your content provider. If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.</small></p>
+                <p>Enter the base URL for your content provider. If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.</p>
                 {{ form.base_url }}
             </div>
 
