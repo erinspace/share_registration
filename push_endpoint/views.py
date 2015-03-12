@@ -23,7 +23,7 @@ class DataList(generics.ListCreateAPIView):
     ordering_fields = ('dateUpdated')
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(source=self.request.user)
 
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):

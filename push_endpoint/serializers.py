@@ -8,12 +8,12 @@ from push_endpoint.validators import ValidDOI
 
 
 class PushedDataSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    source = serializers.ReadOnlyField(source='source.username')
 
     class Meta:
         model = PushedData
         fields = ('id', 'description', 'contributors', 'tags', 'source',
-                  'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'owner')
+                  'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'source')
 
         validators = [
             ValidDOI()
