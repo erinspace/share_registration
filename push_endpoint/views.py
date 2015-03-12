@@ -1,12 +1,11 @@
 from rest_framework import generics
 from rest_framework import permissions
-from django.contrib.auth.models import User
-from django.utils import timezone
-
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from django.contrib.auth.models import User
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from dateutil.parser import parse
 
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import UserSerializer
@@ -18,7 +17,6 @@ class DataList(generics.ListCreateAPIView):
     """
     List all pushed data, or push to the API
     """
-    queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -26,6 +24,25 @@ class DataList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(source=self.request.user)
+
+    def get_queryset(self):
+        """ Return queryset based on from and to kwargs
+        """
+        filter = {}
+        queryset = PushedData.objects.all()
+
+        start_date = self.request.QUERY_PARAMS.get('from', None)
+        end_date = self.request.QUERY_PARAMS.get('to', None)
+
+        if start_date is not None:
+            filter['dateUpdated__gte'] = parse(start_date)
+
+        if end_date is not None:
+            filter['dateUpdated__lte'] = parse(end_date)
+
+        queryset = queryset.filter(**filter)
+
+        return queryset
 
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
