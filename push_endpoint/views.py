@@ -12,8 +12,10 @@ from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
 
+from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
-class DataList(generics.ListCreateAPIView):
+
+class DataList(ListBulkCreateUpdateDestroyAPIView):
     """
     List all pushed data, or push to the API
     """
@@ -52,7 +54,7 @@ class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+                          IsOwnerOrReadOnly)
 
 
 class UserList(generics.ListAPIView):

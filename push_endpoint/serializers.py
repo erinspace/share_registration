@@ -1,19 +1,19 @@
-# from django.forms import widgets
-
-from django.contrib.auth.models import User
 from rest_framework import serializers
-from push_endpoint.models import PushedData
+from django.contrib.auth.models import User
+from rest_framework_bulk import BulkSerializerMixin, BulkListSerializer
 
+from push_endpoint.models import PushedData
 from push_endpoint.validators import ValidDOI
 
 
-class PushedDataSerializer(serializers.HyperlinkedModelSerializer):
+class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSerializer):
     source = serializers.ReadOnlyField(source='source.username')
 
     class Meta:
         model = PushedData
         fields = ('id', 'description', 'contributors', 'tags', 'source',
                   'title', 'dateUpdated', 'url', 'serviceID', 'doi', 'source')
+        list_serializer_class = BulkListSerializer
 
         validators = [
             ValidDOI()
