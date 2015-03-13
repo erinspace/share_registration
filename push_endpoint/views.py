@@ -26,9 +26,12 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
 
     ordering_fields = ('dateUpdated')
 
+    def allow_bulk_destroy(self, qs, filtered):
+        print('ALLOWING!!!')
+
     def post(self, request, *args, **kwargs):
         # request = json.loads(request.data)
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
         return self.create(request, *args, **kwargs)
     # # grab the response
 
