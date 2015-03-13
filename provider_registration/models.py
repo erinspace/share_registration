@@ -3,11 +3,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-YES_NO_CHOICES = (
-    ('Y', 'yes'),
-    ('N', 'no')
-)
-
 
 class RegistrationInfo(models.Model):
 
@@ -16,15 +11,15 @@ class RegistrationInfo(models.Model):
     provider_long_name = models.CharField(max_length=100)
     base_url = models.URLField()
     description = models.TextField()
-    oai_provider = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    oai_provider = models.BooleanField()
 
     # Terms of Service and Metadata Permissions Questions
-    meta_tos = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_privacy = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_sharing_tos = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    meta_tos = models.BooleanField()
+    meta_privacy = models.BooleanField()
+    meta_sharing_tos = models.BooleanField()
     meta_license = models.CharField(max_length=100)
-    meta_license_extended = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_future_license = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    meta_license_extended = models.BooleanField()
+    meta_future_license = models.BooleanField()
 
     # OAI Harvester Information
     property_list = models.TextField()

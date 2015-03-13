@@ -1,7 +1,8 @@
-from datetime import date, timedelta
-
 import requests
 from lxml import etree
+from datetime import date, timedelta
+
+import logging
 
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,6 +10,9 @@ from django.shortcuts import get_object_or_404, render, render_to_response
 
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm
+
+logger = logging.getLogger(__name__)
+
 
 NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
               'oai_dc': 'http://www.openarchives.org/OAI/2.0/',
@@ -47,10 +51,10 @@ def get_provider_info(request):
 def save_other_info(provider_short_name, base_url):
     try:
         RegistrationInfo.objects.get(provider_short_name=provider_short_name)
-        print('{} already exists'.format(provider_short_name))
+        logger.info('{} already exists'.format(provider_short_name))
         return render_to_response('provider_registration/already_exists.html', {'provider': provider_short_name})
     except ObjectDoesNotExist:
-        print('SAVING {}'.format(provider_short_name))
+        logger.info('SAVING {}'.format(provider_short_name))
         RegistrationInfo(
             provider_short_name=provider_short_name,
             base_url=base_url,
@@ -89,7 +93,7 @@ def save_oai_info(provider_short_name, base_url):
     all_prop_content = etree.XML(prop_data_request.content)
     pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
     all_names = [name.tag.replace('{' + NAMESPACES['dc'] + '}', '') for name in pre_names]
-    property_names = list(set([name for name in all_names if name not in BASE_SCHEMA]))
+    property_names = list({name for name in all_names if name not in BASE_SCHEMA})
 
     # check to see if provider with that name exists
     try:
@@ -102,7 +106,6 @@ def save_oai_info(provider_short_name, base_url):
             provider_short_name=provider_short_name,
             base_url=base_url,
             property_list=property_names,
-            # approved_sets=set_names,
             approved_sets=set_groups,
             registration_date=timezone.now()
         ).save()
@@ -110,9 +113,7 @@ def save_oai_info(provider_short_name, base_url):
 
 def register_provider(request):
     if request.method == 'POST':
-
         if not request.POST.get('property_list'):
-            print('Initial registration!')
             name = request.POST['provider_short_name']
             base_url = request.POST['base_url']
 
