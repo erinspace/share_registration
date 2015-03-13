@@ -14,8 +14,6 @@ from push_endpoint.serializers import PushedDataSerializer
 
 from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
-import json
-
 
 class DataList(ListBulkCreateUpdateDestroyAPIView):
     """
@@ -26,19 +24,7 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
 
     ordering_fields = ('dateUpdated')
 
-    def allow_bulk_destroy(self, qs, filtered):
-        print('ALLOWING!!!')
-
-    def post(self, request, *args, **kwargs):
-        # request = json.loads(request.data)
-        # import ipdb; ipdb.set_trace()
-        return self.create(request, *args, **kwargs)
-    # # grab the response
-
-    # change it
-
     def perform_create(self, serializer):
-        # import ipdb; ipdb.set_trace()
         serializer.save(source=self.request.user)
 
     def get_queryset(self):
@@ -68,7 +54,7 @@ class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+                          IsOwnerOrReadOnly)
 
 
 class UserList(generics.ListAPIView):
