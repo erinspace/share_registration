@@ -155,9 +155,8 @@ def register_provider(request):
                 {'form': form}
             )
         else:
-            print('Now Updating data!')
             if request.POST.get('approved_sets', False):
-                choices = set([(item, item) for item in request.POST['approved_sets']])
+                choices = {(item, item) for item in request.POST['approved_sets']}
                 form_data = OAIProviderForm(request.POST, choices=choices)
 
                 object_to_update = RegistrationInfo.objects.get(provider_short_name=form_data['provider_short_name'].value())
