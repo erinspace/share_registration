@@ -12,8 +12,12 @@ from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
 
+from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
-class DataList(generics.ListCreateAPIView):
+import json
+
+
+class DataList(ListBulkCreateUpdateDestroyAPIView):
     """
     List all pushed data, or push to the API
     """
@@ -22,7 +26,16 @@ class DataList(generics.ListCreateAPIView):
 
     ordering_fields = ('dateUpdated')
 
+    def post(self, request, *args, **kwargs):
+        # request = json.loads(request.data)
+        import ipdb; ipdb.set_trace()
+        return self.create(request, *args, **kwargs)
+    # # grab the response
+
+    # change it
+
     def perform_create(self, serializer):
+        # import ipdb; ipdb.set_trace()
         serializer.save(source=self.request.user)
 
     def get_queryset(self):
