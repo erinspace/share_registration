@@ -22,8 +22,6 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    ordering_fields = ('dateUpdated')
-
     def perform_create(self, serializer):
         serializer.save(source=self.request.user)
 
