@@ -6,7 +6,7 @@ from push_endpoint.models import PushedData
 from push_endpoint.validators import ValidDOI
 
 
-class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSerializer):
     source = serializers.ReadOnlyField(source='source.username')
 
     class Meta:
