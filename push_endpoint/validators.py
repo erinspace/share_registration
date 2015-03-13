@@ -3,23 +3,21 @@ from rest_framework import serializers
 
 import requests
 
+DOI_URL = 'https://dx.doi.org/'
 
-class ValidDOI:
 
+class ValidDOI(object):
     def __call__(self, value):
-
-        doi_url = 'http://dx.doi.org/'
+        ''' value is the serialized data to be validated '''
 
         doi = value.get('doi')
 
-        if doi_url in doi:
+        if doi.startswith(DOI_URL):
             request_url = doi
         else:
-            request_url = doi_url + doi
+            request_url = DOI_URL + doi
 
         response = requests.get(request_url)
-        print(request_url)
-        print(response.status_code)
 
         if response.status_code == 404:
             raise serializers.ValidationError('DOI does not resolve, please enter a valid DOI')
