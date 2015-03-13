@@ -2,8 +2,8 @@ from django import forms
 
 
 YES_NO_CHOICES = (
-    ('Y', 'yes'),
-    ('N', 'no')
+    (True, 'yes'),
+    (False, 'no')
 )
 
 
