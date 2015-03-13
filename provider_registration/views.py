@@ -117,7 +117,7 @@ def register_provider(request):
             name = request.POST['provider_short_name']
             base_url = request.POST['base_url']
 
-            if request.POST.get('oai_provider') == 'N':
+            if not request.POST.get('oai_provider'):
                 save_other_info(name, base_url)
                 form = OtherProviderForm(
                     {
