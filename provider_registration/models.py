@@ -3,11 +3,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-YES_NO_CHOICES = (
-    ('Y', 'yes'),
-    ('N', 'no')
-)
-
 
 class RegistrationInfo(models.Model):
 
@@ -16,15 +11,15 @@ class RegistrationInfo(models.Model):
     provider_long_name = models.CharField(max_length=100)
     base_url = models.URLField()
     description = models.TextField()
-    oai_provider = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    oai_provider = models.BooleanField(default=False)
 
     # Terms of Service and Metadata Permissions Questions
-    meta_tos = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_privacy = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_sharing_tos = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    meta_tos = models.BooleanField(default=False)
+    meta_privacy = models.BooleanField(default=False)
+    meta_sharing_tos = models.BooleanField(default=False)
     meta_license = models.CharField(max_length=100)
-    meta_license_extended = models.CharField(max_length=1, choices=YES_NO_CHOICES)
-    meta_future_license = models.CharField(max_length=1, choices=YES_NO_CHOICES)
+    meta_license_extended = models.BooleanField(default=False)
+    meta_future_license = models.BooleanField(default=False)
 
     # OAI Harvester Information
     property_list = models.TextField()
@@ -34,8 +29,8 @@ class RegistrationInfo(models.Model):
     def __unicode__(self):
         return self.provider_short_name
 
-    def was_registered_recently(self):
-        return self.registration_date >= timezone.now() - datetime.timedelta(days=1)
+    def was_registered_recently(self, days=1):
+        return self.registration_date >= timezone.now() - datetime.timedelta(days)
 
     was_registered_recently.admin_order_field = 'registration_date'
     was_registered_recently.boolean = True

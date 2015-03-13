@@ -2,8 +2,8 @@ from django import forms
 
 
 YES_NO_CHOICES = (
-    ('Y', 'yes'),
-    ('N', 'no')
+    (True, 'yes'),
+    (False, 'no')
 )
 
 
@@ -29,12 +29,6 @@ class OAIProviderForm(forms.Form):
 
     property_list = forms.CharField(widget=forms.Textarea)
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-
-    # def to_python(self, value):
-    #     "Normalize data to a list of strings"
-
-    # def is_valid(self):
-    #     pass
 
 
 class InitialProviderForm(forms.Form):

@@ -31,14 +31,14 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         filter = {}
         queryset = PushedData.objects.all()
 
-        start_date = self.request.QUERY_PARAMS.get('from', None)
-        end_date = self.request.QUERY_PARAMS.get('to', None)
+        from_date = self.request.QUERY_PARAMS.get('from')
+        to_date = self.request.QUERY_PARAMS.get('to')
 
-        if start_date is not None:
-            filter['dateUpdated__gte'] = parse(start_date)
+        if from_date:
+            filter['dateUpdated__gte'] = parse(from_date)
 
-        if end_date is not None:
-            filter['dateUpdated__lte'] = parse(end_date)
+        if to_date:
+            filter['dateUpdated__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
