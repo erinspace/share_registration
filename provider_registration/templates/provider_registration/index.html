@@ -7,7 +7,7 @@
     {% if latest_provider_list %}
         <ul>
         {% for provider in latest_provider_list %}
-            <li><a href="{% url 'provider_registration:detail' provider.provider_short_name %}">{{ provider.provider_short_name }}</a></li>
+            <li><a href="{% url 'provider_registration:detail' provider.provider_long_name %}">{{ provider.provider_long_name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}

@@ -28,8 +28,8 @@ def index(request):
     return render(request, 'provider_registration/index.html', context)
 
 
-def detail(request, provider_short_name):
-    provider = get_object_or_404(RegistrationInfo, provider_short_name=provider_short_name)
+def detail(request, provider_long_name):
+    provider = get_object_or_404(RegistrationInfo, provider_long_name=provider_long_name)
     return render(
         request,
         'provider_registration/detail.html',
@@ -48,21 +48,21 @@ def get_provider_info(request):
     )
 
 
-def save_other_info(provider_short_name, base_url):
+def save_other_info(provider_long_name, base_url):
     try:
-        RegistrationInfo.objects.get(provider_short_name=provider_short_name)
-        logger.info('{} already exists'.format(provider_short_name))
-        return render_to_response('provider_registration/already_exists.html', {'provider': provider_short_name})
+        RegistrationInfo.objects.get(provider_long_name=provider_long_name)
+        logger.info('{} already exists'.format(provider_long_name))
+        return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
     except ObjectDoesNotExist:
-        logger.info('SAVING {}'.format(provider_short_name))
+        logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
-            provider_short_name=provider_short_name,
+            provider_long_name=provider_long_name,
             base_url=base_url,
             registration_date=timezone.now()
         ).save()
 
 
-def save_oai_info(provider_short_name, base_url):
+def save_oai_info(provider_long_name, base_url):
     """ Makes 2 requests to the provided base URL:
         1 for the sets available
         1 for the list of properties
@@ -97,13 +97,13 @@ def save_oai_info(provider_short_name, base_url):
 
     # check to see if provider with that name exists
     try:
-        RegistrationInfo.objects.get(provider_short_name=provider_short_name)
-        print('{} already exists'.format(provider_short_name))
-        return render_to_response('provider_registration/already_exists.html', {'provider': provider_short_name})
+        RegistrationInfo.objects.get(provider_long_name=provider_long_name)
+        print('{} already exists'.format(provider_long_name))
+        return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
     except ObjectDoesNotExist:
-        print('SAVING {}'.format(provider_short_name))
+        print('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
-            provider_short_name=provider_short_name,
+            provider_long_name=provider_long_name,
             base_url=base_url,
             property_list=property_names,
             approved_sets=set_groups,
@@ -114,14 +114,14 @@ def save_oai_info(provider_short_name, base_url):
 def register_provider(request):
     if request.method == 'POST':
         if not request.POST.get('property_list'):
-            name = request.POST['provider_short_name']
+            name = request.POST['provider_long_name']
             base_url = request.POST['base_url']
 
-            if request.POST.get('oai_provider') == 'False':
+            if not request.POST.get('oai_provider'):
                 save_other_info(name, base_url)
                 form = OtherProviderForm(
                     {
-                        'provider_short_name': name,
+                        'provider_long_name': name,
                         'base_url': base_url,
                         'property_list': 'enter properties here'
                     }
@@ -134,7 +134,7 @@ def register_provider(request):
 
             print("About to save {} in OAI format".format(name))
             save_oai_info(name, base_url)
-            pre_saved_data = RegistrationInfo.objects.get(provider_short_name=name)
+            pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
             approved_set_list = pre_saved_data.approved_sets.split(',')
             approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
@@ -142,7 +142,7 @@ def register_provider(request):
 
             form = OAIProviderForm(
                 {
-                    'provider_short_name': name,
+                    'provider_long_name': name,
                     'base_url': base_url,
                     'property_list': pre_saved_data.property_list
                 },
@@ -159,7 +159,7 @@ def register_provider(request):
                 choices = {(item, item) for item in request.POST['approved_sets']}
                 form_data = OAIProviderForm(request.POST, choices=choices)
 
-                object_to_update = RegistrationInfo.objects.get(provider_short_name=form_data['provider_short_name'].value())
+                object_to_update = RegistrationInfo.objects.get(provider_long_name=form_data['provider_long_name'].value())
 
                 object_to_update.property_list = form_data['property_list'].value()
                 object_to_update.approved_sets = str(form_data['approved_sets'].value())
@@ -167,7 +167,7 @@ def register_provider(request):
                 object_to_update.save()
             else:
                 form_data = OtherProviderForm(request.POST)
-                object_to_update = RegistrationInfo.objects.get(provider_short_name=form_data['provider_short_name'].value())
+                object_to_update = RegistrationInfo.objects.get(provider_long_name=form_data['provider_long_name'].value())
                 object_to_update.property_list = form_data['property_list'].value()
 
                 object_to_update.save()
@@ -175,5 +175,5 @@ def register_provider(request):
             return render(
                 request,
                 'provider_registration/confirmation.html',
-                {'provider': form_data['provider_short_name'].value()}
+                {'provider': form_data['provider_long_name'].value()}
             )
