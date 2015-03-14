@@ -82,7 +82,6 @@ def save_oai_info(provider_long_name, base_url):
 
     set_groups = []
     for item in all_set_info:
-        print(len(item))
         one_group = (item[0].text, item[1].text)
         set_groups.append(one_group)
 
@@ -98,10 +97,10 @@ def save_oai_info(provider_long_name, base_url):
     # check to see if provider with that name exists
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
-        print('{} already exists'.format(provider_long_name))
+        logger.info('{} already exists'.format(provider_long_name))
         return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
     except ObjectDoesNotExist:
-        print('SAVING {}'.format(provider_long_name))
+        logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
             provider_long_name=provider_long_name,
             base_url=base_url,
@@ -132,7 +131,7 @@ def register_provider(request):
                     {'form': form}
                 )
 
-            print("About to save {} in OAI format".format(name))
+            logger.info("About to save {} in OAI format".format(name))
             save_oai_info(name, base_url)
             pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
