@@ -19,34 +19,25 @@ class InitialProviderForm(ModelForm):
                   'contact_name', 'contact_email']
 
 
-class ListField(forms.Field):
-    def to_python(self, value):
-        "Normalize data to a list of strings."
-
-        # Return an empty list if no input was given.
-        if not value:
-            return []
-        return value.split(',')
-
-
-class OAIProviderForm(forms.Form):
+class OAIProviderForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.choices = kwargs.pop('choices')
         super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
     provider_long_name = forms.CharField(max_length=100)
-    provider_short_name = forms.CharField(max_length=50)
     base_url = forms.URLField()
 
     property_list = forms.CharField(widget=forms.Textarea)
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
 
+    class Meta:
+        model = RegistrationInfo
+        fields = ['provider_long_name', 'base_url',
+                  'property_list', 'approved_sets']
 
-class OtherProviderForm(forms.Form):
 
-    provider_long_name = forms.CharField(max_length=100)
-    provider_short_name = forms.CharField(max_length=50)
-    base_url = forms.URLField()
-
-    property_list = forms.CharField(widget=forms.Textarea)
+class OtherProviderForm(ModelForm):
+    class Meta:
+        model = RegistrationInfo
+        fields = ['provider_long_name', 'base_url', 'property_list']
