@@ -16,65 +16,73 @@
         {% csrf_token %}
 
         <div class="container">
+
+            <h2>Contact Information</h2>
+            <div class="field_entry">
+                <p><strong>Your Name </strong>
+                {{ form.contact_name }}
+                </p>
+            </div>
+            <div class="field_entry">
+                <p><strong>Your Email </strong> {{ form.contact_email }}
+                </p>
+                
+            </div>
+            <br>
+            <hr>
             <h2>Basic Provider Information</h2>
             <div class="field_entry">
-                <p>Provider Short Name</p>
-                {{ form.provider_short_name }}
-            </div>
-
-            <div class="field_entry">
-                <p>Provider Long Name</p>
+                <p><strong>Name of your provider</strong></p>
                 {{ form.provider_long_name }}
             </div>
 
             <div class="field_entry">
-                <p>Is your content provider based on OAI-PMH Standards?</p>
-                {{ form.oai_provider}}
+                <p><strong>{{ form.oai_provider}} This content provider is based on OAI-PMH Standards.</strong></p>
+                
             </div>
 
             <div class="field_entry">
-                <p>Base URL</p>
-                <p>Enter the base URL for your content provider. If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.</p>
+                <p><strong>Base URL</strong></p>
+                <p>Enter the base URL for your content provider.<br>
+                If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.<br></p>
                 {{ form.base_url }}
+                <p><small>Example: http://repository.stcloudstate.edu/do/oai/ </small></p>
             </div>
 
             <div class="field_entry">
-                <p>Description</p>
+                <p><strong>Description of your provider</strong></p>
                 {{ form.description }}
             </div>
         </div>
-
+        <hr>
         <div class="container">
             <h2>Metadata Sharing Questions</h2>
             <p class="lead">SHARE Notify will gather together research release event reports from the metadata you provide. Since we will be reusing your metadata and then retransmitting it to others as notifications, we need to be sure the rights to use that metadata are not encumbered.</p>
                 <div class="field_entry">
-                <p>Does metadata gathering violate your Terms of Service?</p>
-                {{ form.meta_tos }}
+                <p><strong> {{ form.meta_tos }} Metadata gathering violates our Terms of Service.</strong></p>
+                
                 </div>
 
                 <div class="field_entry">
-                    <p>Does metadata gathering violate your Privacy Policy?</p>
-                    {{ form.meta_privacy }}
+                    <p><strong>{{ form.meta_privacy }} Metadata gathering violates our Privacy Policy.</strong></p>
                 </div>
 
                 <div class="field_entry">
-                <p>Does our sharing your metadata violate your Privacy Policy?</p>
-                {{ form.meta_sharing_tos }}
+                    <p><strong>{{ form.meta_sharing_tos }} Our sharing your metadata violates our Privacy Policy.</strong></p>
                 </div>
 
                 <div class="field_entry">
-                <p>What is the license of the metadata?</p>
-                {{ form.meta_license }}
+                    <p><strong>What is the license of the metadata?</strong></p>
+                    {{ form.meta_license }}
                 </div>
 
                 <div class="field_entry">
-                <p>Does that license extend to those beyond the group that gathered it?</p>
-                {{ form.meta_license_extended }}
+                    <p><strong>{{ form.meta_license_extended }} The license above extends to those beyond the group that gathered it.</strong></p>
                 </div>
 
                 <div class="field_entry">
-                <p>If unlicensed, will you explicitly license the content?</p>
-                {{ form.meta_future_license }}
+                <p><strong>{{ form.meta_future_license }} If unlicensed, we will explicitly license the content.</strong></p>
+                
                 </div>
             </div>
 
