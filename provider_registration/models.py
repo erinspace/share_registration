@@ -7,6 +7,8 @@ from django.utils import timezone
 class RegistrationInfo(models.Model):
 
     # Basic Information
+    contact_name = models.CharField(max_length=100)
+    contact_email = models.CharField(max_length=100)
     provider_short_name = models.CharField(max_length=50, primary_key=True)
     provider_long_name = models.CharField(max_length=100)
     base_url = models.URLField()

@@ -15,7 +15,8 @@ class InitialProviderForm(ModelForm):
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
                   'oai_provider', 'meta_tos', 'meta_privacy', 'meta_sharing_tos',
-                  'meta_license', 'meta_license_extended', 'meta_future_license']
+                  'meta_license', 'meta_license_extended', 'meta_future_license',
+                  'contact_name', 'contact_email']
 
 
 class ListField(forms.Field):
