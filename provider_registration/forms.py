@@ -1,10 +1,21 @@
 from django import forms
+from django.forms import ModelForm
+
+from provider_registration.models import RegistrationInfo
 
 
 YES_NO_CHOICES = (
     (True, 'yes'),
     (False, 'no')
 )
+
+
+class InitialProviderForm(ModelForm):
+    class Meta:
+        model = RegistrationInfo
+        fields = ['provider_long_name', 'base_url', 'description',
+                  'oai_provider', 'meta_tos', 'meta_privacy', 'meta_sharing_tos',
+                  'meta_license', 'meta_license_extended', 'meta_future_license']
 
 
 class ListField(forms.Field):
@@ -29,22 +40,6 @@ class OAIProviderForm(forms.Form):
 
     property_list = forms.CharField(widget=forms.Textarea)
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-
-
-class InitialProviderForm(forms.Form):
-    provider_long_name = forms.CharField(max_length=100)
-    provider_short_name = forms.CharField(max_length=50)
-    oai_provider = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
-    base_url = forms.URLField()
-    description = forms.CharField(widget=forms.Textarea)
-
-    # Terms of Service and Metadata Permissions Questions
-    meta_tos = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
-    meta_privacy = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
-    meta_sharing_tos = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
-    meta_license = forms.CharField(max_length=50)
-    meta_license_extended = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
-    meta_future_license = forms.ChoiceField(widget=forms.RadioSelect, choices=YES_NO_CHOICES)
 
 
 class OtherProviderForm(forms.Form):
