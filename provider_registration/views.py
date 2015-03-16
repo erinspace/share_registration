@@ -11,8 +11,8 @@ from django.shortcuts import get_object_or_404, render, render_to_response
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
               'oai_dc': 'http://www.openarchives.org/OAI/2.0/',
@@ -49,11 +49,15 @@ def get_provider_info(request):
 
 
 def save_other_info(provider_long_name, base_url):
+    if provider_long_name == '':
+        print('Provider name is NOTHING: '.format(provider_long_name))
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
+        print('ABOUT TO RENDER')
         return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
     except ObjectDoesNotExist:
+        print('I AM SAVING NOW.')
         logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
             provider_long_name=provider_long_name,
@@ -112,6 +116,7 @@ def save_oai_info(provider_long_name, base_url):
 
 def register_provider(request):
     if request.method == 'POST':
+        print('I got to the registering step!!')
         if not request.POST.get('property_list'):
             name = request.POST['provider_long_name']
             base_url = request.POST['base_url']
@@ -125,11 +130,12 @@ def register_provider(request):
                         'property_list': 'enter properties here'
                     }
                 )
-                return render(
-                    request,
-                    'provider_registration/other_registration_form.html',
-                    {'form': form}
-                )
+                if form.is_valid():
+                    return render(
+                        request,
+                        'provider_registration/other_registration_form.html',
+                        {'form': form}
+                    )
 
             logger.info("About to save {} in OAI format".format(name))
             save_oai_info(name, base_url)
@@ -147,7 +153,6 @@ def register_provider(request):
                 },
                 choices=approved_set_set
             )
-
             return render(
                 request,
                 'provider_registration/oai_registration_form.html',
