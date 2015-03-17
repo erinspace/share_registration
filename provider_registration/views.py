@@ -3,6 +3,7 @@ import logging
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, render_to_response
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from provider_registration.utils import get_oai_properties
 
@@ -35,6 +36,7 @@ def detail(request, provider_long_name):
     )
 
 
+@xframe_options_exempt
 def get_provider_info(request):
     """ Shows initial provider form
     """
@@ -144,6 +146,7 @@ def update_other_entry(request):
     return form_data
 
 
+@xframe_options_exempt
 def register_provider(request):
     """ Function to register a provider. This does all the work for
     registration, calling out to other functions for processing
