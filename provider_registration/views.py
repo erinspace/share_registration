@@ -2,7 +2,7 @@ import logging
 
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404, render, render_to_response
+from django.shortcuts import get_object_or_404, render, render_to_response, redirect
 
 from provider_registration.utils import get_oai_properties
 
@@ -38,7 +38,13 @@ def detail(request, provider_long_name):
 def get_provider_info(request):
     """ Shows initial provider form
     """
-    form = InitialProviderForm()
+    if request.method == 'POST':
+        form = InitialProviderForm(request.POST)
+        if form.is_valid():
+            return redirect('register.html', **request.POST)
+    else:
+        form = InitialProviderForm()
+
     return render(
         request,
         'provider_registration/initial_registration_form.html',
@@ -152,6 +158,7 @@ def register_provider(request):
     """ Function to register a provider. This does all the work for
     registration, calling out to other functions for processing
     """
+    import ipdb; ipdb.set_trace()
     # If there's no prop list, it's a first request or a non-oai request
     if not request.POST.get('property_list'):
         name = request.POST['provider_long_name']
@@ -165,7 +172,7 @@ def register_provider(request):
             form = render_oai_provider_form(request, name, base_url)
             return form
     else:
-        # If there's no approved sets yet, render the pre-OAI provider form
+        # Update the requested entries
         if request.POST.get('approved_sets', False):
             form_data = update_oai_entry(request)
         else:

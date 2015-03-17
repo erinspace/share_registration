@@ -10,7 +10,7 @@
 <br>
 
     <div class="container">
-        <form action="{% url 'provider_registration:register' %}" method="post">
+        <form action="{% url 'provider_registration:pre_register' %}" method="post">
         {% csrf_token %}
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
