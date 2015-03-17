@@ -2,7 +2,7 @@ import logging
 
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404, render, render_to_response, redirect
+from django.shortcuts import get_object_or_404, render, render_to_response
 
 from provider_registration.utils import get_oai_properties
 
@@ -38,13 +38,7 @@ def detail(request, provider_long_name):
 def get_provider_info(request):
     """ Shows initial provider form
     """
-    if request.method == 'POST':
-        form = InitialProviderForm(request.POST)
-        if form.is_valid():
-            return redirect('register.html', **request.POST)
-    else:
-        form = InitialProviderForm()
-
+    form = InitialProviderForm()
     return render(
         request,
         'provider_registration/initial_registration_form.html',
@@ -158,9 +152,15 @@ def register_provider(request):
     """ Function to register a provider. This does all the work for
     registration, calling out to other functions for processing
     """
-    import ipdb; ipdb.set_trace()
-    # If there's no prop list, it's a first request or a non-oai request
     if not request.POST.get('property_list'):
+        # this is the initial post, and needs to be checked
+        form = InitialProviderForm(request.POST)
+        if not form.is_valid():
+            return render(
+                request,
+                'provider_registration/initial_registration_form.html',
+                {'form': form}
+            )
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
         # if it's a first request and not an oai request, render the other provider form
