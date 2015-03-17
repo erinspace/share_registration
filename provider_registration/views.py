@@ -3,6 +3,7 @@ import logging
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, render_to_response
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from provider_registration.utils import get_oai_properties
 
@@ -35,6 +36,7 @@ def detail(request, provider_long_name):
     )
 
 
+@xframe_options_exempt
 def get_provider_info(request):
     """ Shows initial provider form
     """
@@ -61,13 +63,8 @@ def save_other_info(provider_long_name, base_url):
 
 
 def save_oai_info(provider_long_name, base_url):
-    """ Makes 2 requests to the provided base URL:
-        1 for the sets available
-        1 for the list of properties
-        The sets available are added as multiple selections for the next form,
-        the properties are pre-loaded into the properties field.
+    """ Gets and saves information about the OAI source
     """
-
     oai_properties = get_oai_properties(base_url)
 
     # check to see if provider with that name exists
@@ -94,6 +91,7 @@ def render_oai_provider_form(request, name, base_url):
     approved_set_list = pre_saved_data.approved_sets.split(',')
     approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
     approved_set_set = set([(item, item) for item in approved_set_list])
+
     # render an OAI form with the request data filled in
     form = OAIProviderForm(
         {
@@ -148,12 +146,20 @@ def update_other_entry(request):
     return form_data
 
 
+@xframe_options_exempt
 def register_provider(request):
     """ Function to register a provider. This does all the work for
     registration, calling out to other functions for processing
     """
-    # If there's no prop list, it's a first request or a non-oai request
     if not request.POST.get('property_list'):
+        # this is the initial post, and needs to be checked
+        form = InitialProviderForm(request.POST)
+        if not form.is_valid():
+            return render(
+                request,
+                'provider_registration/initial_registration_form.html',
+                {'form': form}
+            )
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
         # if it's a first request and not an oai request, render the other provider form
@@ -165,7 +171,7 @@ def register_provider(request):
             form = render_oai_provider_form(request, name, base_url)
             return form
     else:
-        # If there's no approved sets yet, render the pre-OAI provider form
+        # Update the requested entries
         if request.POST.get('approved_sets', False):
             form_data = update_oai_entry(request)
         else:
