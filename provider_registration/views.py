@@ -49,15 +49,11 @@ def get_provider_info(request):
 
 
 def save_other_info(provider_long_name, base_url):
-    if provider_long_name == '':
-        print('Provider name is NOTHING: '.format(provider_long_name))
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
-        print('ABOUT TO RENDER')
         return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
     except ObjectDoesNotExist:
-        print('I AM SAVING NOW.')
         logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
             provider_long_name=provider_long_name,
@@ -115,12 +111,15 @@ def save_oai_info(provider_long_name, base_url):
 
 
 def register_provider(request):
+    """ Function to register a provider. This does all the work for
+    registration, calling out to other functions for processing
+    """
     if request.method == 'POST':
-        print('I got to the registering step!!')
+        # If there's no prop list, it's a first request or non-oai request
         if not request.POST.get('property_list'):
             name = request.POST['provider_long_name']
             base_url = request.POST['base_url']
-
+            # if it's a first request and not an oai request, render the other provider form
             if not request.POST.get('oai_provider'):
                 save_other_info(name, base_url)
                 form = OtherProviderForm(
@@ -136,7 +135,7 @@ def register_provider(request):
                         'provider_registration/other_registration_form.html',
                         {'form': form}
                     )
-
+            # If it's made it this far, request is an OAI provider
             logger.info("About to save {} in OAI format".format(name))
             save_oai_info(name, base_url)
             pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
@@ -144,7 +143,7 @@ def register_provider(request):
             approved_set_list = pre_saved_data.approved_sets.split(',')
             approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
             approved_set_set = set([(item, item) for item in approved_set_list])
-
+            # render an OAI form with the request data filled in
             form = OAIProviderForm(
                 {
                     'provider_long_name': name,
@@ -159,6 +158,7 @@ def register_provider(request):
                 {'form': form}
             )
         else:
+            # If there's no approved sets yet, render the pre-OAI provider form
             if request.POST.get('approved_sets', False):
                 choices = {(item, item) for item in request.POST['approved_sets']}
                 form_data = OAIProviderForm(request.POST, choices=choices)
