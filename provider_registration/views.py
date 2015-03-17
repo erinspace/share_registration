@@ -61,13 +61,8 @@ def save_other_info(provider_long_name, base_url):
 
 
 def save_oai_info(provider_long_name, base_url):
-    """ Makes 2 requests to the provided base URL:
-        1 for the sets available
-        1 for the list of properties
-        The sets available are added as multiple selections for the next form,
-        the properties are pre-loaded into the properties field.
+    """ Gets and saves information about the OAI source
     """
-
     oai_properties = get_oai_properties(base_url)
 
     # check to see if provider with that name exists
@@ -94,6 +89,7 @@ def render_oai_provider_form(request, name, base_url):
     approved_set_list = pre_saved_data.approved_sets.split(',')
     approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
     approved_set_set = set([(item, item) for item in approved_set_list])
+
     # render an OAI form with the request data filled in
     form = OAIProviderForm(
         {
