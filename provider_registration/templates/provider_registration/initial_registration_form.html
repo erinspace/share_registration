@@ -10,10 +10,10 @@
 <br>
 
     <div class="container">
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
         <form action="{% url 'provider_registration:register' %}" method="post">
         {% csrf_token %}
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 
         <div class="container">
             {% if form.errors %}
