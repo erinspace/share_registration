@@ -13,13 +13,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RegistrationInfo',
             fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('base_url', models.URLField()),
                 ('description', models.TextField()),
+                ('contact_email', models.EmailField(max_length=75)),
                 ('contact_name', models.CharField(max_length=100)),
-                ('contact_email', models.CharField(max_length=100)),
                 ('oai_provider', models.BooleanField(default=False)),
                 ('provider_short_name', models.CharField(max_length=50)),
-                ('provider_long_name', models.CharField(max_length=100, serialize=False, primary_key=True)),
+                ('provider_long_name', models.CharField(max_length=100)),
                 ('meta_tos', models.BooleanField(default=False)),
                 ('meta_license', models.CharField(max_length=100)),
                 ('meta_privacy', models.BooleanField(default=False)),

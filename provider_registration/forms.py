@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+
 
 from provider_registration.models import RegistrationInfo
 
@@ -10,7 +10,7 @@ YES_NO_CHOICES = (
 )
 
 
-class InitialProviderForm(ModelForm):
+class InitialProviderForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
@@ -19,7 +19,7 @@ class InitialProviderForm(ModelForm):
                   'contact_name', 'contact_email']
 
 
-class OAIProviderForm(ModelForm):
+class OAIProviderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.choices = kwargs.pop('choices')
         super(OAIProviderForm, self).__init__(*args, **kwargs)
@@ -37,7 +37,7 @@ class OAIProviderForm(ModelForm):
                   'property_list', 'approved_sets']
 
 
-class OtherProviderForm(ModelForm):
+class OtherProviderForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'property_list']
