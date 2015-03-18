@@ -1,16 +1,13 @@
 from django import forms
-from django.forms import ModelForm
+from provider_registration.validators import URLResolves
+
 
 from provider_registration.models import RegistrationInfo
 
 
-YES_NO_CHOICES = (
-    (True, 'yes'),
-    (False, 'no')
-)
+class InitialProviderForm(forms.ModelForm):
+    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
 
-
-class InitialProviderForm(ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
@@ -19,13 +16,13 @@ class InitialProviderForm(ModelForm):
                   'contact_name', 'contact_email']
 
 
-class OAIProviderForm(ModelForm):
+class OAIProviderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.choices = kwargs.pop('choices')
         super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
-    provider_long_name = forms.CharField(max_length=100)
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
     base_url = forms.URLField()
 
     property_list = forms.CharField(widget=forms.Textarea)
@@ -37,7 +34,9 @@ class OAIProviderForm(ModelForm):
                   'property_list', 'approved_sets']
 
 
-class OtherProviderForm(ModelForm):
+class OtherProviderForm(forms.ModelForm):
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
+
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'property_list']

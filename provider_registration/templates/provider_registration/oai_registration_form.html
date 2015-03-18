@@ -13,12 +13,12 @@
     <div class="container">
         <div class="field_entry">
             <h2>Provider Name</h2>
-            {{ form.provider_long_name }}
+            <h3>{{ name }}</h3>
         </div>
 
         <div class="field_entry">
             <h2>Base URL</h2>
-            {{ form.base_url }}
+            <h3>{{ base_url }}</h3>
         </div>
 
         <div class="field_entry">
@@ -30,7 +30,7 @@
             <h2>Approved Sets</h2>
             {{ form.approved_sets }}
         </div>
-
+            {{ form.provider_long_name}}
     </div>
 
     <input type="submit" value="OK" />

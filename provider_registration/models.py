@@ -9,11 +9,11 @@ class RegistrationInfo(models.Model):
     # Basic Information
     base_url = models.URLField()
     description = models.TextField()
+    contact_email = models.EmailField()
     contact_name = models.CharField(max_length=100)
-    contact_email = models.CharField(max_length=100)
     oai_provider = models.BooleanField(default=False)
     provider_short_name = models.CharField(max_length=50)
-    provider_long_name = models.CharField(max_length=100, primary_key=True)
+    provider_long_name = models.CharField(max_length=100)
 
     # Terms of Service and Metadata Permissions Questions
     meta_tos = models.BooleanField(default=False)

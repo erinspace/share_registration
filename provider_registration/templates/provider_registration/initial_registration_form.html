@@ -10,21 +10,35 @@
 <br>
 
     <div class="container">
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
         <form action="{% url 'provider_registration:register' %}" method="post">
         {% csrf_token %}
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 
         <div class="container">
+            {% if form.errors %}
+                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+            {% endif %}
 
             <h2>Contact Information</h2>
             <div class="field_entry">
                 <p><strong>Your Name </strong>
+                {% if form.contact_name.errors %}
+                  <span class="help-block">
+                    {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
                 {{ form.contact_name }}
                 </p>
             </div>
             <div class="field_entry">
-                <p><strong>Your Email </strong> {{ form.contact_email }}
+                <p><strong>Your Email </strong> 
+                {% if form.contact_email.errors %}
+                  <span class="help-block">
+                    {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
+                {{ form.contact_email }}
                 </p>
                 
             </div>
@@ -32,6 +46,11 @@
             <hr>
             <h2>Basic Provider Information</h2>
             <div class="field_entry">
+                {% if form.provider_long_name.errors %}
+                  <span class="help-block">
+                    {% for error in form.provider_long_name.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
                 <p><strong>Name of your provider</strong></p>
                 {{ form.provider_long_name }}
             </div>
@@ -45,12 +64,22 @@
                 <p><strong>Base URL</strong></p>
                 <p>Enter the base URL for your content provider.<br>
                 If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.<br></p>
+                {% if form.base_url.errors %}
+                  <span class="help-block">
+                    {% for error in form.base_url.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
                 {{ form.base_url }}
                 <p><small>Example: http://repository.stcloudstate.edu/do/oai/ </small></p>
             </div>
 
             <div class="field_entry">
                 <p><strong>Description of your provider</strong></p>
+                {% if form.description.errors %}
+                  <span class="help-block">
+                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
                 {{ form.description }}
             </div>
         </div>
@@ -73,7 +102,13 @@
 
                 <div class="field_entry">
                     <p><strong>What is the license of the metadata?</strong></p>
+                    {% if form.meta_licesnse.errors %}
+                      <span class="help-block">
+                        {% for error in form.meta_licesnse.errors %}{{ error }}{% endfor %}
+                      </span>
+                    {% endif %}
                     {{ form.meta_license }}
+                    <p><small>Example: MIT, Apache, GPL</small></p>
                 </div>
 
                 <div class="field_entry">
