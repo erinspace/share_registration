@@ -1,0 +1,31 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.5.3 CPython/2.7.9 Darwin/13.4.0]
+    method: GET
+    uri: http://repository.stcloudstate.edu/do/oai/
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA42RUWuDMBSFn/VXhDzXRFvKiqhlMMYGLRusK2Nvqd5pQBOXG2v37xeDeyjsoeQt
+        fOeec+7NtpeuJWcwKLXKacJiSkCVupKqzun74THa0G0RZi/3z9Hr/ikMHK4wp421fcr5OI5M96CE
+        KRt5BmTa1NyxfMliTmc6vaC8Uowrzy3jOOEf+91b2UAnIqnQClXCJEOZov/d6VJYH+0WxzAIbsHm
+        MuyCFS3CIDOAvVYID8JCsYyTdRSvomRzSO7SVZyuN58Zv0K85HsAtNPmTjmlxWxroNcorTY/DG3Z
+        6qFynSwwqAZeaa6F5NMsr3XOQQbGaEPcviGnJ1Ed3ThaHEU7ANFfxDbgHYgw9dCBskQiUdoSQVqo
+        RUvmJh5aXOPwx3cS0V1zQZzRvwNdaHAhK5ZxH8cF8y+bLjldvfgFOoP1IiYCAAA=
+    headers:
+      cache-control: [private]
+      connection: [keep-alive]
+      content-encoding: [gzip]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 18 Mar 2015 17:30:58 GMT']
+      server: [nginx/1.2.1]
+      set-cookie: [bp_plack_session=2d7ad33fe393bc11238237a56625535aa25c9e58; path=/;
+          HttpOnly]
+      transfer-encoding: [chunked]
+    status: {code: 200, message: OK}
+version: 1

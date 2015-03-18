@@ -6,6 +6,10 @@ from provider_registration.models import RegistrationInfo
 
 
 class InitialProviderForm(forms.ModelForm):
+
+    # def __init__(self, *args, **kwargs):
+    #     self.registration_date = kwargs.get('registration_date')
+
     base_url = forms.CharField(max_length=100, validators=[URLResolves()])
 
     class Meta:
