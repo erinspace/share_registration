@@ -11,8 +11,10 @@ NAMESPACES = {'oai': 'http://www.openarchives.org/OAI/2.0/'}
 class URLResolves(object):
     def __call__(self, value):
         ''' value is the serialized data to be validated '''
-
-        data = requests.get(value)
+        try:
+            data = requests.get(value)
+        except requests.exceptions.ConnectionError:
+            raise forms.ValidationError('URL does not resolve, please enter  a valid URL')
         if data.status_code == 404:
             raise forms.ValidationError('URL does not resolve, please enter  a valid URL')
 

@@ -1,6 +1,9 @@
 import logging
 
+from lxml.etree import XMLSyntaxError
+
 from django.utils import timezone
+from django.forms.util import ErrorList
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -67,31 +70,36 @@ def save_other_info(provider_long_name, base_url):
 def save_oai_info(provider_long_name, base_url):
     """ Gets and saves information about the OAI source
     """
-    oai_properties = utils.get_oai_properties(base_url)
-
-    # check to see if provider with that name exists
+    success = {'value': False, 'reason': 'Provider name already exists'}
     try:
-        RegistrationInfo.objects.get(provider_long_name=provider_long_name)
-        logger.info('{} already exists'.format(provider_long_name))
-        success = False
-    except ObjectDoesNotExist:
-        print("I GOT AN ERROR!")
-        logger.info('SAVING {}'.format(provider_long_name))
-        RegistrationInfo(
-            provider_long_name=provider_long_name,
-            base_url=base_url,
-            property_list=oai_properties['properties'],
-            approved_sets=oai_properties['sets'],
-            registration_date=timezone.now()
-        ).save()
-        success = True
+        oai_properties = utils.get_oai_properties(base_url)
+
+        # check to see if provider with that name exists
+        try:
+            RegistrationInfo.objects.get(provider_long_name=provider_long_name)
+
+        except ObjectDoesNotExist:
+            logger.info('SAVING {}'.format(provider_long_name))
+            RegistrationInfo(
+                provider_long_name=provider_long_name,
+                base_url=base_url,
+                property_list=oai_properties['properties'],
+                approved_sets=oai_properties['sets'],
+                registration_date=timezone.now()
+            ).save()
+            success['value'] = True
+            success['reason'] = '{} registered and saved successfully'.format(provider_long_name)
+
+    except XMLSyntaxError:
+        success['reason'] = 'XML Not Valid'
+
+    logger.info(success['reason'])
     return success
 
 
 def render_oai_provider_form(request, name, base_url):
     saving_successful = save_oai_info(name, base_url)
-    if saving_successful:
-        logger.info("About to save {} in OAI format".format(name))
+    if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
         approved_set_set = utils.format_set_choices(pre_saved_data)
@@ -109,6 +117,15 @@ def render_oai_provider_form(request, name, base_url):
             request,
             'provider_registration/oai_registration_form.html',
             {'form': form, 'name': name, 'base_url': base_url}
+        )
+    elif saving_successful['reason'] == 'XML Not Valid':
+        form = InitialProviderForm(request.POST)
+        form.is_valid()
+        form._errors["base_url"] = ErrorList(["OAI-PMH XML not valid, please enter a valid OAI PMH url"])
+        return render(
+            request,
+            'provider_registration/initial_registration_form.html',
+            {'form': form}
         )
     else:
         return render_to_response('provider_registration/already_exists.html', {'provider': name})

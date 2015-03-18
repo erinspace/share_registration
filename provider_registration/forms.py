@@ -1,5 +1,5 @@
 from django import forms
-from provider_registration.validators import ValidOAIURL, URLResolves
+from provider_registration.validators import URLResolves
 
 
 from provider_registration.models import RegistrationInfo
@@ -32,8 +32,6 @@ class OAIProviderForm(forms.ModelForm):
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url',
                   'property_list', 'approved_sets']
-
-        validators = [ValidOAIURL()]
 
 
 class OtherProviderForm(forms.ModelForm):
