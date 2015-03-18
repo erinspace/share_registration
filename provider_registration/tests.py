@@ -11,6 +11,7 @@ from provider_registration.forms import InitialProviderForm
 
 
 class RegistrationMethodTests(TestCase):
+
     def test_was_published_recently_with_future_question(self):
         """
         was_published_recently() should return False for questions whose
@@ -74,6 +75,58 @@ class RegistrationFormTests(TestCase):
         })
         self.assertFalse(form.is_valid())
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_missing_contact_name(self):
+        form = InitialProviderForm({
+            'contact_name': '',
+            'contact_email': 'BullyRay@dudleyboyz.net',
+            'provider_long_name': 'Devon - Get the Tables',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'description': 'A description',
+            'oai_provider': True,
+            'meta_license': 'MIT'
+        })
+        self.assertFalse(form.is_valid())
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_missing_contact_email(self):
+        form = InitialProviderForm({
+            'contact_name': 'Spike Dudley',
+            'contact_email': '',
+            'provider_long_name': 'Devon - Get the Tables',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'description': 'A description',
+            'oai_provider': True,
+            'meta_license': 'MIT'
+        })
+        self.assertFalse(form.is_valid())
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_malformed_contact_email(self):
+        form = InitialProviderForm({
+            'contact_name': 'Spike Dudley',
+            'contact_email': 'email',
+            'provider_long_name': 'Devon - Get the Tables',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'description': 'A description',
+            'oai_provider': True,
+            'meta_license': 'MIT'
+        })
+        self.assertFalse(form.is_valid())
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_missing_provider_name(self):
+        form = InitialProviderForm({
+            'contact_name': 'Spike Dudley',
+            'contact_email': 'email@email.com',
+            'provider_long_name': '',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'description': 'A description',
+            'oai_provider': True,
+            'meta_license': 'MIT'
+        })
+        self.assertFalse(form.is_valid())
+
 
 class ViewMethodTests(TestCase):
 
@@ -109,3 +162,21 @@ class ViewMethodTests(TestCase):
 
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'Provider name already exists')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
+    def test_save_other_provider(self):
+        provider_long_name = 'The COSMIC KEEEEEY'
+        base_url = 'http://wwe.com'
+        success = views.save_other_info(provider_long_name, base_url)
+        self.assertTrue(success)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
+    def test_repeat_provider_fails(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://wwe.com',
+            property_list=['some', 'properties'],
+            registration_date=timezone.now()
+        ).save()
+        success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
+        self.assertFalse(success)
