@@ -14,6 +14,7 @@ class RegistrationInfo(models.Model):
     oai_provider = models.BooleanField(default=False)
     provider_short_name = models.CharField(max_length=50)
     provider_long_name = models.CharField(max_length=100)
+    link = 'Edit'
 
     # Terms of Service and Metadata Permissions Questions
     meta_tos = models.BooleanField(default=False)

@@ -8,8 +8,11 @@ class RegistrationAdmin(admin.ModelAdmin):
         ('Date information', {'fields': ['registration_date'], 'classes': ['collapse']})
     ]
 
-    list_display = ('provider_short_name', 'provider_long_name', 'registration_date', 'was_registered_recently')
+    list_display_links = ['link']
+    list_display = ('link', 'provider_short_name', 'provider_long_name', 'registration_date', 'was_registered_recently', 'base_url')
     list_filter = ['registration_date']
     search_fields = ['provider_long_name']
+
+    list_editable = ['provider_long_name', 'provider_short_name']
 
 admin.site.register(RegistrationInfo, RegistrationAdmin)
