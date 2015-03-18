@@ -1,5 +1,6 @@
 import vcr
 import datetime
+import requests
 
 from django.utils import timezone
 from django.test import TestCase
@@ -47,6 +48,31 @@ class RegistrationFormTests(TestCase):
             'meta_license': 'MIT'
         })
         self.assertTrue(form.is_valid())
+
+    def test_misformed_url(self):
+        form = InitialProviderForm({
+            'contact_name': 'BubbaRay Dudley',
+            'contact_email': 'BullyRay@dudleyboyz.net',
+            'provider_long_name': 'Devon - Get the Tables',
+            'base_url': 'DEVONGETTHETABLLESSSSSS',
+            'description': 'A description',
+            'oai_provider': False,
+            'meta_license': 'MIT'
+        })
+        with self.assertRaises(requests.exceptions.MissingSchema):
+            form.is_valid()
+
+    def test_formed_not_valid(self):
+        form = InitialProviderForm({
+            'contact_name': 'BubbaRay Dudley',
+            'contact_email': 'BullyRay@dudleyboyz.net',
+            'provider_long_name': 'Devon - Get the Tables',
+            'base_url': 'http://notreallyaurul.nope',
+            'description': 'A description',
+            'oai_provider': False,
+            'meta_license': 'MIT'
+        })
+        self.assertFalse(form.is_valid())
 
 
 class ViewMethodTests(TestCase):
