@@ -102,7 +102,7 @@ def render_oai_provider_form(request, name, base_url):
     return render(
         request,
         'provider_registration/oai_registration_form.html',
-        {'form': form}
+        {'form': form, 'name': name, 'base_url': base_url}
     )
 
 
@@ -118,7 +118,7 @@ def render_other_provider_form(request, name, base_url):
     return render(
         request,
         'provider_registration/other_registration_form.html',
-        {'form': form}
+        {'form': form, 'name': name, 'base_url': base_url}
     )
 
 
