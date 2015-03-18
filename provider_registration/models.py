@@ -32,7 +32,8 @@ class RegistrationInfo(models.Model):
         return self.provider_long_name
 
     def was_registered_recently(self, days=1):
-        return self.registration_date >= timezone.now() - datetime.timedelta(days)
+        now = timezone.now()
+        return now - datetime.timedelta(days) <= self.registration_date <= now
 
     was_registered_recently.admin_order_field = 'registration_date'
     was_registered_recently.boolean = True
