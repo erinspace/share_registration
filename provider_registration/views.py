@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.views.decorators.clickjacking import xframe_options_exempt
 
-from provider_registration.utils import get_oai_properties
+from provider_registration import utils
 
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm
@@ -65,7 +65,7 @@ def save_other_info(provider_long_name, base_url):
 def save_oai_info(provider_long_name, base_url):
     """ Gets and saves information about the OAI source
     """
-    oai_properties = get_oai_properties(base_url)
+    oai_properties = utils.get_oai_properties(base_url)
 
     # check to see if provider with that name exists
     try:
@@ -88,9 +88,7 @@ def render_oai_provider_form(request, name, base_url):
     save_oai_info(name, base_url)
     pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
-    approved_set_list = pre_saved_data.approved_sets.split(',')
-    approved_set_list = [item.replace('[', '').replace(']', '') for item in approved_set_list]
-    approved_set_set = set([(item, item) for item in approved_set_list])
+    approved_set_set = utils.format_set_choices(pre_saved_data)
 
     # render an OAI form with the request data filled in
     form = OAIProviderForm(
