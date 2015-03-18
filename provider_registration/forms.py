@@ -1,16 +1,13 @@
 from django import forms
+from provider_registration.validators import URLResolves
 
 
 from provider_registration.models import RegistrationInfo
 
 
-YES_NO_CHOICES = (
-    (True, 'yes'),
-    (False, 'no')
-)
-
-
 class InitialProviderForm(forms.ModelForm):
+    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
+
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
