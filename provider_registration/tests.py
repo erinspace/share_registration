@@ -66,3 +66,20 @@ class ViewMethodTests(TestCase):
         success = views.save_oai_info(provider_long_name, base_url)
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'XML Not Valid')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
+    def test_repeat_oai_name(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+
+        provider_long_name = 'Stardust Weekly'
+        base_url = 'http://repository.stcloudstate.edu/do/oai/'
+        success = views.save_oai_info(provider_long_name, base_url)
+
+        self.assertFalse(success['value'])
+        self.assertEqual(success['reason'], 'Provider name already exists')
