@@ -52,7 +52,6 @@ def save_other_info(provider_long_name, base_url):
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
-        # return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
         success = False
     except ObjectDoesNotExist:
         logger.info('SAVING {}'.format(provider_long_name))
@@ -74,7 +73,6 @@ def save_oai_info(provider_long_name, base_url):
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
-        # return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
         success = False
     except ObjectDoesNotExist:
         print("I GOT AN ERROR!")
@@ -92,7 +90,6 @@ def save_oai_info(provider_long_name, base_url):
 
 def render_oai_provider_form(request, name, base_url):
     saving_successful = save_oai_info(name, base_url)
-    # import ipdb; ipdb.set_trace()
     if saving_successful:
         logger.info("About to save {} in OAI format".format(name))
         pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
