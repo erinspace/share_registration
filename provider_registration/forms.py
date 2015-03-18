@@ -1,13 +1,8 @@
 from django import forms
+from provider_registration.validators import ValidOAIURL
 
 
 from provider_registration.models import RegistrationInfo
-
-
-YES_NO_CHOICES = (
-    (True, 'yes'),
-    (False, 'no')
-)
 
 
 class InitialProviderForm(forms.ModelForm):
@@ -35,6 +30,10 @@ class OAIProviderForm(forms.ModelForm):
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url',
                   'property_list', 'approved_sets']
+
+        validators = [
+            ValidOAIURL()
+        ]
 
 
 class OtherProviderForm(forms.ModelForm):
