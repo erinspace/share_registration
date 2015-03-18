@@ -3,18 +3,10 @@ import datetime
 
 from django.utils import timezone
 from django.test import TestCase
-# from django.core.urlresolvers import reverse
 
+from provider_registration import views
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import InitialProviderForm
-
-
-# def create_registration(provider_long_name, base_url, days):
-#     date = timezone.now() + datetime.timedelta(days=days)
-#     RegistrationInfo.objects.create(
-#         provider_long_name=provider_long_name,
-#         base_url=base_url,
-#         registration_date=date)
 
 
 class RegistrationMethodTests(TestCase):
@@ -55,3 +47,22 @@ class RegistrationFormTests(TestCase):
             'meta_license': 'MIT'
         })
         self.assertTrue(form.is_valid())
+
+
+class ViewMethodTests(TestCase):
+
+    @vcr.use_cassette('provider_registration/vcr_cassettes/oai_response_listsets.yaml')
+    def test_valid_oai_url(self):
+        provider_long_name = 'Stardust Weekly'
+        base_url = 'http://repository.stcloudstate.edu/do/oai/'
+        success = views.save_oai_info(provider_long_name, base_url)
+        self.assertTrue(success['value'])
+        self.assertEqual(success['reason'], 'Stardust Weekly registered and saved successfully')
+
+    @vcr.use_cassette('provider_registration/vcr_cassettes/other_response_oai.yaml')
+    def test_invalid_oai_url(self):
+        provider_long_name = 'Golddust Monthly'
+        base_url = 'http://wwe.com'
+        success = views.save_oai_info(provider_long_name, base_url)
+        self.assertFalse(success['value'])
+        self.assertEqual(success['reason'], 'XML Not Valid')

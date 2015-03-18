@@ -11,20 +11,20 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA42RUWuDMBSFn/VXhDzXRFvKiqhlMMYGLRusK2Nvqd5pQBOXG2v37xeDeyjsoeQt
-        fOeec+7NtpeuJWcwKLXKacJiSkCVupKqzun74THa0G0RZi/3z9Hr/ikMHK4wp421fcr5OI5M96CE
-        KRt5BmTa1NyxfMliTmc6vaC8Uowrzy3jOOEf+91b2UAnIqnQClXCJEOZov/d6VJYH+0WxzAIbsHm
-        MuyCFS3CIDOAvVYID8JCsYyTdRSvomRzSO7SVZyuN58Zv0K85HsAtNPmTjmlxWxroNcorTY/DG3Z
-        6qFynSwwqAZeaa6F5NMsr3XOQQbGaEPcviGnJ1Ed3ThaHEU7ANFfxDbgHYgw9dCBskQiUdoSQVqo
-        RUvmJh5aXOPwx3cS0V1zQZzRvwNdaHAhK5ZxH8cF8y+bLjldvfgFOoP1IiYCAAA=
+        H4sIAAAAAAAAA42RUUvDMBSFn9tfEfK8Ju3GVErbIYgobCg4h/iWtdc20CY1N13nvzcN9WHgw8hb
+        +M4959ybbc5dS05gUGqV04TFlIAqdSVVndP3/WN0RzdFmL3cP0evu6cwcLjCnDbW9inn4zgy3YMS
+        pmzkCZBpU3PH8iWLOZ3p9IzyQjGuPLeM44R/7LZvZQOdiKRCK1QJkwxliv53q0thfbRrHMMguAab
+        y7AzVrQIg8wA9lohPAgLxTJO1lG8ipK7fXKbruM0ufnM+AXiJd8DoJ02d8wpLWZbA71GabX5YWjL
+        Vg+V62SBQTXwSnMtJJ9mea1zDjIwRhvi9g05PYrq4MbR4iDaAYj+IrYB70CEqYcOlCUSidKWCNJC
+        LVoyN/HQ4hKHP76TiO6aC+KM/h3oQoMLWbGM+zgumH/ZdMnp6sUvR36+0SYCAAA=
     headers:
       cache-control: [private]
       connection: [keep-alive]
       content-encoding: [gzip]
       content-type: [text/xml; charset=UTF-8]
-      date: ['Wed, 18 Mar 2015 17:30:58 GMT']
+      date: ['Wed, 18 Mar 2015 17:50:16 GMT']
       server: [nginx/1.2.1]
-      set-cookie: [bp_plack_session=2d7ad33fe393bc11238237a56625535aa25c9e58; path=/;
+      set-cookie: [bp_plack_session=0da35f4e7df0ee457098ccd74ff121e8c393e9a8; path=/;
           HttpOnly]
       transfer-encoding: [chunked]
     status: {code: 200, message: OK}
