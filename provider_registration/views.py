@@ -52,7 +52,7 @@ def save_other_info(provider_long_name, base_url):
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
-        return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
+        success = False
     except ObjectDoesNotExist:
         logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
@@ -60,6 +60,8 @@ def save_other_info(provider_long_name, base_url):
             base_url=base_url,
             registration_date=timezone.now()
         ).save()
+        success = True
+    return success
 
 
 def save_oai_info(provider_long_name, base_url):
@@ -71,8 +73,9 @@ def save_oai_info(provider_long_name, base_url):
     try:
         RegistrationInfo.objects.get(provider_long_name=provider_long_name)
         logger.info('{} already exists'.format(provider_long_name))
-        return render_to_response('provider_registration/already_exists.html', {'provider': provider_long_name})
+        success = False
     except ObjectDoesNotExist:
+        print("I GOT AN ERROR!")
         logger.info('SAVING {}'.format(provider_long_name))
         RegistrationInfo(
             provider_long_name=provider_long_name,
@@ -81,45 +84,53 @@ def save_oai_info(provider_long_name, base_url):
             approved_sets=oai_properties['sets'],
             registration_date=timezone.now()
         ).save()
+        success = True
+    return success
 
 
 def render_oai_provider_form(request, name, base_url):
-    logger.info("About to save {} in OAI format".format(name))
-    save_oai_info(name, base_url)
-    pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
+    saving_successful = save_oai_info(name, base_url)
+    if saving_successful:
+        logger.info("About to save {} in OAI format".format(name))
+        pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
-    approved_set_set = utils.format_set_choices(pre_saved_data)
+        approved_set_set = utils.format_set_choices(pre_saved_data)
 
-    # render an OAI form with the request data filled in
-    form = OAIProviderForm(
-        {
-            'provider_long_name': name,
-            'base_url': base_url,
-            'property_list': pre_saved_data.property_list
-        },
-        choices=approved_set_set
-    )
-    return render(
-        request,
-        'provider_registration/oai_registration_form.html',
-        {'form': form}
-    )
+        # render an OAI form with the request data filled in
+        form = OAIProviderForm(
+            {
+                'provider_long_name': name,
+                'base_url': base_url,
+                'property_list': pre_saved_data.property_list
+            },
+            choices=approved_set_set
+        )
+        return render(
+            request,
+            'provider_registration/oai_registration_form.html',
+            {'form': form, 'name': name, 'base_url': base_url}
+        )
+    else:
+        return render_to_response('provider_registration/already_exists.html', {'provider': name})
 
 
 def render_other_provider_form(request, name, base_url):
-    save_other_info(name, base_url)
-    form = OtherProviderForm(
-        {
-            'provider_long_name': name,
-            'base_url': base_url,
-            'property_list': 'enter properties here'
-        }
-    )
-    return render(
-        request,
-        'provider_registration/other_registration_form.html',
-        {'form': form}
-    )
+    saving_successful = save_other_info(name, base_url)
+    if saving_successful:
+        form = OtherProviderForm(
+            {
+                'provider_long_name': name,
+                'base_url': base_url,
+                'property_list': 'enter properties here'
+            }
+        )
+        return render(
+            request,
+            'provider_registration/other_registration_form.html',
+            {'form': form, 'name': name, 'base_url': base_url}
+        )
+    else:
+        return render_to_response('provider_registration/already_exists.html', {'provider': name})
 
 
 def update_oai_entry(request):

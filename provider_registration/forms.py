@@ -22,7 +22,7 @@ class OAIProviderForm(forms.ModelForm):
         super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
-    provider_long_name = forms.CharField(max_length=100)
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
     base_url = forms.URLField()
 
     property_list = forms.CharField(widget=forms.Textarea)
@@ -37,6 +37,8 @@ class OAIProviderForm(forms.ModelForm):
 
 
 class OtherProviderForm(forms.ModelForm):
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
+
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'property_list']
