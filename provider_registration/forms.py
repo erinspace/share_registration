@@ -1,11 +1,13 @@
 from django import forms
-from provider_registration.validators import ValidOAIURL
+from provider_registration.validators import ValidOAIURL, URLResolves
 
 
 from provider_registration.models import RegistrationInfo
 
 
 class InitialProviderForm(forms.ModelForm):
+    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
+
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
@@ -31,9 +33,7 @@ class OAIProviderForm(forms.ModelForm):
         fields = ['provider_long_name', 'base_url',
                   'property_list', 'approved_sets']
 
-        validators = [
-            ValidOAIURL()
-        ]
+        validators = [ValidOAIURL()]
 
 
 class OtherProviderForm(forms.ModelForm):
