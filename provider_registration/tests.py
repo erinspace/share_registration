@@ -22,7 +22,7 @@ class RegistrationMethodTests(TestCase):
 
 class RegistrationFormTests(TestCase):
 
-    @vcr.use_cassette('provider_registration/vcr_cassettes/oai_response.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
     def test_valid_oai_data(self):
         form = InitialProviderForm({
             'contact_name': 'BubbaRay Dudley',
@@ -35,7 +35,7 @@ class RegistrationFormTests(TestCase):
         })
         self.assertTrue(form.is_valid())
 
-    @vcr.use_cassette('provider_registration/vcr_cassettes/other_response.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response.yaml')
     def test_valid_other_data(self):
         form = InitialProviderForm({
             'contact_name': 'BubbaRay Dudley',
@@ -51,7 +51,7 @@ class RegistrationFormTests(TestCase):
 
 class ViewMethodTests(TestCase):
 
-    @vcr.use_cassette('provider_registration/vcr_cassettes/oai_response_listsets.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
     def test_valid_oai_url(self):
         provider_long_name = 'Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
@@ -59,7 +59,7 @@ class ViewMethodTests(TestCase):
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'Stardust Weekly registered and saved successfully')
 
-    @vcr.use_cassette('provider_registration/vcr_cassettes/other_response_oai.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
     def test_invalid_oai_url(self):
         provider_long_name = 'Golddust Monthly'
         base_url = 'http://wwe.com'
