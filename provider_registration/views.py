@@ -16,10 +16,7 @@ from provider_registration.forms import OAIProviderForm, OtherProviderForm, Init
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
-              'oai_dc': 'http://www.openarchives.org/OAI/2.0/',
-              'ns0': 'http://www.openarchives.org/OAI/2.0/'}
-BASE_SCHEMA = ['title', 'contributor', 'creator', 'subject', 'description']
+PLACEHOLDER_SHORTNAME = 'temp_shortname'
 
 
 def index(request):
@@ -61,7 +58,8 @@ def save_other_info(provider_long_name, base_url):
         RegistrationInfo(
             provider_long_name=provider_long_name,
             base_url=base_url,
-            registration_date=timezone.now()
+            registration_date=timezone.now(),
+            provider_short_name=PLACEHOLDER_SHORTNAME
         ).save()
         success = True
     return success
@@ -85,7 +83,8 @@ def save_oai_info(provider_long_name, base_url):
                 base_url=base_url,
                 property_list=oai_properties['properties'],
                 approved_sets=oai_properties['sets'],
-                registration_date=timezone.now()
+                registration_date=timezone.now(),
+                provider_short_name=PLACEHOLDER_SHORTNAME
             ).save()
             success['value'] = True
             success['reason'] = '{} registered and saved successfully'.format(provider_long_name)
