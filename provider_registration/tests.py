@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.test import TestCase
 
 from provider_registration import views
+from provider_registration import utils
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import InitialProviderForm, OAIProviderForm
 
@@ -202,3 +203,18 @@ class ViewMethodTests(TestCase):
         ).save()
         success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
         self.assertFalse(success)
+
+
+class TestUtils(TestCase):
+
+    def test_format_set_choices(self):
+        test_data = RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets="[('publication:some', 'sets')]",
+            registration_date=timezone.now()
+        )
+
+        formatted_sets = utils.format_set_choices(test_data)
+        self.assertEqual(formatted_sets, set([('some', 'sets')]))
