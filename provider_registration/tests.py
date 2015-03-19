@@ -3,10 +3,11 @@ import datetime
 import requests
 
 from django.utils import timezone
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
 from provider_registration import views
 from provider_registration import utils
+from provider_registration import validators
 from provider_registration.models import RegistrationInfo
 from provider_registration.forms import InitialProviderForm, OAIProviderForm
 
@@ -153,6 +154,9 @@ class TestOAIProviderForm(TestCase):
 
 class ViewMethodTests(TestCase):
 
+    def setUp(self):
+        self.factory = RequestFactory()
+
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
     def test_valid_oai_url(self):
         provider_long_name = 'Stardust Weekly'
@@ -203,6 +207,11 @@ class ViewMethodTests(TestCase):
         ).save()
         success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
         self.assertFalse(success)
+
+    def test_get_provider_info(self):
+        request = self.factory.get('/provider_info/')
+        view = views.get_provider_info(request)
+        self.assertEqual(view.status_code, 200)
 
 
 class TestUtils(TestCase):
