@@ -3,9 +3,9 @@ import json
 
 from django.test import TestCase
 from push_endpoint.views import DataList
-from django.contrib.auth.models import AnonymousUser, User
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import force_authenticate
+from django.contrib.auth.models import AnonymousUser, User
 
 
 VALID_POST = {
@@ -40,11 +40,11 @@ class APIPostTests(TestCase):
 
     def test_missing_doi(self):
         view = DataList.as_view()
-        invalid_data = copy.copy(VALID_POST)
-        invalid_data.pop('doi')
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('doi')
         request = self.factory.post(
             '/pushed_data/',
-            json.dumps(invalid_data),
+            json.dumps(invalid_post),
             content_type='application/json'
         )
         force_authenticate(request, user=self.user)
@@ -54,16 +54,48 @@ class APIPostTests(TestCase):
 
     def test_invalid_doi(self):
         view = DataList.as_view()
-        invalid_data = copy.copy(VALID_POST)
-        invalid_data['doi'] = 'thisistotallynotadoi'
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post['doi'] = 'thisistotallynotadoi'
         request = self.factory.post(
             '/pushed_data/',
-            json.dumps(invalid_data),
+            json.dumps(invalid_post),
             content_type='application/json'
         )
         force_authenticate(request, user=self.user)
         response = view(request)
         data = response.data
+        self.assertEqual(
+            data['non_field_errors'],
+            ['DOI does not resolve, please enter a valid DOI']
+        )
+
+    def test_missing_url(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('url')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        force_authenticate(request, user=self.user)
+        response = view(request)
+        data = response.data
+        self.assertEqual(data['url'], ['This field is required.'])
+
+    def test_invalid_url(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post['url'] = 'thisistotallynotaurl'
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        force_authenticate(request, user=self.user)
+        response = view(request)
+        data = response.data
+        import ipdb; ipdb.set_trace()
         self.assertEqual(
             data['non_field_errors'],
             ['DOI does not resolve, please enter a valid DOI']
