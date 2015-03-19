@@ -1,7 +1,11 @@
+import logging
+
 import requests
 from lxml import etree
-
 from django import forms
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 IDENTIFY = '?verb=Identify'
 
@@ -39,3 +43,5 @@ class ValidOAIURL(object):
             raise forms.ValidationError(
                 'XML Does not appear to point to a valid OAI-PMH source, please enter a valid OAI-PMH url'
             )
+        logger.info('OAI link valid for: {}'.format(repository_name))
+        return True
