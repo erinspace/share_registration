@@ -7,7 +7,7 @@ from django.test import TestCase
 
 from provider_registration import views
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import InitialProviderForm
+from provider_registration.forms import InitialProviderForm, OAIProviderForm
 
 
 class RegistrationMethodTests(TestCase):
@@ -20,6 +20,14 @@ class RegistrationMethodTests(TestCase):
         time = timezone.now() + datetime.timedelta(days=30)
         future_question = RegistrationInfo(registration_date=time)
         self.assertEqual(future_question.was_registered_recently(), False)
+
+    def test_unicode_name(self):
+        time = timezone.now() + datetime.timedelta(days=30)
+        registraion = RegistrationInfo(
+            provider_long_name='SquaredCircle Digest',
+            registration_date=time
+        )
+        self.assertEqual(unicode(registraion), 'SquaredCircle Digest')
 
 
 class RegistrationFormTests(TestCase):
@@ -126,6 +134,20 @@ class RegistrationFormTests(TestCase):
             'meta_license': 'MIT'
         })
         self.assertFalse(form.is_valid())
+
+
+class TestOAIProviderForm(TestCase):
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_valid_oai_data(self):
+        approved_set_set = [('totally', 'approved')]
+        form = OAIProviderForm({
+            'provider_long_name': 'SuperCena',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'property_list': "some, properties",
+            'approved_sets': ["totally"]
+        }, choices=approved_set_set)
+        self.assertTrue(form.is_valid())
 
 
 class ViewMethodTests(TestCase):
