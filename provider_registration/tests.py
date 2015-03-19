@@ -227,3 +227,13 @@ class TestUtils(TestCase):
 
         formatted_sets = utils.format_set_choices(test_data)
         self.assertEqual(formatted_sets, set([('some', 'sets')]))
+
+
+@vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_identify.yaml')
+class TestValidators(TestCase):
+
+    def test_valid_oai_url(self):
+        url = 'http://repository.stcloudstate.edu/do/oai/'
+        oai_validator = validators.ValidOAIURL()
+        call = oai_validator(url)
+        self.assertTrue(call)
