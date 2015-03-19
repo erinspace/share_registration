@@ -173,7 +173,7 @@ class ViewMethodTests(TestCase):
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'XML Not Valid')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listrecords.yaml')
     def test_repeat_oai_name(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
