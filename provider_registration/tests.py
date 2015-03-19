@@ -2,6 +2,7 @@ import vcr
 import datetime
 import requests
 
+from django import forms
 from django.utils import timezone
 from django.test import TestCase, RequestFactory
 
@@ -237,3 +238,12 @@ class TestValidators(TestCase):
         oai_validator = validators.ValidOAIURL()
         call = oai_validator(url)
         self.assertTrue(call)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_identify.yaml')
+    def test_invalid_oai_url(self):
+        url = 'http://wwe.com'
+        oai_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            oai_validator(url)
+        # self.assertFalse(call)
