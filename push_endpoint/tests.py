@@ -11,7 +11,6 @@ VALID_POST = {
     "description": "Ducks, their calls, and their habbits.",
     "contributors": "Shawn Michaels",
     "tags": "ducks, hunting",
-    "source": "devon",
     "title": "All About Ducks",
     "url": "http://dudley.net",
     "serviceID": "DuckID11",
@@ -200,3 +199,16 @@ class APIPostTests(TestCase):
 
         self.assertEqual(data['detail'], 'Authentication credentials were not provided.')
         self.assertEqual(response.status_code, 403)
+
+    def test_source_is_same_as_user(self):
+        view = DataList.as_view()
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(VALID_POST),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['source'], request.user.username)
