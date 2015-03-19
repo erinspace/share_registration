@@ -33,7 +33,7 @@ class APIPostTests(TestCase):
             json.dumps(VALID_POST),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
 
         self.assertEqual(response.status_code, 201)
@@ -47,7 +47,7 @@ class APIPostTests(TestCase):
             json.dumps(invalid_post),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
         data = response.data
 
@@ -62,7 +62,7 @@ class APIPostTests(TestCase):
             json.dumps(invalid_post),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
         data = response.data
 
@@ -81,7 +81,7 @@ class APIPostTests(TestCase):
             json.dumps(invalid_post),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
         data = response.data
 
@@ -97,7 +97,7 @@ class APIPostTests(TestCase):
             json.dumps(invalid_post),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
         data = response.data
 
@@ -113,7 +113,29 @@ class APIPostTests(TestCase):
             json.dumps(invalid_post),
             content_type='application/json'
         )
-        force_authenticate(request, user=self.user)
+        request.user = self.user
         response = view(request)
 
         self.assertEqual(response.status_code, 201)
+
+    def test_anonomous_user_can_view(self):
+        view = DataList.as_view()
+        request = self.factory.get('/pushed_data/')
+        request.user = AnonymousUser()
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_anonomous_user_can_not_post(self):
+        view = DataList.as_view()
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(VALID_POST),
+            content_type='application/json'
+        )
+        request.user = AnonymousUser()
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['detail'], 'Authentication credentials were not provided.')
+        self.assertEqual(response.status_code, 403)
