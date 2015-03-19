@@ -103,3 +103,17 @@ class APIPostTests(TestCase):
 
         self.assertEqual(data['url'], ['Enter a valid URL.'])
         self.assertEqual(response.status_code, 400)
+
+    def test_missing_tags_is_ok(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('tags')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        force_authenticate(request, user=self.user)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 201)
