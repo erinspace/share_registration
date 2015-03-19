@@ -50,6 +50,7 @@ class APIPostTests(TestCase):
         force_authenticate(request, user=self.user)
         response = view(request)
         data = response.data
+
         self.assertEqual(data['doi'], ['This field is required.'])
 
     def test_invalid_doi(self):
@@ -64,10 +65,12 @@ class APIPostTests(TestCase):
         force_authenticate(request, user=self.user)
         response = view(request)
         data = response.data
+
         self.assertEqual(
             data['non_field_errors'],
             ['DOI does not resolve, please enter a valid DOI']
         )
+        self.assertEqual(response.status_code, 400)
 
     def test_missing_url(self):
         view = DataList.as_view()
@@ -81,7 +84,9 @@ class APIPostTests(TestCase):
         force_authenticate(request, user=self.user)
         response = view(request)
         data = response.data
+
         self.assertEqual(data['url'], ['This field is required.'])
+        self.assertEqual(response.status_code, 400)
 
     def test_invalid_url(self):
         view = DataList.as_view()
@@ -95,8 +100,6 @@ class APIPostTests(TestCase):
         force_authenticate(request, user=self.user)
         response = view(request)
         data = response.data
-        import ipdb; ipdb.set_trace()
-        self.assertEqual(
-            data['non_field_errors'],
-            ['DOI does not resolve, please enter a valid DOI']
-        )
+
+        self.assertEqual(data['url'], ['Enter a valid URL.'])
+        self.assertEqual(response.status_code, 400)
