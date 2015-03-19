@@ -4,7 +4,6 @@ import json
 from django.test import TestCase
 from push_endpoint.views import DataList
 from rest_framework.test import APIRequestFactory
-from rest_framework.test import force_authenticate
 from django.contrib.auth.models import AnonymousUser, User
 
 
@@ -104,10 +103,72 @@ class APIPostTests(TestCase):
         self.assertEqual(data['url'], ['Enter a valid URL.'])
         self.assertEqual(response.status_code, 400)
 
+    def test_missing_title_fails(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('title')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['title'], ['This field is required.'])
+        self.assertEqual(response.status_code, 400)
+
+    def test_missing_service_id_fails(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('serviceID')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['serviceID'], ['This field is required.'])
+        self.assertEqual(response.status_code, 400)
+
+    def test_missing_contributors_fails(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('contributors')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['contributors'], ['This field is required.'])
+        self.assertEqual(response.status_code, 400)
+
     def test_missing_tags_is_ok(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
         invalid_post.pop('tags')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+
+        self.assertEqual(response.status_code, 201)
+
+    def test_missing_description_is_ok(self):
+        view = DataList.as_view()
+        invalid_post = copy.copy(VALID_POST)
+        invalid_post.pop('description')
         request = self.factory.post(
             '/pushed_data/',
             json.dumps(invalid_post),
