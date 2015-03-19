@@ -3,11 +3,13 @@ import datetime
 import requests
 
 from django.utils import timezone
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
 from provider_registration import views
+from provider_registration import utils
+from provider_registration import validators
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import InitialProviderForm
+from provider_registration.forms import InitialProviderForm, OAIProviderForm
 
 
 class RegistrationMethodTests(TestCase):
@@ -20,6 +22,14 @@ class RegistrationMethodTests(TestCase):
         time = timezone.now() + datetime.timedelta(days=30)
         future_question = RegistrationInfo(registration_date=time)
         self.assertEqual(future_question.was_registered_recently(), False)
+
+    def test_unicode_name(self):
+        time = timezone.now() + datetime.timedelta(days=30)
+        registraion = RegistrationInfo(
+            provider_long_name='SquaredCircle Digest',
+            registration_date=time
+        )
+        self.assertEqual(unicode(registraion), 'SquaredCircle Digest')
 
 
 class RegistrationFormTests(TestCase):
@@ -128,7 +138,24 @@ class RegistrationFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
 
+class TestOAIProviderForm(TestCase):
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_valid_oai_data(self):
+        approved_set_set = [('totally', 'approved')]
+        form = OAIProviderForm({
+            'provider_long_name': 'SuperCena',
+            'base_url': 'http://repository.stcloudstate.edu/do/oai/',
+            'property_list': "some, properties",
+            'approved_sets': ["totally"]
+        }, choices=approved_set_set)
+        self.assertTrue(form.is_valid())
+
+
 class ViewMethodTests(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
     def test_valid_oai_url(self):
@@ -180,3 +207,23 @@ class ViewMethodTests(TestCase):
         ).save()
         success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
         self.assertFalse(success)
+
+    def test_get_provider_info(self):
+        request = self.factory.get('/provider_info/')
+        view = views.get_provider_info(request)
+        self.assertEqual(view.status_code, 200)
+
+
+class TestUtils(TestCase):
+
+    def test_format_set_choices(self):
+        test_data = RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets="[('publication:some', 'sets')]",
+            registration_date=timezone.now()
+        )
+
+        formatted_sets = utils.format_set_choices(test_data)
+        self.assertEqual(formatted_sets, set([('some', 'sets')]))
