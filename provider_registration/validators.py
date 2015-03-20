@@ -39,9 +39,6 @@ class ValidOAIURL(object):
             raise forms.ValidationError('URL does not return valid XML, please enter a valid OAI-PMH url')
 
         repository_name = doc.xpath('//oai:repositoryName/node()', namespaces=NAMESPACES) or ['']
-        if not repository_name[0]:
-            raise forms.ValidationError(
-                'XML Does not appear to point to a valid OAI-PMH source, please enter a valid OAI-PMH url'
-            )
-        logger.info('OAI link valid for: {}'.format(repository_name))
-        return True
+        if repository_name[0]:
+            logger.info('OAI link valid for: {}'.format(repository_name))
+            return True
