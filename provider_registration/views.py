@@ -11,14 +11,17 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from provider_registration import utils
 
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm
+from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm, ContactInfoForm, MetadataQuestionsForm
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 PLACEHOLDER_SHORTNAME = 'temp_shortname'
+PLACEHOLDER_LONGNAME = 'temp_longname'
+PLACEHOLDER_URL = 'temp_url'
 
 
+@xframe_options_exempt
 def index(request):
     latest_provider_list = RegistrationInfo.objects.order_by('registration_date')
 
@@ -44,6 +47,49 @@ def get_provider_info(request):
     return render(
         request,
         'provider_registration/initial_registration_form.html',
+        {'form': form}
+    )
+
+
+@xframe_options_exempt
+def get_contact_info(request):
+    """ Shows initial provider form
+    """
+    form = ContactInfoForm()
+    return render(
+        request,
+        'provider_registration/contact_information.html',
+        {'form': form}
+    )
+
+
+def save_contact_info(contact_name, contact_email):
+    try:
+        RegistrationInfo.objects.get(contact_email=contact_email)
+        logger.info('Someone with the email address {} has already registered a provider'.format(contact_email))
+        success = False
+    except ObjectDoesNotExist:
+        logger.info('Saving provider with contact name {} and email {}'.format(contact_name, contact_email))
+        RegistrationInfo(
+            contact_name=contact_name,
+            contact_email=contact_email,
+            provider_long_name=PLACEHOLDER_LONGNAME,
+            base_url=PLACEHOLDER_URL,
+            registration_date=timezone.now(),
+            provider_short_name=PLACEHOLDER_SHORTNAME
+        ).save()
+        success = True
+    return success
+
+
+@xframe_options_exempt
+def get_metadata_info(request):
+    """ Shows initial provider form
+    """
+    form = MetadataQuestionsForm()
+    return render(
+        request,
+        'provider_registration/metadata_questions.html',
         {'form': form}
     )
 
