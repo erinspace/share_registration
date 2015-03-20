@@ -7,13 +7,13 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.5.3 CPython/2.7.9 Darwin/13.4.0]
     method: GET
-    uri: http://wwe.com/?verb=ListSets
+    uri: http://wwe.com/?verb=Identify
   response:
     body: {string: !!python/unicode ''}
     headers:
       content-length: ['0']
-      date: ['Fri, 20 Mar 2015 14:56:09 GMT']
-      location: ['http://www.wwe.com/?verb=ListSets']
+      date: ['Fri, 20 Mar 2015 14:56:06 GMT']
+      location: ['http://www.wwe.com/?verb=Identify']
       server: [squid/2.5.STABLE12]
     status: {code: 301, message: Moved Permanently}
 - request:
@@ -24,7 +24,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.5.3 CPython/2.7.9 Darwin/13.4.0]
     method: GET
-    uri: http://www.wwe.com/?verb=ListSets
+    uri: http://www.wwe.com/?verb=Identify
   response:
     body:
       string: !!binary |
@@ -456,13 +456,13 @@ interactions:
         jl/F8jsFBroIB8Wu1Z+RluaOjYM3/z9Mi/jwX7kBAA==
     headers:
       accept-ranges: [bytes]
-      cache-control: ['public, must-revalidate, max-age=156']
+      cache-control: ['public, must-revalidate, max-age=150']
       connection: [keep-alive]
       content-encoding: [gzip]
       content-language: [en]
       content-length: ['24256']
       content-type: [text/html; charset=utf-8]
-      date: ['Fri, 20 Mar 2015 14:56:09 GMT']
+      date: ['Fri, 20 Mar 2015 14:56:06 GMT']
       etag: ['"1426863211"']
       last-modified: ['Fri, 20 Mar 2015 14:53:31 +0000']
       link: ['</node/1024776>; rel="canonical",</node/1024776>; rel="shortlink"']
@@ -472,10 +472,9 @@ interactions:
       x-app: [p6tyr2]
       x-cacheable: ['NO: beresp.status 1']
       x-cacheable-status: ['200']
-      x-cachekyte: [HIT]
-      x-cachekyte-hits: ['1']
+      x-cachekyte: [MISS]
       x-cachekyte-server: [p6kyte3]
       x-cachetyr-server: [p6tyr2]
-      x-varnish: [198509324 198508679, 1616541309 1616541265]
+      x-varnish: [198509324 198508679, '1616541265']
     status: {code: 200, message: OK}
 version: 1

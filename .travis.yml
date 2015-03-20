@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+
+env:
+  - DJANGO=1.7.4
+
+# command to install dependencies
+install: 
+    - cp shareregistration/travis-settings.py shareregistration/settings.py
+    - "pip install -r requirements.txt"
+
+# command to run tests
+script: python manage.py test

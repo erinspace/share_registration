@@ -2,8 +2,9 @@ import vcr
 import datetime
 import requests
 
+from django import forms
 from django.utils import timezone
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, Client
 
 from provider_registration import views
 from provider_registration import utils
@@ -152,10 +153,41 @@ class TestOAIProviderForm(TestCase):
         self.assertTrue(form.is_valid())
 
 
-class ViewMethodTests(TestCase):
+class ViewTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
+        self.client = Client()
+
+    def test_get_index(self):
+        request = self.factory.get('/')
+        view = views.get_provider_info(request)
+        self.assertEqual(view.status_code, 200)
+
+    def test_get_provider_info(self):
+        request = self.factory.get('/provider_info/')
+        view = views.get_provider_info(request)
+        self.assertEqual(view.status_code, 200)
+
+    def test_get_provider_detail_fails(self):
+        response = self.client.get('/provider_registration/provider_detail/THISISNONSENSE')
+        self.assertEqual(response.status_code, 301)
+
+    def test_get_provider_detail(self):
+        c = Client()
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+
+        response = c.get('provider_registration/provider_detail/Stardust Weekly/')
+        self.assertEqual(response.status_code, 404)  # TODO - this is broken
+
+
+class ViewMethodTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
     def test_valid_oai_url(self):
@@ -173,7 +205,7 @@ class ViewMethodTests(TestCase):
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'XML Not Valid')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listrecords.yaml')
     def test_repeat_oai_name(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
@@ -208,11 +240,6 @@ class ViewMethodTests(TestCase):
         success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
         self.assertFalse(success)
 
-    def test_get_provider_info(self):
-        request = self.factory.get('/provider_info/')
-        view = views.get_provider_info(request)
-        self.assertEqual(view.status_code, 200)
-
 
 class TestUtils(TestCase):
 
@@ -227,3 +254,45 @@ class TestUtils(TestCase):
 
         formatted_sets = utils.format_set_choices(test_data)
         self.assertEqual(formatted_sets, set([('some', 'sets')]))
+
+
+class TestValidators(TestCase):
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_identify.yaml')
+    def test_valid_oai_url(self):
+        url = 'http://repository.stcloudstate.edu/do/oai/'
+        oai_validator = validators.ValidOAIURL()
+        call = oai_validator(url)
+        self.assertTrue(call)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_identify.yaml')
+    def test_invalid_oai_url(self):
+        url = 'http://wwe.com'
+        oai_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            oai_validator(url)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_invalid_identify.yaml')
+    def test_invalid_oai_url_with_xml(self):
+        url = 'http://www.osti.gov/scitech/scitechxml?EntryDateFrom=02%2F02%2F2015&page=0'
+        oai_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            oai_validator(url)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_404.yaml')
+    def test_url_returns_404(self):
+        url = 'https://github.com/erinspace/thisisnotreal'
+        url_validator = validators.URLResolves()
+
+        with self.assertRaises(forms.ValidationError):
+            url_validator(url)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_404_oai.yaml')
+    def test_oai_url_returns_404(self):
+        url = 'https://github.com/erinspace/thisisnotreal'
+        url_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            url_validator(url)
