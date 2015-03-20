@@ -8,7 +8,10 @@ env:
 # command to install dependencies
 install: 
     - cp shareregistration/travis-settings.py shareregistration/settings.py
-    - "pip install -r requirements.txt"
+    - pip install -r requirements.txt
 
 # command to run tests
-script: python manage.py test
+script: coverage run --source='.' manage.py test
+
+after_success:
+    - coveralls
