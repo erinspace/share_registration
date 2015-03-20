@@ -10,10 +10,20 @@ class InitialProviderForm(forms.ModelForm):
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'description',
-                  'oai_provider', 'meta_tos', 'meta_privacy', 'meta_sharing_tos',
-                  'meta_license', 'meta_license_extended', 'meta_future_license',
-                  'contact_name', 'contact_email']
+        fields = ['provider_long_name', 'base_url', 'description', 'oai_provider']
+
+
+class ContactInfoForm(forms.ModelForm):
+    class Meta:
+        model = RegistrationInfo
+        fields = ['contact_name', 'contact_email']
+
+
+class MetadataQuestionsForm(forms.ModelForm):
+    class Meta:
+        model = RegistrationInfo
+        fields = ['meta_tos', 'meta_privacy', 'meta_sharing_tos',
+                  'meta_license', 'meta_license_extended', 'meta_future_license']
 
 
 class OAIProviderForm(forms.ModelForm):
