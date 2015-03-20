@@ -9,6 +9,7 @@ env:
 install: 
     - cp shareregistration/travis-settings.py shareregistration/settings.py
     - pip install -r requirements.txt
+    - pip install coveralls
 
 # command to run tests
 script: coverage run --source='.' manage.py test
