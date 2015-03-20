@@ -230,9 +230,9 @@ class TestUtils(TestCase):
         self.assertEqual(formatted_sets, set([('some', 'sets')]))
 
 
-@vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_identify.yaml')
 class TestValidators(TestCase):
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_identify.yaml')
     def test_valid_oai_url(self):
         url = 'http://repository.stcloudstate.edu/do/oai/'
         oai_validator = validators.ValidOAIURL()
@@ -246,4 +246,27 @@ class TestValidators(TestCase):
 
         with self.assertRaises(forms.ValidationError):
             oai_validator(url)
-        # self.assertFalse(call)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_invalid_identify.yaml')
+    def test_invalid_oai_url_with_xml(self):
+        url = 'http://www.osti.gov/scitech/scitechxml?EntryDateFrom=02%2F02%2F2015&page=0'
+        oai_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            oai_validator(url)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_404.yaml')
+    def test_url_returns_404(self):
+        url = 'https://github.com/erinspace/thisisnotreal'
+        url_validator = validators.URLResolves()
+
+        with self.assertRaises(forms.ValidationError):
+            url_validator(url)
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_404_oai.yaml')
+    def test_oai_url_returns_404(self):
+        url = 'https://github.com/erinspace/thisisnotreal'
+        url_validator = validators.ValidOAIURL()
+
+        with self.assertRaises(forms.ValidationError):
+            url_validator(url)
