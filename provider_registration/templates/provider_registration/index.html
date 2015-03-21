@@ -3,7 +3,17 @@
 {% block content %}
 
 <div class="container">
-    <h1>Provider List</h1>
+    <h1>
+        <a href="contact_information">Register a Provider</a><br>
+        <small>Use this form to register a provider for SHARE Notify</small>
+    </h1>
+
+    <br>
+    <h2>
+        Here is a list of providers that have registered,<br>
+        <small>and are pending review for enterance into SHARE Notify</small>
+    </h2>
+
     {% if latest_provider_list %}
         <ul>
         {% for provider in latest_provider_list %}
@@ -14,8 +24,5 @@
         <p>No providers are registered.</p>
     {% endif %}
 
-    <div>
-        <a href="pre_register">Register a new provider!</a>
-    </div>
 </div>
 {% endblock %}
