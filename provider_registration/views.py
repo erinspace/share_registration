@@ -40,57 +40,51 @@ def detail(request, provider_long_name):
 
 
 @xframe_options_exempt
-def get_provider_info(request):
-    """ Shows initial provider form
-    """
-    form = InitialProviderForm()
-    return render(
-        request,
-        'provider_registration/initial_registration_form.html',
-        {'form': form}
-    )
-
-
-@xframe_options_exempt
 def get_contact_info(request):
     """ Shows initial provider form
     """
-    form = ContactInfoForm()
-    return render(
-        request,
-        'provider_registration/contact_information.html',
-        {'form': form}
-    )
-
-
-def save_contact_info(contact_name, contact_email):
-    try:
-        RegistrationInfo.objects.get(contact_email=contact_email)
-        logger.info('Someone with the email address {} has already registered a provider'.format(contact_email))
-        success = False
-    except ObjectDoesNotExist:
-        logger.info('Saving provider with contact name {} and email {}'.format(contact_name, contact_email))
-        RegistrationInfo(
-            contact_name=contact_name,
-            contact_email=contact_email,
-            provider_long_name=PLACEHOLDER_LONGNAME,
-            base_url=PLACEHOLDER_URL,
-            registration_date=timezone.now(),
-            provider_short_name=PLACEHOLDER_SHORTNAME
-        ).save()
-        success = True
-    return success
+    if request.method == 'GET':
+        form = ContactInfoForm()
+        return render(
+            request,
+            'provider_registration/contact_information.html',
+            {'form': form}
+        )
+    else:
+        contact_name = request.POST.get('contact_name')
+        contact_email = request.POST.get('contact_email')
+        reg_id = save_contact_info(contact_name, contact_email)
+        form = MetadataQuestionsForm()
+        return render(
+            request,
+            'provider_registration/metadata_information.html',
+            {'form': form, 'reg_id': reg_id}
+        )
 
 
 @xframe_options_exempt
-def get_metadata_info(request):
-    """ Shows initial provider form
+def save_contact_info(contact_name, contact_email):
+    logger.info('Saving provider with contact name {} and email {}'.format(contact_name, contact_email))
+    RegistrationInfo(
+        contact_name=contact_name,
+        contact_email=contact_email,
+        provider_long_name=PLACEHOLDER_LONGNAME,
+        base_url=PLACEHOLDER_URL,
+        registration_date=timezone.now(),
+        provider_short_name=PLACEHOLDER_SHORTNAME
+    ).save()
+    new_registration = RegistrationInfo.objects.last()
+    return new_registration.id
+
+
+@xframe_options_exempt
+def save_metadata_info(request):
     """
-    form = MetadataQuestionsForm()
+    Saves metadata info
+    Shows basic provider questions form
+    """
     return render(
-        request,
-        'provider_registration/metadata_questions.html',
-        {'form': form}
+        # TODO
     )
 
 
@@ -169,7 +163,7 @@ def render_oai_provider_form(request, name, base_url):
         form._errors["base_url"] = ErrorList(["OAI-PMH XML not valid, please enter a valid OAI PMH url"])
         return render(
             request,
-            'provider_registration/initial_registration_form.html',
+            'provider_registration/provider_questions.html',
             {'form': form}
         )
     else:
@@ -228,7 +222,7 @@ def register_provider(request):
         if not form.is_valid():
             return render(
                 request,
-                'provider_registration/initial_registration_form.html',
+                'provider_registration/provider_questions.html',
                 {'form': form}
             )
         name = request.POST['provider_long_name']
