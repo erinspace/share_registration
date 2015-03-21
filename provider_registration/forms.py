@@ -20,6 +20,9 @@ class ContactInfoForm(forms.ModelForm):
 
 
 class MetadataQuestionsForm(forms.ModelForm):
+
+    reg_id = forms.CharField(widget=forms.HiddenInput())
+
     class Meta:
         model = RegistrationInfo
         fields = ['meta_tos', 'meta_privacy', 'meta_sharing_tos',
@@ -33,6 +36,7 @@ class OAIProviderForm(forms.ModelForm):
         self.fields['approved_sets'].choices = self.choices
 
     provider_long_name = forms.CharField(widget=forms.HiddenInput())
+    reg_id = forms.CharField(widget=forms.HiddenInput())
     base_url = forms.URLField()
 
     property_list = forms.CharField(widget=forms.Textarea)
@@ -46,6 +50,7 @@ class OAIProviderForm(forms.ModelForm):
 
 class OtherProviderForm(forms.ModelForm):
     provider_long_name = forms.CharField(widget=forms.HiddenInput())
+    reg_id = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RegistrationInfo
