@@ -1,8 +1,7 @@
 # SHARE Registration and push API Access
 
 
-- [![Build Status](https://travis-ci.org/erinspace/shareregistration.svg?branch=master)](https://travis-ci.org/erinspace/shareregistration)
-- [![Coverage Status](https://coveralls.io/repos/erinspace/shareregistration/badge.svg?branch=tests)](https://coveralls.io/r/erinspace/shareregistration?branch=tests)
+- [![Build Status](https://travis-ci.org/erinspace/shareregistration.svg?branch=master)](https://travis-ci.org/erinspace/shareregistration)  [![Coverage Status](https://coveralls.io/repos/erinspace/shareregistration/badge.svg?branch=tests)](https://coveralls.io/r/erinspace/shareregistration?branch=tests)
 
 Alpha application to facilitate self-registraion of providers and recieving
 push API conent for SHARE Notify.
