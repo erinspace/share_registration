@@ -54,15 +54,14 @@ def get_contact_info(request):
         contact_name = request.POST.get('contact_name')
         contact_email = request.POST.get('contact_email')
         reg_id = save_contact_info(contact_name, contact_email)
-        form = MetadataQuestionsForm()
+        form = MetadataQuestionsForm({'reg_id': reg_id})
         return render(
             request,
-            'provider_registration/metadata_information.html',
-            {'form': form, 'reg_id': reg_id}
+            'provider_registration/metadata_questions.html',
+            {'form': form}
         )
 
 
-@xframe_options_exempt
 def save_contact_info(contact_name, contact_email):
     logger.info('Saving provider with contact name {} and email {}'.format(contact_name, contact_email))
     RegistrationInfo(
@@ -77,14 +76,41 @@ def save_contact_info(contact_name, contact_email):
     return new_registration.id
 
 
-@xframe_options_exempt
-def save_metadata_info(request):
+def save_metadata_render_provider(request):
     """
     Saves metadata info
     Shows basic provider questions form
     """
+    reg_id = request.POST.get('reg_id')
+    current_registration = RegistrationInfo.objects.get(id=reg_id)
+
+    current_registration.meta_liscense = request.POST.get('meta_license')
+
+    # Save appropriate fields
+    meta_tos = request.POST.get('meta_tos')
+    meta_privacy = request.POST.get('meta_privacy')
+    meta_sharing_tos = request.POST.get('meta_sharing_tos')
+    meta_license_extended = request.POST.get('meta_license_extended')
+    meta_future_license = request.POST.get('meta_future_license')
+
+    if meta_tos:
+        current_registration.meta_tos = meta_tos
+    if meta_privacy:
+        current_registration.meta_privacy = meta_privacy
+    if meta_sharing_tos:
+        current_registration.meta_sharing_tos = meta_sharing_tos
+    if meta_license_extended:
+        current_registration.meta_license_extended = meta_license_extended
+    if meta_future_license:
+        current_registration.meta_future_license = meta_future_license
+
+    current_registration.save()
+
+    form = InitialProviderForm(instance=current_registration)
     return render(
-        # TODO
+        request,
+        'provider_registration/provider_questions.html',
+        {'form': form}
     )
 
 
@@ -136,7 +162,7 @@ def save_oai_info(provider_long_name, base_url):
     return success
 
 
-def render_oai_provider_form(request, name, base_url):
+def render_oai_provider_form(request, name, base_url, reg_id):
     saving_successful = save_oai_info(name, base_url)
     if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
@@ -148,7 +174,8 @@ def render_oai_provider_form(request, name, base_url):
             {
                 'provider_long_name': name,
                 'base_url': base_url,
-                'property_list': pre_saved_data.property_list
+                'property_list': pre_saved_data.property_list,
+                'reg_id': reg_id
             },
             choices=approved_set_set
         )
@@ -170,14 +197,15 @@ def render_oai_provider_form(request, name, base_url):
         return render_to_response('provider_registration/already_exists.html', {'provider': name})
 
 
-def render_other_provider_form(request, name, base_url):
+def render_other_provider_form(request, name, base_url, reg_id):
     saving_successful = save_other_info(name, base_url)
     if saving_successful:
         form = OtherProviderForm(
             {
                 'provider_long_name': name,
                 'base_url': base_url,
-                'property_list': 'enter properties here'
+                'property_list': 'enter properties here',
+                'reg_id': reg_id
             }
         )
         return render(
@@ -193,7 +221,7 @@ def update_oai_entry(request):
     choices = {(item, item) for item in request.POST['approved_sets']}
     form_data = OAIProviderForm(request.POST, choices=choices)
 
-    object_to_update = RegistrationInfo.objects.get(provider_long_name=form_data['provider_long_name'].value())
+    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'].value())
 
     object_to_update.property_list = form_data['property_list'].value()
     object_to_update.approved_sets = str(form_data['approved_sets'].value())
@@ -204,7 +232,7 @@ def update_oai_entry(request):
 
 def update_other_entry(request):
     form_data = OtherProviderForm(request.POST)
-    object_to_update = RegistrationInfo.objects.get(provider_long_name=form_data['provider_long_name'].value())
+    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'].value())
     object_to_update.property_list = form_data['property_list'].value()
 
     object_to_update.save()
@@ -227,13 +255,14 @@ def register_provider(request):
             )
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
+        reg_id = request.POST['reg_id']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
-            form = render_other_provider_form(request, name, base_url)
+            form = render_other_provider_form(request, name, base_url, reg_id)
             return form
         else:
             # If it's made it this far, request is an OAI provider
-            form = render_oai_provider_form(request, name, base_url)
+            form = render_oai_provider_form(request, name, base_url, reg_id)
             return form
     else:
         # Update the requested entries

@@ -26,7 +26,8 @@ class MetadataQuestionsForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['meta_tos', 'meta_privacy', 'meta_sharing_tos',
-                  'meta_license', 'meta_license_extended', 'meta_future_license']
+                  'meta_license', 'meta_license_extended',
+                  'meta_future_license', 'reg_id']
 
 
 class OAIProviderForm(forms.ModelForm):

@@ -8,7 +8,7 @@
 </h1><br>
 
     <div class="container">
-        <form action="{% url 'provider_registration:register' %}" method="post">
+        <form action="{% url 'provider_registration:provider_information' %}" method="post">
         {% csrf_token %}
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -51,6 +51,7 @@
                 <p><strong>{{ form.meta_future_license }} If unlicensed, we will explicitly license the content.</strong></p>
             </div>
         </div>
+        {{ form.reg_id }}
 
         <input type="submit" value="Submit" />
         </form>

@@ -12,11 +12,12 @@
     <div class="container">
         <form action="{% url 'provider_registration:register' %}" method="post">
         {% csrf_token %}
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
 
         <div class="container">
             <h2>Basic Provider Information</h2>
+            {% if form.errors %}
+                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+            {% endif %}
             <div class="field_entry">
                 {% if form.provider_long_name.errors %}
                   <span class="help-block">
