@@ -181,7 +181,7 @@ def render_oai_provider_form(request, name, base_url, reg_id):
 
 
 def render_other_provider_form(request, name, base_url, reg_id):
-    saving_successful = save_other_info(name, base_url)
+    saving_successful = save_other_info(name, base_url, reg_id)
     if saving_successful:
         form = OtherProviderForm(
             {
@@ -203,8 +203,7 @@ def render_other_provider_form(request, name, base_url, reg_id):
 def update_oai_entry(request):
     choices = {(item, item) for item in request.POST['approved_sets']}
     form_data = OAIProviderForm(request.POST, choices=choices)
-
-    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'])
+    object_to_update = RegistrationInfo.objects.get(id=request.POST['reg_id'])
 
     object_to_update.property_list = form_data['property_list'].value()
     object_to_update.approved_sets = str(form_data['approved_sets'].value())
@@ -215,7 +214,7 @@ def update_oai_entry(request):
 
 def update_other_entry(request):
     form_data = OtherProviderForm(request.POST)
-    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'])
+    object_to_update = RegistrationInfo.objects.get(id=request.POST['reg_id'])
     object_to_update.property_list = form_data['property_list'].value()
 
     object_to_update.save()
