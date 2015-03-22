@@ -4,7 +4,6 @@ from lxml.etree import XMLSyntaxError
 
 from django.utils import timezone
 from django.forms.util import ErrorList
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.views.decorators.clickjacking import xframe_options_exempt
 
@@ -107,46 +106,37 @@ def save_metadata_render_provider(request):
     )
 
 
-def save_other_info(provider_long_name, base_url):
-    try:
-        RegistrationInfo.objects.get(provider_long_name=provider_long_name)
-        logger.info('{} already exists'.format(provider_long_name))
-        success = False
-    except ObjectDoesNotExist:
-        logger.info('SAVING {}'.format(provider_long_name))
-        RegistrationInfo(
-            provider_long_name=provider_long_name,
-            base_url=base_url,
-            registration_date=timezone.now(),
-            provider_short_name=PLACEHOLDER_SHORTNAME
-        ).save()
-        success = True
-    return success
+def save_other_info(provider_long_name, base_url, reg_id):
+    object_to_update = RegistrationInfo.objects.get(id=reg_id)
+
+    object_to_update.provider_long_name = provider_long_name
+    object_to_update.base_url = base_url
+    object_to_update.registration_date = timezone.now()
+    object_to_update.provider_short_name = PLACEHOLDER_SHORTNAME
+    object_to_update.save()
+
+    return True
 
 
-def save_oai_info(provider_long_name, base_url):
+def save_oai_info(provider_long_name, base_url, reg_id):
     """ Gets and saves information about the OAI source
     """
-    success = {'value': False, 'reason': 'Provider name already exists'}
+    success = {'value': False, 'reason': 'XML Not Valid'}
     try:
         oai_properties = utils.get_oai_properties(base_url)
 
-        # check to see if provider with that name exists
-        try:
-            RegistrationInfo.objects.get(provider_long_name=provider_long_name)
+        object_to_update = RegistrationInfo.objects.get(id=reg_id)
 
-        except ObjectDoesNotExist:
-            logger.info('SAVING {}'.format(provider_long_name))
-            RegistrationInfo(
-                provider_long_name=provider_long_name,
-                base_url=base_url,
-                property_list=oai_properties['properties'],
-                approved_sets=oai_properties['sets'],
-                registration_date=timezone.now(),
-                provider_short_name=PLACEHOLDER_SHORTNAME
-            ).save()
-            success['value'] = True
-            success['reason'] = '{} registered and saved successfully'.format(provider_long_name)
+        object_to_update.provider_long_name = provider_long_name
+        object_to_update.base_url = base_url
+        object_to_update.property_list = oai_properties['properties']
+        object_to_update.approved_sets = oai_properties['sets']
+        object_to_update.registration_date = timezone.now()
+        object_to_update.provider_short_name = PLACEHOLDER_SHORTNAME
+        object_to_update.save()
+
+        success['value'] = True
+        success['reason'] = '{} registered and saved successfully'.format(provider_long_name)
 
     except XMLSyntaxError:
         success['reason'] = 'XML Not Valid'
@@ -156,7 +146,7 @@ def save_oai_info(provider_long_name, base_url):
 
 
 def render_oai_provider_form(request, name, base_url, reg_id):
-    saving_successful = save_oai_info(name, base_url)
+    saving_successful = save_oai_info(name, base_url, reg_id)
     if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
 
@@ -214,7 +204,7 @@ def update_oai_entry(request):
     choices = {(item, item) for item in request.POST['approved_sets']}
     form_data = OAIProviderForm(request.POST, choices=choices)
 
-    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'].value())
+    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'])
 
     object_to_update.property_list = form_data['property_list'].value()
     object_to_update.approved_sets = str(form_data['approved_sets'].value())
@@ -225,7 +215,7 @@ def update_oai_entry(request):
 
 def update_other_entry(request):
     form_data = OtherProviderForm(request.POST)
-    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'].value())
+    object_to_update = RegistrationInfo.objects.get(id=form_data['reg_id'])
     object_to_update.property_list = form_data['property_list'].value()
 
     object_to_update.save()
@@ -248,7 +238,6 @@ def register_provider(request):
             )
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
-        import ipdb; ipdb.set_trace()
         reg_id = request.POST['reg_id']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
