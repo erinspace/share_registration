@@ -7,20 +7,23 @@ from provider_registration.models import RegistrationInfo
 
 class InitialProviderForm(forms.ModelForm):
     base_url = forms.CharField(max_length=100, validators=[URLResolves()])
+    reg_id = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'description', 'oai_provider']
+        fields = ['provider_long_name', 'base_url', 'description',
+                  'oai_provider', 'reg_id']
 
 
 class ContactInfoForm(forms.ModelForm):
+    reg_id = forms.CharField(widget=forms.HiddenInput())
+
     class Meta:
         model = RegistrationInfo
-        fields = ['contact_name', 'contact_email']
+        fields = ['contact_name', 'contact_email', 'reg_id']
 
 
 class MetadataQuestionsForm(forms.ModelForm):
-
     reg_id = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
@@ -46,7 +49,7 @@ class OAIProviderForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url',
-                  'property_list', 'approved_sets']
+                  'property_list', 'approved_sets', 'reg_id']
 
 
 class OtherProviderForm(forms.ModelForm):
@@ -55,4 +58,4 @@ class OtherProviderForm(forms.ModelForm):
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'property_list']
+        fields = ['provider_long_name', 'base_url', 'property_list', 'reg_id']
