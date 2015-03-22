@@ -38,26 +38,22 @@ class RegistrationFormTests(TestCase):
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
     def test_valid_oai_data(self):
         form = InitialProviderForm({
-            'contact_name': 'BubbaRay Dudley',
-            'contact_email': 'BullyRay@dudleyboyz.net',
-            'provider_long_name': 'Devon - Get the Tables',
+            'provider_long_name': 'Booyaka Booyaka',
+            'reg_id': 1,
             'base_url': 'http://repository.stcloudstate.edu/do/oai/',
             'description': 'A description',
-            'oai_provider': True,
-            'meta_license': 'MIT'
+            'oai_provider': True
         })
         self.assertTrue(form.is_valid())
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response.yaml')
     def test_valid_other_data(self):
         form = InitialProviderForm({
-            'contact_name': 'BubbaRay Dudley',
-            'contact_email': 'BullyRay@dudleyboyz.net',
             'provider_long_name': 'Devon - Get the Tables',
             'base_url': 'http://wwe.com',
             'description': 'A description',
-            'oai_provider': False,
-            'meta_license': 'MIT'
+            'reg_id': 1,
+            'oai_provider': False
         })
         self.assertTrue(form.is_valid())
 
@@ -148,7 +144,8 @@ class TestOAIProviderForm(TestCase):
             'provider_long_name': 'SuperCena',
             'base_url': 'http://repository.stcloudstate.edu/do/oai/',
             'property_list': "some, properties",
-            'approved_sets': ["totally"]
+            'approved_sets': ["totally"],
+            'reg_id': 1
         }, choices=approved_set_set)
         self.assertTrue(form.is_valid())
 
@@ -161,12 +158,7 @@ class ViewTests(TestCase):
 
     def test_get_index(self):
         request = self.factory.get('/')
-        view = views.get_provider_info(request)
-        self.assertEqual(view.status_code, 200)
-
-    def test_get_provider_info(self):
-        request = self.factory.get('/provider_info/')
-        view = views.get_provider_info(request)
+        view = views.index(request)
         self.assertEqual(view.status_code, 200)
 
     def test_get_provider_detail_fails(self):
@@ -191,54 +183,46 @@ class ViewMethodTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
     def test_valid_oai_url(self):
-        provider_long_name = 'Stardust Weekly'
-        base_url = 'http://repository.stcloudstate.edu/do/oai/'
-        success = views.save_oai_info(provider_long_name, base_url)
-        self.assertTrue(success['value'])
-        self.assertEqual(success['reason'], 'Stardust Weekly registered and saved successfully')
-
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
-    def test_invalid_oai_url(self):
-        provider_long_name = 'Golddust Monthly'
-        base_url = 'http://wwe.com'
-        success = views.save_oai_info(provider_long_name, base_url)
-        self.assertFalse(success['value'])
-        self.assertEqual(success['reason'], 'XML Not Valid')
-
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listrecords.yaml')
-    def test_repeat_oai_name(self):
         RegistrationInfo(
-            provider_long_name='Stardust Weekly',
-            base_url='http://repository.stcloudstate.edu/do/oai/',
+            provider_long_name='The Old Stardust Weekly',
+            base_url='http://aurl.com',
             property_list=['some', 'properties'],
             approved_sets=['some', 'sets'],
             registration_date=timezone.now()
         ).save()
 
-        provider_long_name = 'Stardust Weekly'
+        provider_long_name = 'New Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
-        success = views.save_oai_info(provider_long_name, base_url)
 
+        reg_id = RegistrationInfo.objects.last().pk
+        success = views.save_oai_info(provider_long_name, base_url, reg_id)
+        self.assertTrue(success['value'])
+        self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
+    def test_invalid_oai_url(self):
+        provider_long_name = 'Golddust Monthly'
+        base_url = 'http://wwe.com'
+        reg_id = 1
+        success = views.save_oai_info(provider_long_name, base_url, reg_id)
         self.assertFalse(success['value'])
-        self.assertEqual(success['reason'], 'Provider name already exists')
+        self.assertEqual(success['reason'], 'XML Not Valid')
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
     def test_save_other_provider(self):
-        provider_long_name = 'The COSMIC KEEEEEY'
-        base_url = 'http://wwe.com'
-        success = views.save_other_info(provider_long_name, base_url)
-        self.assertTrue(success)
-
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
-    def test_repeat_provider_fails(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
-            base_url='http://wwe.com',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
             property_list=['some', 'properties'],
+            approved_sets="[('publication:some', 'sets')]",
             registration_date=timezone.now()
         ).save()
-        success = views.save_other_info('Stardust Weekly', 'http://wwe.com')
-        self.assertFalse(success)
+        provider_long_name = 'The COSMIC KEEEEEY'
+        base_url = 'http://wwe.com'
+        new_registration = RegistrationInfo.objects.last()
+        reg_id = new_registration.pk
+        success = views.save_other_info(provider_long_name, base_url, reg_id)
+        self.assertTrue(success)
 
 
 class TestUtils(TestCase):

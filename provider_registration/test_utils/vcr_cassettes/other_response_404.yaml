@@ -18,7 +18,7 @@ interactions:
       content-security-policy: ['default-src ''none''; script-src ''self''; style-src
           ''unsafe-inline''; img-src data:; connect-src ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Fri, 20 Mar 2015 14:56:07 GMT']
+      date: ['Sun, 22 Mar 2015 21:03:11 GMT']
       server: [GitHub.com]
       status: [404 Not Found]
       strict-transport-security: [max-age=31536000; includeSubdomains; preload]
@@ -26,10 +26,10 @@ interactions:
       vary: [X-PJAX]
       x-content-type-options: [nosniff]
       x-frame-options: [deny]
-      x-github-request-id: ['D8C54245:54B2:6B5C0:550C3507']
+      x-github-request-id: ['17197C7A:452D:2EFBB2D:550F2E0F']
       x-rack-cache: [miss]
-      x-request-id: [ffd6355e0798e8b5f030a1f1569f7dc7]
-      x-runtime: ['0.009552']
+      x-request-id: [5d3072f7099fd9ff0040489bc00c9ef1]
+      x-runtime: ['0.006849']
       x-ua-compatible: ['IE=Edge,chrome=1']
       x-xss-protection: [1; mode=block]
     status: {code: 404, message: Not Found}

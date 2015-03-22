@@ -1,0 +1,60 @@
+{% extends "provider_registration/base.html" %}
+
+{% block content %}
+<div class="container">
+<h1>
+    Register a Provider<br>
+    <small>Use this form to register a provider for SHARE Notify</small>
+</h1><br>
+
+    <div class="container">
+        <form action="{% url 'provider_registration:provider_information' %}" method="post">
+        {% csrf_token %}
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+        <div class="container">
+            {% if form.errors %}
+                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+            {% endif %}
+
+            <h2>Metadata Sharing Questions</h2>
+            <p class="lead">SHARE Notify will gather together research release event reports from the metadata you provide. Since we will be reusing your metadata and then retransmitting it to others as notifications, we need to be sure the rights to use that metadata are not encumbered.</p>
+            <div class="field_entry">
+            <p><strong> {{ form.meta_tos }} Metadata gathering violates our Terms of Service.</strong></p>
+            
+            </div>
+
+            <div class="field_entry">
+                <p><strong>{{ form.meta_privacy }} Metadata gathering violates our Privacy Policy.</strong></p>
+            </div>
+
+            <div class="field_entry">
+                <p><strong>{{ form.meta_sharing_tos }} Our sharing your metadata violates our Privacy Policy.</strong></p>
+            </div>
+
+            <div class="field_entry">
+                <p><strong>What is the license of the metadata?</strong></p>
+                {% if form.meta_licesnse.errors %}
+                  <span class="help-block">
+                    {% for error in form.meta_licesnse.errors %}{{ error }}{% endfor %}
+                  </span>
+                {% endif %}
+                {{ form.meta_license }}
+                <p><small>Example: MIT, Apache, GPL</small></p>
+            </div>
+
+            <div class="field_entry">
+                <p><strong>{{ form.meta_license_extended }} The license above extends to those beyond the group that gathered it.</strong></p>
+            </div>
+
+            <div class="field_entry">
+                <p><strong>{{ form.meta_future_license }} If unlicensed, we will explicitly license the content.</strong></p>
+            </div>
+        </div>
+        {{ form.reg_id }}
+
+        <input type="submit" value="Submit" />
+        </form>
+    </div>
+</div>
+{% endblock %}
