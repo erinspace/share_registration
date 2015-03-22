@@ -86,27 +86,20 @@ def save_metadata_render_provider(request):
 
     current_registration.meta_liscense = request.POST.get('meta_license')
 
-    # Save appropriate fields
-    meta_tos = request.POST.get('meta_tos')
-    meta_privacy = request.POST.get('meta_privacy')
-    meta_sharing_tos = request.POST.get('meta_sharing_tos')
-    meta_license_extended = request.POST.get('meta_license_extended')
-    meta_future_license = request.POST.get('meta_future_license')
-
-    if meta_tos:
-        current_registration.meta_tos = meta_tos
-    if meta_privacy:
-        current_registration.meta_privacy = meta_privacy
-    if meta_sharing_tos:
-        current_registration.meta_sharing_tos = meta_sharing_tos
-    if meta_license_extended:
-        current_registration.meta_license_extended = meta_license_extended
-    if meta_future_license:
-        current_registration.meta_future_license = meta_future_license
+    if request.POST.get('meta_tos'):
+        current_registration.meta_tos = True
+    if request.POST.get('meta_privacy'):
+        current_registration.meta_privacy = True
+    if request.POST.get('meta_sharing_tos'):
+        current_registration.meta_sharing_tos = True
+    if request.POST.get('meta_license_extended'):
+        current_registration.meta_license_extended = True
+    if request.POST.get('meta_future_license'):
+        current_registration.meta_future_license = True
 
     current_registration.save()
 
-    form = InitialProviderForm(instance=current_registration)
+    form = InitialProviderForm({'reg_id': reg_id})
     return render(
         request,
         'provider_registration/provider_questions.html',
@@ -255,6 +248,7 @@ def register_provider(request):
             )
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
+        import ipdb; ipdb.set_trace()
         reg_id = request.POST['reg_id']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
