@@ -194,7 +194,7 @@ class ViewMethodTests(TestCase):
         provider_long_name = 'New Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
 
-        reg_id = 2
+        reg_id = RegistrationInfo.objects.last().pk
         success = views.save_oai_info(provider_long_name, base_url, reg_id)
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
@@ -219,8 +219,8 @@ class ViewMethodTests(TestCase):
         ).save()
         provider_long_name = 'The COSMIC KEEEEEY'
         base_url = 'http://wwe.com'
-        # new_registration = RegistrationInfo.objects.last()
-        reg_id = 1
+        new_registration = RegistrationInfo.objects.last()
+        reg_id = new_registration.pk
         success = views.save_other_info(provider_long_name, base_url, reg_id)
         self.assertTrue(success)
 
