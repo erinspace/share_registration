@@ -96,6 +96,7 @@ def save_metadata_render_provider(request):
 
     current_registration.save()
 
+    # TODO fix the example url that gets checked here?
     form = InitialProviderForm({
         'reg_id': reg_id,
         'provider_long_name': ' ',
