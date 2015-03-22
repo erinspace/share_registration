@@ -15,9 +15,7 @@ from provider_registration.forms import OAIProviderForm, OtherProviderForm, Init
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-PLACEHOLDER_SHORTNAME = 'temp_shortname'
-PLACEHOLDER_LONGNAME = 'temp_longname'
-PLACEHOLDER_URL = 'temp_url'
+PLACEHOLDER = 'temp_value'
 
 
 @xframe_options_exempt
@@ -53,7 +51,7 @@ def get_contact_info(request):
         contact_name = request.POST.get('contact_name')
         contact_email = request.POST.get('contact_email')
         reg_id = save_contact_info(contact_name, contact_email)
-        form = MetadataQuestionsForm({'reg_id': reg_id})
+        form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
         return render(
             request,
             'provider_registration/metadata_questions.html',
@@ -66,10 +64,10 @@ def save_contact_info(contact_name, contact_email):
     RegistrationInfo(
         contact_name=contact_name,
         contact_email=contact_email,
-        provider_long_name=PLACEHOLDER_LONGNAME,
-        base_url=PLACEHOLDER_URL,
+        provider_long_name=PLACEHOLDER,
+        base_url=PLACEHOLDER,
         registration_date=timezone.now(),
-        provider_short_name=PLACEHOLDER_SHORTNAME
+        provider_short_name=PLACEHOLDER
     ).save()
     new_registration = RegistrationInfo.objects.last()
     return new_registration.id
@@ -98,7 +96,12 @@ def save_metadata_render_provider(request):
 
     current_registration.save()
 
-    form = InitialProviderForm({'reg_id': reg_id})
+    form = InitialProviderForm({
+        'reg_id': reg_id,
+        'provider_long_name': ' ',
+        'base_url': 'http://example.com',
+        'description': ' '
+    })
     return render(
         request,
         'provider_registration/provider_questions.html',
@@ -112,7 +115,7 @@ def save_other_info(provider_long_name, base_url, reg_id):
     object_to_update.provider_long_name = provider_long_name
     object_to_update.base_url = base_url
     object_to_update.registration_date = timezone.now()
-    object_to_update.provider_short_name = PLACEHOLDER_SHORTNAME
+    object_to_update.provider_short_name = PLACEHOLDER
     object_to_update.save()
 
     return True
@@ -132,7 +135,7 @@ def save_oai_info(provider_long_name, base_url, reg_id):
         object_to_update.property_list = oai_properties['properties']
         object_to_update.approved_sets = oai_properties['sets']
         object_to_update.registration_date = timezone.now()
-        object_to_update.provider_short_name = PLACEHOLDER_SHORTNAME
+        object_to_update.provider_short_name = PLACEHOLDER
         object_to_update.save()
 
         success['value'] = True
