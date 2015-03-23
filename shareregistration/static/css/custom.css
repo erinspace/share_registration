@@ -21,3 +21,16 @@ li {
   margin-right: auto;
   max-width: 180px;
 }
+
+.main_body {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 30px;
+  padding-left: 10px;
+}
