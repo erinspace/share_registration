@@ -2,27 +2,34 @@
 
 {% block content %}
 
-<div class="container">
-    <h1>
-        <a href="contact_information">Register a Provider</a><br>
-        <small>Use this form to register a provider for SHARE Notify</small>
-    </h1>
+<div class="row">
+    <div class="col-xs-3">
+        <a type="button" class="btn btn-primary btn-lg" href="contact_information">Register a Provider</a>
+    </div>
+    <div class="col-xs-9">
+        <h1>
+            <small>Use this form to register a provider for SHARE Notify</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class='col-xs-12'>
+        <br>
+        <h2>
+            Here is a list of providers that have registered recently,<br>
+            <small>and are pending review for enterance into SHARE Notify</small>
+        </h2>
 
-    <br>
-    <h2>
-        Here is a list of providers that have registered,<br>
-        <small>and are pending review for enterance into SHARE Notify</small>
-    </h2>
-
-    {% if latest_provider_list %}
-        <ul>
-        {% for provider in latest_provider_list %}
-            <li><a href="{% url 'provider_registration:detail' provider.provider_long_name %}">{{ provider.provider_long_name }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No providers are registered.</p>
-    {% endif %}
+        {% if latest_provider_list %}
+            <ul>
+            {% for provider in latest_provider_list %}
+                <li><a href="{% url 'provider_registration:detail' provider.provider_long_name %}">{{ provider.provider_long_name }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No providers are registered.</p>
+        {% endif %}
+    </div>
 
 </div>
 {% endblock %}
