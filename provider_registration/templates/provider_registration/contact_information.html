@@ -2,6 +2,7 @@
 
 {% block content %}
 
+    </div>
     <form action="{% url 'provider_registration:contact_information' %}" method="post">
     {% csrf_token %}
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

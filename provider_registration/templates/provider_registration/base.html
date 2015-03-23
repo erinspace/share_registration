@@ -7,11 +7,9 @@
 
     <body>
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 logo_header">
-                    <img class="logo" src="{% static 'img/share.png' %}"/>
-                </div>
-            </div>
+            <div class="jumbotron">
+                <img class="logo" src="{% static 'img/share.png' %}"/>
+
                 {% block content %}
                 {% endblock %}
         </div>
