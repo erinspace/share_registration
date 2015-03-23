@@ -20,7 +20,7 @@ PLACEHOLDER = 'temp_value'
 
 @xframe_options_exempt
 def index(request):
-    latest_provider_list = RegistrationInfo.objects.order_by('registration_date')
+    latest_provider_list = RegistrationInfo.objects.order_by('-registration_date')[:20]
 
     context = {'latest_provider_list': latest_provider_list}
 
