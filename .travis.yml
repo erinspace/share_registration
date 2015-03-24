@@ -24,6 +24,7 @@ install:
     - cp shareregistration/settings/local-travis.py shareregistration/settings/local.py
     - pip wheel --find-links=$WHEELHOUSE -r dev-requirements.txt --wheel-dir=$WHEELHOUSE
     - pip install -r dev-requirements.txt --no-index --find-links=$WHEELHOUSE
+    - npm install bower
     - bower install
 
 # command to run tests
