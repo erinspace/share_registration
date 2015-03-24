@@ -1,5 +1,5 @@
 """
-Travis Django settings for shareregistration project.
+Django settings for shareregistration project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -16,11 +16,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# travis secret key
-SECRET_KEY = 'booooooooooootista'
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '...'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -63,8 +63,12 @@ WSGI_APPLICATION = 'shareregistration.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'share_registration'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'share_registration',
+        # 'USER': '',
+        # 'PASSWORD': '',
+        # 'HOST': '127.0.0.1',
+        # 'PORT': ''
     }
 }
 
@@ -91,6 +95,7 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(
         os.path.dirname(__file__),
+        '..', # up one level from the settings directory
         'static',
     ),
 )
