@@ -155,7 +155,7 @@ def save_oai_info(provider_long_name, base_url, reg_id):
 def render_oai_provider_form(request, name, base_url, reg_id):
     saving_successful = save_oai_info(name, base_url, reg_id)
     if saving_successful['value']:
-        pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
+        pre_saved_data = RegistrationInfo.objects.get(id=reg_id)
 
         approved_set_set = utils.format_set_choices(pre_saved_data)
 

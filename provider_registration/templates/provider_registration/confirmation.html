@@ -1,14 +1,15 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
+</div>
 
-<h1>Confirmation</h1>
-<h2>You've just registered:
-    {{ provider }}
-</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Confirmation</h1>
+        <p class="lead">You've just registered: {{ provider }}</p>
 
-<div>
-    <a href="/provider_registration">Back to provider list</a>
+        <a class='btn' href="/provider_registration">Back to provider list</a>
+    </div>
 </div>
 
 {% endblock %}
