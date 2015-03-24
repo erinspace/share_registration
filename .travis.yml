@@ -12,7 +12,7 @@ env:
 cache:
   directories:
     - $HOME/.cache
-#    - node_modules
+    - node_modules
     - shareregistration/static/bower_components
 
 before_install:
