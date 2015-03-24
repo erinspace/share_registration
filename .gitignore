@@ -54,6 +54,7 @@ docs/_build/
 # PyBuilder
 target/
 
+.idea
 **/bower_components
 **/settings/local.py
 .env
