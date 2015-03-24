@@ -1,0 +1,12 @@
+{
+  "name": "shareregistration",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "",
+  "author": "Center for Open Science",
+  "dependencies": {
+    "bower": "^1.3.12"
+  },
+  "devDependencies": {
+  }
+}
