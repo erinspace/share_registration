@@ -19,6 +19,13 @@ ul {
   font-weight: inherit;
 }
 
+.front_page {
+  width:33%;
+  line-height:1.5em;
+  float:left;
+  display:inline;
+}
+
 ul#id_approved_sets {
   padding-left: 0px;
 }
