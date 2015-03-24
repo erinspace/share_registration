@@ -3,13 +3,13 @@
 }
 
 ul {
-  width:760px;
+  width: 100%;
   margin-bottom:20px;
   overflow:hidden;
 }
 
 #id_approved_sets li {
-  width:50%;
+  width:33%;
   line-height:1.5em;
   float:left;
   display:inline;
@@ -58,6 +58,19 @@ input {
 
 .btn-bottom {
   margin-right: 30px;
+  margin-top: 20px;
   float: right;
 
+}
+
+textarea {
+  width: 100%;
+}
+
+input[type=text] {
+  width: 100%;
+}
+
+input[type=email] {
+  width: 100%;
 }
