@@ -49,15 +49,23 @@ def get_contact_info(request):
             {'form': form}
         )
     else:
-        contact_name = request.POST.get('contact_name')
-        contact_email = request.POST.get('contact_email')
-        reg_id = save_contact_info(contact_name, contact_email)
-        form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
-        return render(
-            request,
-            'provider_registration/metadata_questions.html',
-            {'form': form}
-        )
+        form = ContactInfoForm(request.POST)
+        if form.is_valid():
+            contact_name = request.POST.get('contact_name')
+            contact_email = request.POST.get('contact_email')
+            reg_id = save_contact_info(contact_name, contact_email)
+            form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
+            return render(
+                request,
+                'provider_registration/metadata_questions.html',
+                {'form': form}
+            )
+        else:
+            return render(
+                request,
+                'provider_registration/contact_information.html',
+                {'form': form}
+            )
 
 
 def save_contact_info(contact_name, contact_email):
@@ -80,36 +88,42 @@ def save_metadata_render_provider(request):
     Saves metadata info
     Shows basic provider questions form
     """
-    reg_id = request.POST.get('reg_id')
-    current_registration = RegistrationInfo.objects.get(id=reg_id)
+    form = MetadataQuestionsForm(request.POST)
+    if form.is_valid() and request.POST['meta_license'] != ' ':
+        reg_id = request.POST.get('reg_id')
+        current_registration = RegistrationInfo.objects.get(id=reg_id)
 
-    current_registration.meta_liscense = request.POST.get('meta_license')
+        current_registration.meta_liscense = request.POST.get('meta_license')
 
-    if request.POST.get('meta_tos'):
-        current_registration.meta_tos = True
-    if request.POST.get('meta_privacy'):
-        current_registration.meta_privacy = True
-    if request.POST.get('meta_sharing_tos'):
-        current_registration.meta_sharing_tos = True
-    if request.POST.get('meta_license_extended'):
-        current_registration.meta_license_extended = True
-    if request.POST.get('meta_future_license'):
-        current_registration.meta_future_license = True
+        if request.POST.get('meta_tos'):
+            current_registration.meta_tos = True
+        if request.POST.get('meta_privacy'):
+            current_registration.meta_privacy = True
+        if request.POST.get('meta_sharing_tos'):
+            current_registration.meta_sharing_tos = True
+        if request.POST.get('meta_license_extended'):
+            current_registration.meta_license_extended = True
+        if request.POST.get('meta_future_license'):
+            current_registration.meta_future_license = True
 
-    current_registration.save()
+        current_registration.save()
 
-    # TODO fix the example url that gets checked here?
-    form = InitialProviderForm({
-        'reg_id': reg_id,
-        'provider_long_name': ' ',
-        'base_url': 'http://example.com',
-        'description': ' '
-    })
-    return render(
-        request,
-        'provider_registration/provider_questions.html',
-        {'form': form}
-    )
+        form = InitialProviderForm(initial={
+            'reg_id': reg_id
+        })
+        return render(
+            request,
+            'provider_registration/provider_questions.html',
+            {'form': form}
+        )
+
+    else:
+        form._errors["meta_license"] = ErrorList(['Please enter a license. If None, please enter "None."'])
+        return render(
+            request,
+            'provider_registration/metadata_questions.html',
+            {'form': form}
+        )
 
 
 def save_other_info(provider_long_name, base_url, reg_id):

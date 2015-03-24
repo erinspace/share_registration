@@ -16,11 +16,10 @@ class InitialProviderForm(forms.ModelForm):
 
 
 class ContactInfoForm(forms.ModelForm):
-    reg_id = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RegistrationInfo
-        fields = ['contact_name', 'contact_email', 'reg_id']
+        fields = ['contact_name', 'contact_email']
 
 
 class MetadataQuestionsForm(forms.ModelForm):
