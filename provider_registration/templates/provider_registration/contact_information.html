@@ -1,49 +1,61 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
+</div>
 
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li class="active">Contact Information</li>
+                <li>Metadata Information</li>
+                <li>Provider Information</li>
+            </ol>
+        </div>
     </div>
+
     <form action="{% url 'provider_registration:contact_information' %}" method="post">
     {% csrf_token %}
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 
     <div class="row">
-        {% if form.errors %}
-            <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
-        {% endif %}
-        <h2>Contact Information</h2>
-    </div>
-    <div class="row">
-        <div class="col-xs-2">
-            <strong>Your Name </strong>
-            {% if form.contact_name.errors %}
-              <span class="help-block">
-                {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
-              </span>
+        <div class="col-xs-12">
+            {% if form.errors %}
+                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
             {% endif %}
-        </div>
-        <div class="col-xs-2">
-            {{ form.contact_name }}
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-xs-2">
-            <strong>Your Email </strong> 
-            {% if form.contact_email.errors %}
-              <span class="help-block">
-                {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
-              </span>
-            {% endif %}
-        </div>
-        <div class="col-xs-8">
-            {{ form.contact_email }}
-        </div>
-    </div>
-    <br>
-            <input type="submit" value="Submit" />
+            <h2>Contact Information</h2>
+            <div class="row">
+                <div class="col-xs-2">
+                    <strong>Your Name </strong>
+                    {% if form.contact_name.errors %}
+                      <span class="help-block">
+                        {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
+                      </span>
+                    {% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {{ form.contact_name }}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xs-2">
+                    <strong>Your Email </strong> 
+                    {% if form.contact_email.errors %}
+                      <span class="help-block">
+                        {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
+                      </span>
+                    {% endif %}
+                </div>
+                <div class="col-xs-8">
+                    {{ form.contact_email }}
+                </div>
+            </div>
+        <br>
+                <input type="submit" value="Submit" />
 
+        </div>
+    </div>
     </form>
 
 {% endblock %}

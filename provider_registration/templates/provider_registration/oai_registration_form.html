@@ -1,8 +1,19 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
+</div>
 
-<div class="container">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li >Contact Information</li>
+                <li>Metadata Information</li>
+                <li class="active">Provider Information</li>
+            </ol>
+        </div>
+    </div>
+
     <h1>Register a Provider</h1>
 
     {% if error_message %}<h2><strong>{{ error_message }}</strong></p>{% endif %}
@@ -10,7 +21,6 @@
     <form action="{% url 'provider_registration:register' %}" method="post">
     {% csrf_token %}
 
-    <div class="container">
         <div class="field_entry">
             <h2>Provider Name</h2>
             <h3>{{ name }}</h3>
@@ -30,8 +40,8 @@
             <h2>Approved Sets</h2>
             {{ form.approved_sets }}
         </div>
-            {{ form.provider_long_name}}
-    </div>
+
+    {{ form.provider_long_name}}
     {{ form.reg_id }}
 
     <input type="submit" value="OK" />

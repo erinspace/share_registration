@@ -1,13 +1,14 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
-<div class="container">
-<h1>
-    Register a Provider<br>
-    <small>Use this form to register a provider for SHARE Notify</small>
-</h1><br>
+</div>
 
-    <div class="container">
+<div class="row">
+    <div class="col-xs-12">
+    <h1>
+        Register a Provider<br>
+        <small>Use this form to register a provider for SHARE Notify</small>
+    </h1><br>
         <form action="{% url 'provider_registration:provider_information' %}" method="post">
         {% csrf_token %}
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -57,4 +58,5 @@
         </form>
     </div>
 </div>
+
 {% endblock %}
