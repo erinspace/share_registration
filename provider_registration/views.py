@@ -20,13 +20,14 @@ PLACEHOLDER = 'temp_value'
 
 @xframe_options_exempt
 def index(request):
-    latest_provider_list = RegistrationInfo.objects.order_by('registration_date')
+    latest_provider_list = RegistrationInfo.objects.order_by('-registration_date')[:20]
 
     context = {'latest_provider_list': latest_provider_list}
 
     return render(request, 'provider_registration/index.html', context)
 
 
+@xframe_options_exempt
 def detail(request, provider_long_name):
     provider = get_object_or_404(RegistrationInfo, provider_long_name=provider_long_name)
     return render(
@@ -73,6 +74,7 @@ def save_contact_info(contact_name, contact_email):
     return new_registration.id
 
 
+@xframe_options_exempt
 def save_metadata_render_provider(request):
     """
     Saves metadata info
@@ -149,10 +151,11 @@ def save_oai_info(provider_long_name, base_url, reg_id):
     return success
 
 
+@xframe_options_exempt
 def render_oai_provider_form(request, name, base_url, reg_id):
     saving_successful = save_oai_info(name, base_url, reg_id)
     if saving_successful['value']:
-        pre_saved_data = RegistrationInfo.objects.get(provider_long_name=name)
+        pre_saved_data = RegistrationInfo.objects.get(id=reg_id)
 
         approved_set_set = utils.format_set_choices(pre_saved_data)
 
@@ -184,6 +187,7 @@ def render_oai_provider_form(request, name, base_url, reg_id):
         return render_to_response('provider_registration/already_exists.html', {'provider': name})
 
 
+@xframe_options_exempt
 def render_other_provider_form(request, name, base_url, reg_id):
     saving_successful = save_other_info(name, base_url, reg_id)
     if saving_successful:

@@ -7,12 +7,18 @@
 
     <body>
         <div class="container">
-            <img class="logo" src="{% static 'img/share.png' %}"/>
+            <div class="jumbotron">
+                <img class="logo" src="{% static 'img/share.png' %}"/>
+
+                {% block content %}
+                {% endblock %}
+
         </div>
 
-        {% block content %}
-        {% endblock %}
-
+    <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/pym.min.js' %}"></script>
+    <script>var pymChild = new pym.Child({ id: 'share_registration_iframe' });</script>
+
   </body>
 </html>

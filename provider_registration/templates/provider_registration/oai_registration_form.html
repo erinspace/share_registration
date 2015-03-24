@@ -1,41 +1,51 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
-
-<div class="container">
-    <h1>Register a Provider</h1>
-
-    {% if error_message %}<h2><strong>{{ error_message }}</strong></p>{% endif %}
-
-    <form action="{% url 'provider_registration:register' %}" method="post">
-    {% csrf_token %}
-
-    <div class="container">
-        <div class="field_entry">
-            <h2>Provider Name</h2>
-            <h3>{{ name }}</h3>
-        </div>
-
-        <div class="field_entry">
-            <h2>Base URL</h2>
-            <h3>{{ base_url }}</h3>
-        </div>
-
-        <div class="field_entry">
-            <h2>Property List</h2>
-            {{ form.property_list }}
-        </div>
-
-        <div class="field_entry">
-            <h2>Approved Sets</h2>
-            {{ form.approved_sets }}
-        </div>
-            {{ form.provider_long_name}}
-    </div>
-    {{ form.reg_id }}
-
-    <input type="submit" value="OK" />
-    </form>
 </div>
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><small>Contact Information</small></li>
+                <li><small>Metadata Information</small></li>
+                <li class="active"><b>Provider Information</b></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            {% if error_message %}<strong>{{ error_message }}</strong></p>{% endif %}
+
+            <form action="{% url 'provider_registration:register' %}" method="post">
+            {% csrf_token %}
+
+                <div class="field_entry">
+                    <p><strong>Provider Name:</strong> {{ name }}</p>
+                </div>
+
+                <div class="field_entry">
+                    <p><strong>Base URL:</strong> {{ base_url }}</p>
+                </div>
+
+                <div class="field_entry">
+                    <p><strong>Property List</strong></p>
+                    {{ form.property_list }}
+                </div>
+
+                <div class="field_entry">
+                    <p><strong>Approved Sets</strong></p>
+                    {{ form.approved_sets }}
+                </div>
+
+            {{ form.provider_long_name}}
+            {{ form.reg_id }}
+
+            <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

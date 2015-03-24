@@ -2,27 +2,31 @@
 
 {% block content %}
 
-<div class="container">
-    <h1>
-        <a href="contact_information">Register a Provider</a><br>
-        <small>Use this form to register a provider for SHARE Notify</small>
-    </h1>
+        <br>
+        <p class="lead">Start here to register a provider for SHARE Notify</p>
+        <br>
+        <a type="button" class="btn btn-primary btn-lg" href="contact_information">Register a Provider</a>
+    </div>
 
-    <br>
-    <h2>
-        Here is a list of providers that have registered,<br>
-        <small>and are pending review for enterance into SHARE Notify</small>
-    </h2>
 
-    {% if latest_provider_list %}
-        <ul>
-        {% for provider in latest_provider_list %}
-            <li><a href="{% url 'provider_registration:detail' provider.provider_long_name %}">{{ provider.provider_long_name }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No providers are registered.</p>
-    {% endif %}
+<div class="row">
+    <div class='col-xs-12'>
+        <br>
+        <h2>Recent Providers</h2>
+            <p class="lead">Here is a list of providers that have registered recently, and are pending review</p>
+
+        {% if latest_provider_list %}
+            <ul>
+            {% for provider in latest_provider_list %}
+                <li class="front_page"><a href="{% url 'provider_registration:detail' provider.provider_long_name %}">{{ provider.provider_long_name }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No providers are registered.</p>
+        {% endif %}
+    </div>
 
 </div>
+
+
 {% endblock %}

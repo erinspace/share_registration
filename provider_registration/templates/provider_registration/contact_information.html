@@ -1,45 +1,58 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
-<div class="container">
-
-    <div class="container">
-        <form action="{% url 'provider_registration:contact_information' %}" method="post">
-        {% csrf_token %}
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-
-        <div class="container">
-            {% if form.errors %}
-                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
-            {% endif %}
-
-            <h2>Contact Information</h2>
-            <div class="field_entry">
-                <p><strong>Your Name </strong>
-                {% if form.contact_name.errors %}
-                  <span class="help-block">
-                    {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                {{ form.contact_name }}
-                </p>
-            </div>
-            <div class="field_entry">
-                <p><strong>Your Email </strong> 
-                {% if form.contact_email.errors %}
-                  <span class="help-block">
-                    {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                {{ form.contact_email }}
-                </p>
-                
-            </div>
-
-            </div>
-        <input type="submit" value="Submit" />
-        </form>
-    </div>
 </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li class="active"><b>Contact Information</b></li>
+                <li><small>Metadata Information</small></li>
+                <li><small>Provider Information</small></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <form action="{% url 'provider_registration:contact_information' %}" method="post">
+            {% csrf_token %}
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                    {% if form.errors %}
+                        <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+                    {% endif %}
+                    <h2>Contact Information</h2>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <strong>Your Name </strong>
+                            {% if form.contact_name.errors %}
+                              <span class="help-block">
+                                {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
+                              </span>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-10">
+                            {{ form.contact_name }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <strong>Your Email </strong> 
+                            {% if form.contact_email.errors %}
+                              <span class="help-block">
+                                {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
+                              </span>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-10">
+                            {{ form.contact_email }}
+                        </div>
+                    </div>
+                <br>
+                <input class="btn btn-primary btn-bottom" type="submit" value="Next" />
+            </form>
+        </div>
+    </div>
 {% endblock %}

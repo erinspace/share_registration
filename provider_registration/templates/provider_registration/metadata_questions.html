@@ -1,39 +1,44 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
-<div class="container">
-<h1>
-    Register a Provider<br>
-    <small>Use this form to register a provider for SHARE Notify</small>
-</h1><br>
+</div>
 
-    <div class="container">
+<div class="row">
+    <div class="col-xs-12">
+        <ol class="breadcrumb">
+            <li><small>Contact Information</small></li>
+            <li class="active"><b>Metadata Information</b></li>
+            <li><small>Provider Information</small></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
         <form action="{% url 'provider_registration:provider_information' %}" method="post">
-        {% csrf_token %}
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            {% csrf_token %}
 
-        <div class="container">
             {% if form.errors %}
                 <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
             {% endif %}
 
             <h2>Metadata Sharing Questions</h2>
             <p class="lead">SHARE Notify will gather together research release event reports from the metadata you provide. Since we will be reusing your metadata and then retransmitting it to others as notifications, we need to be sure the rights to use that metadata are not encumbered.</p>
+
             <div class="field_entry">
-            <p><strong> {{ form.meta_tos }} Metadata gathering violates our Terms of Service.</strong></p>
-            
+                <p>{{ form.meta_tos }} Metadata gathering violates this provider's Terms of Service.</p>
             </div>
 
             <div class="field_entry">
-                <p><strong>{{ form.meta_privacy }} Metadata gathering violates our Privacy Policy.</strong></p>
+                <p>{{ form.meta_privacy }} Metadata gathering violates this provider's Privacy Policy.</p>
             </div>
 
             <div class="field_entry">
-                <p><strong>{{ form.meta_sharing_tos }} Our sharing your metadata violates our Privacy Policy.</strong></p>
+                <p>{{ form.meta_sharing_tos }} SHARE distributing your metadata violates this provider's Privacy Policy.</p>
             </div>
 
             <div class="field_entry">
-                <p><strong>What is the license of the metadata?</strong></p>
+                <p>What license does this provider's metadata have?</p>
                 {% if form.meta_licesnse.errors %}
                   <span class="help-block">
                     {% for error in form.meta_licesnse.errors %}{{ error }}{% endfor %}
@@ -44,17 +49,17 @@
             </div>
 
             <div class="field_entry">
-                <p><strong>{{ form.meta_license_extended }} The license above extends to those beyond the group that gathered it.</strong></p>
+                <p>{{ form.meta_license_extended }} The license above extends to those beyond the group that gathered it.</p>
             </div>
 
             <div class="field_entry">
-                <p><strong>{{ form.meta_future_license }} If unlicensed, we will explicitly license the content.</strong></p>
+                <p>{{ form.meta_future_license }} If unlicensed, this provider will explicitly license the content at a later date.</p>
             </div>
-        </div>
-        {{ form.reg_id }}
+            {{ form.reg_id }}
 
-        <input type="submit" value="Submit" />
+            <input class="btn btn-primary btn-bottom" type="submit" value="Next" />
         </form>
     </div>
 </div>
+
 {% endblock %}

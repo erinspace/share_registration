@@ -1,65 +1,72 @@
 {% extends "provider_registration/base.html" %}
 
 {% block content %}
-<div class="container">
-<h1>
-    Register a Provider<br>
-    <small>Use this form to register a provider for SHARE Notify</small>
-</h1>
+
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <ol class="breadcrumb">
+            <li><small>Contact Information</small></li>
+            <li><small>Metadata Information</small></li>
+            <li class="active"><b>Provider Information</b></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-xs-12">
 
 <br>
-
-    <div class="container">
-        <form action="{% url 'provider_registration:register' %}" method="post">
-        {% csrf_token %}
-
-        <div class="container">
-            <h2>Basic Provider Information</h2>
-            {% if form.errors %}
-                <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+    <form action="{% url 'provider_registration:register' %}" method="post">
+    {% csrf_token %}
+        <h2>Basic Provider Information</h2>
+        {% if form.errors %}
+            <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
+        {% endif %}
+        <div class="field_entry">
+            {% if form.provider_long_name.errors %}
+              <span class="help-block">
+                {% for error in form.provider_long_name.errors %}{{ error }}{% endfor %}
+              </span>
             {% endif %}
-            <div class="field_entry">
-                {% if form.provider_long_name.errors %}
-                  <span class="help-block">
-                    {% for error in form.provider_long_name.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                <p><strong>Name of your provider</strong></p>
-                {{ form.provider_long_name }}
-            </div>
-
-            <div class="field_entry">
-                <p><strong>{{ form.oai_provider}} This content provider is based on OAI-PMH Standards.</strong></p>
-                
-            </div>
-
-            <div class="field_entry">
-                <p><strong>Base URL</strong></p>
-                <p>Enter the base URL for your content provider.<br>
-                If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.<br></p>
-                {% if form.base_url.errors %}
-                  <span class="help-block">
-                    {% for error in form.base_url.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                {{ form.base_url }}
-                <p><small>Example: http://repository.stcloudstate.edu/do/oai/ </small></p>
-            </div>
-
-            <div class="field_entry">
-                <p><strong>Description of your provider</strong></p>
-                {% if form.description.errors %}
-                  <span class="help-block">
-                    {% for error in form.description.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                {{ form.description }}
-            </div>
+            <p><strong>Name of your provider</strong></p>
+            {{ form.provider_long_name }}
         </div>
-        {{ form.reg_id }}
 
-        <input type="submit" value="Submit" />
-        </form>
-    </div>
+        <div class="field_entry">
+            <p><strong>{{ form.oai_provider}} This content provider is based on OAI-PMH Standards.</strong></p>
+            
+        </div>
+
+        <div class="field_entry">
+            <p><strong>Base URL</strong></p>
+            <p>Enter the base URL for your content provider.<br>
+            If you're entering an OAI-PMH provider, include everything before the ? in the OAI phm access url.<br></p>
+            {% if form.base_url.errors %}
+              <span class="help-block">
+                {% for error in form.base_url.errors %}{{ error }}{% endfor %}
+              </span>
+            {% endif %}
+            {{ form.base_url }}
+            <p><small>Example: http://repository.stcloudstate.edu/do/oai/ </small></p>
+        </div>
+
+        <div class="field_entry">
+            <p><strong>Description of your provider</strong></p>
+            {% if form.description.errors %}
+              <span class="help-block">
+                {% for error in form.description.errors %}{{ error }}{% endfor %}
+              </span>
+            {% endif %}
+            {{ form.description }}
+        </div>
+
+    {{ form.reg_id }}
+
+    <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
+    </form>
+
+</div>
 </div>
 {% endblock %}
