@@ -49,15 +49,23 @@ def get_contact_info(request):
             {'form': form}
         )
     else:
-        contact_name = request.POST.get('contact_name')
-        contact_email = request.POST.get('contact_email')
-        reg_id = save_contact_info(contact_name, contact_email)
-        form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
-        return render(
-            request,
-            'provider_registration/metadata_questions.html',
-            {'form': form}
-        )
+        form = ContactInfoForm(request.POST)
+        if form.is_valid():
+            contact_name = request.POST.get('contact_name')
+            contact_email = request.POST.get('contact_email')
+            reg_id = save_contact_info(contact_name, contact_email)
+            form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
+            return render(
+                request,
+                'provider_registration/metadata_questions.html',
+                {'form': form}
+            )
+        else:
+            return render(
+                request,
+                'provider_registration/contact_information.html',
+                {'form': form}
+            )
 
 
 def save_contact_info(contact_name, contact_email):
