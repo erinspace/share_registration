@@ -39,9 +39,9 @@
 
             <div class="field_entry">
                 <p>What license does this provider's metadata have?</p>
-                {% if form.meta_licesnse.errors %}
+                {% if form.meta_license.errors %}
                   <span class="help-block">
-                    {% for error in form.meta_licesnse.errors %}{{ error }}{% endfor %}
+                    {% for error in form.meta_license.errors %}{{ error }}{% endfor %}
                   </span>
                 {% endif %}
                 {{ form.meta_license }}
