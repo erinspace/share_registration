@@ -17,7 +17,6 @@ cache:
 
 before_install:
   - mkdir -p $HOME/.cache/pip
-  - mkdir -p $HOME/.cache/node_modules
   - mkdir -p $HOME/.cache/wheelhouse
 
 # command to install dependencies
