@@ -1,15 +1,30 @@
 language: python
+
 python:
   - "2.7"
 
+sudo: false
+
 env:
-  - DJANGO=1.7.4
+  DJANGO: 1.7.4
+  WHEELHOUSE: $HOME/.cache/wheelhouse
+
+cache:
+  directories:
+    - $HOME/.cache
+#    - node_modules
+    - shareregistration/static/bower_components
+
+before_install:
+  - mkdir -p $HOME/.cache/wheelhouse
+  - mkdir -p $HOME/.cache/pip
 
 # command to install dependencies
-install: 
+install:
     - cp shareregistration/settings/local-travis.py shareregistration/settings/local.py
-    - pip install -r requirements.txt
-    - pip install coveralls
+    - pip wheel --find-links=$WHEELHOUSE -r dev-requirements.txt --wheel-dir=$WHEELHOUSE
+    - pip install -r dev-requirements.txt --no-index --find-links=$WHEELHOUSE
+    - bower install
 
 # command to run tests
 script: coverage run --source='.' manage.py test
