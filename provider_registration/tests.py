@@ -181,7 +181,7 @@ class ViewTests(TestCase):
 
 class ViewMethodTests(TestCase):
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_listsets.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery.yaml')
     def test_valid_oai_url(self):
         RegistrationInfo(
             provider_long_name='The Old Stardust Weekly',
