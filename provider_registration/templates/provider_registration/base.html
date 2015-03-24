@@ -10,10 +10,13 @@
             <div class="jumbotron">
                 <img class="logo" src="{% static 'img/share.png' %}"/>
 
+                {% block header_content %}
+                {% endblock %}
+            </div>
+
                 {% block content %}
                 {% endblock %}
 
-        </div>
 
     <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
