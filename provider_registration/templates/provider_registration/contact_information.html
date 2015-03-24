@@ -19,7 +19,6 @@
             {% csrf_token %}
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-
                     {% if form.errors %}
                         <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
                     {% endif %}
@@ -56,5 +55,4 @@
             </form>
         </div>
     </div>
-
 {% endblock %}
