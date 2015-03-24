@@ -16,19 +16,10 @@
 
 <div class="row">
 <div class="col-xs-12">
-<h1>
-    Register a Provider<br>
-    <small>Use this form to register a provider for SHARE Notify</small>
-</h1>
-</div>
 
-<div class="row">
-<div class="col-xs-12">
 <br>
     <form action="{% url 'provider_registration:register' %}" method="post">
     {% csrf_token %}
-
-    <div class="container">
         <h2>Basic Provider Information</h2>
         {% if form.errors %}
             <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
@@ -70,13 +61,12 @@
             {% endif %}
             {{ form.description }}
         </div>
-    </div>
+
     {{ form.reg_id }}
 
     <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
     </form>
-    </div>
-    </div>
+
 </div>
 </div>
 {% endblock %}
