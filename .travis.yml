@@ -7,7 +7,7 @@ env:
 
 # command to install dependencies
 install: 
-    - cp shareregistration/travis-settings.py shareregistration/settings.py
+    - cp shareregistration/settings/local-travis.py shareregistration/settings/local.py
     - pip install -r requirements.txt
     - pip install coveralls
 
