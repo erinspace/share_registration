@@ -1,0 +1,9 @@
+{
+  "name": "shareregistration",
+  "version": "0.0.1",
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "jquery": "~1.11.2",
+    "pym.js": "~0.4.1"
+  }
+}
