@@ -23,20 +23,23 @@
             {% csrf_token %}
 
                 <div class="field_entry">
-                    <p><strong>Provider Name:</strong> {{ name }}</p>
+                    <p class="lead"><strong>Provider Name:</strong> {{ name }}</p>
                 </div>
 
                 <div class="field_entry">
-                    <p><strong>Base URL:</strong> {{ base_url }}</p>
+                    <p class="lead"><strong>Base URL:</strong> {{ base_url }}</p>
                 </div>
 
                 <div class="field_entry">
                     <p class="lead"><strong>Property List</strong></p>
                     <p>Enter the elements in your metadata schema that do not match up with the outer elements of the SHARE metadata schema. For more information, see <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">schema details on the OSF.</a></p>
+                    {{ form.property_list }}
                 </div>
-
+                <br>
                 <div class="field_entry">
-                    <p><strong>Approved Sets</strong></p>
+                    <p class="lead"><strong>Approved Sets</strong></p>
+                    <p>Check the approved sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets">ListSets API endpoint</a>.</p>
+                    <br>
                     {{ form.approved_sets }}
                 </div>
 
