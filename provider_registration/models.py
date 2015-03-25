@@ -13,19 +13,20 @@ class RegistrationInfo(models.Model):
 
     # Terms of Service and Metadata Permissions Questions
     meta_tos = models.BooleanField(default=False)
-    meta_license = models.CharField(max_length=100)
+    meta_rights = models.BooleanField(default=False)
     meta_privacy = models.BooleanField(default=False)
-    meta_sharing_tos = models.BooleanField(default=False)
-    meta_future_license = models.BooleanField(default=False)
-    meta_license_extended = models.BooleanField(default=False)
+    meta_sharing = models.BooleanField(default=False)
+    meta_license_cc0 = models.BooleanField(default=False)
+    meta_license = models.CharField(max_length=100, default='None')
 
     #Provider Information
     base_url = models.URLField()
     description = models.TextField()
     oai_provider = models.BooleanField(default=False)
     provider_long_name = models.CharField(max_length=100)
-    request_rate_limit = models.PositiveSmallIntegerField(default=0)
+    per_request_rate_limit = models.PositiveSmallIntegerField(default=0)
     provider_short_name = models.CharField(max_length=50, blank=True, default='')
+    rate_limit_text_box = models.CharField(max_length=100, blank=True, default='')
 
     # Harvester Information
     property_list = models.TextField()
