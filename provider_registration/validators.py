@@ -17,7 +17,7 @@ class URLResolves(object):
         ''' value is the serialized data to be validated '''
         try:
             data = requests.get(value)
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema):
             raise forms.ValidationError('URL does not resolve, please enter  a valid URL')
         if data.status_code == 404:
             raise forms.ValidationError('URL does not resolve, please enter  a valid URL')
