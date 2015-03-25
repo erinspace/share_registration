@@ -42,7 +42,8 @@ class RegistrationFormTests(TestCase):
             'reg_id': 1,
             'base_url': 'http://repository.stcloudstate.edu/do/oai/',
             'description': 'A description',
-            'oai_provider': True
+            'oai_provider': True,
+            'request_rate_limit': 0
         })
         self.assertTrue(form.is_valid())
 
@@ -53,7 +54,8 @@ class RegistrationFormTests(TestCase):
             'base_url': 'http://wwe.com',
             'description': 'A description',
             'reg_id': 1,
-            'oai_provider': False
+            'oai_provider': False,
+            'request_rate_limit': 0
         })
         self.assertTrue(form.is_valid())
 
@@ -189,12 +191,11 @@ class ViewMethodTests(TestCase):
             approved_sets=['some', 'sets'],
             registration_date=timezone.now()
         ).save()
-
         provider_long_name = 'New Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
-
+        request_rate_limit = 0
         reg_id = RegistrationInfo.objects.last().pk
-        success = views.save_oai_info(provider_long_name, base_url, reg_id)
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, request_rate_limit)
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
 
@@ -203,9 +204,10 @@ class ViewMethodTests(TestCase):
         provider_long_name = 'Golddust Monthly'
         base_url = 'http://wwe.com'
         reg_id = 1
-        success = views.save_oai_info(provider_long_name, base_url, reg_id)
+        request_rate_limit = 0
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, request_rate_limit)
         self.assertFalse(success['value'])
-        self.assertEqual(success['reason'], 'XML Not Valid')
+        self.assertEqual(success['reason'], 'OAI Information could not be automatically processed.')
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
     def test_save_other_provider(self):

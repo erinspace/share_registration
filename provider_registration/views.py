@@ -218,27 +218,29 @@ def render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit
 
 
 @xframe_options_exempt
-def redirect_to_simple_oai(request, name, base_url, reg_id):
-    ## TODO - fix this to redirect to simple form instead of pre-generated sets
-    saving_successful = save_other_info(name, base_url, reg_id)
-    if saving_successful:
-        form = SimpleOAIProviderForm(
-            {
-                'provider_long_name': name,
-                'base_url': base_url,
-                'property_list': 'enter properties here',
-                'approved_sets': 'enter approved sets here',
-                'reg_id': reg_id
-            }
-        )
-        return render(
-            request,
-            'provider_registration/simple_oai_registration_form.html',
-            {'form': form, 'name': name, 'base_url': base_url}
-        )
-    else:
-        return render_to_response('provider_registration/already_exists.html', {'provider': name})
+def redirect_to_simple_oai(request):
+    # TODO - fix this - dangerous if more than one person is registering?
+    # maybe pass reg_id somehow as a post request? Or session information from the request?
+    new_registration = RegistrationInfo.objects.last()
 
+    name = new_registration.provider_long_name
+    base_url = new_registration.base_url
+    reg_id = new_registration.id
+
+    form = SimpleOAIProviderForm(
+        {
+            'provider_long_name': name,
+            'base_url': base_url,
+            'property_list': 'enter property list',
+            'approved_sets': 'enter approved sets here',
+            'reg_id': reg_id
+        }
+    )
+    return render(
+        request,
+        'provider_registration/simple_oai_registration_form.html',
+        {'form': form, 'name': name, 'base_url': base_url}
+    )
 
 
 @xframe_options_exempt

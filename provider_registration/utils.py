@@ -1,15 +1,17 @@
 import ast
 import time
+import logging
 from datetime import date, timedelta
 
 import requests
 from lxml import etree
 
-
 NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
               'oai_dc': 'http://www.openarchives.org/OAI/2.0/',
               'ns0': 'http://www.openarchives.org/OAI/2.0/'}
 BASE_SCHEMA = ['title', 'contributor', 'creator', 'subject', 'description']
+
+logger = logging.getLogger(__name__)
 
 
 def format_set_choices(pre_saved_data):
@@ -69,5 +71,6 @@ def get_oai_properties(base_url, request_rate_limit):
         return {'properties': property_names, 'sets': set_groups}
 
     # If anything at all goes wrong, just render a blank form...
-    except Exception:
-        raise ValueError('OAI Processing Error')
+    except Exception as e:
+        logger.info(e)
+        raise ValueError('OAI Processing Error - {}'.format(e))
