@@ -89,22 +89,20 @@ def save_metadata_render_provider(request):
     Shows basic provider questions form
     """
     form = MetadataQuestionsForm(request.POST)
-    if form.is_valid() and request.POST['meta_license'] != ' ':
+    if form.is_valid():
         reg_id = request.POST.get('reg_id')
         current_registration = RegistrationInfo.objects.get(id=reg_id)
 
-        current_registration.meta_liscense = request.POST.get('meta_license')
-
         if request.POST.get('meta_tos'):
             current_registration.meta_tos = True
+        if request.POST.get('meta_rights'):
+            current_registration.meta_rights = True
         if request.POST.get('meta_privacy'):
             current_registration.meta_privacy = True
-        if request.POST.get('meta_sharing_tos'):
-            current_registration.meta_sharing_tos = True
-        if request.POST.get('meta_license_extended'):
-            current_registration.meta_license_extended = True
-        if request.POST.get('meta_future_license'):
-            current_registration.meta_future_license = True
+        if request.POST.get('meta_sharing'):
+            current_registration.meta_sharing = True
+        if request.POST.get('meta_license_cc0'):
+            current_registration.meta_license_cc0 = True
 
         current_registration.save()
 
@@ -118,7 +116,6 @@ def save_metadata_render_provider(request):
         )
 
     else:
-        form._errors["meta_license"] = ErrorList(['Please enter a license. If None, please enter "None."'])
         return render(
             request,
             'provider_registration/metadata_questions.html',
@@ -138,12 +135,12 @@ def save_other_info(provider_long_name, base_url, reg_id):
     return True
 
 
-def save_oai_info(provider_long_name, base_url, reg_id, request_rate_limit):
+def save_oai_info(provider_long_name, base_url, reg_id):
     """ Gets and saves information about the OAI source
     """
     success = {'value': False, 'reason': 'XML Not Valid'}
     try:
-        oai_properties = utils.get_oai_properties(base_url, request_rate_limit)
+        oai_properties = utils.get_oai_properties(base_url)
 
         object_to_update = RegistrationInfo.objects.get(id=reg_id)
 
@@ -169,8 +166,8 @@ def save_oai_info(provider_long_name, base_url, reg_id, request_rate_limit):
 
 
 @xframe_options_exempt
-def render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit):
-    saving_successful = save_oai_info(name, base_url, reg_id, request_rate_limit)
+def render_oai_provider_form(request, name, base_url, reg_id):
+    saving_successful = save_oai_info(name, base_url, reg_id)
     if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(id=reg_id)
 
@@ -302,14 +299,13 @@ def register_provider(request):
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
         reg_id = request.POST['reg_id']
-        request_rate_limit = request.POST['request_rate_limit']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
             form = render_other_provider_form(request, name, base_url, reg_id)
             return form
         else:
             # If it's made it this far, request is an OAI provider
-            form = render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit)
+            form = render_oai_provider_form(request, name, base_url, reg_id)
             return form
     else:
         # Update the requested entries
