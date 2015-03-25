@@ -19,7 +19,7 @@
 
         <form action="{% url 'provider_registration:register' %}" method="post">
         {% csrf_token %}
-            <h2>Provider Information</h2>
+
             <div class="field_entry">
                 <p class="lead"><strong>Provider Name:</strong> {{ name }}</p>
             </div>
@@ -33,12 +33,10 @@
                 <p>Enter the elements in your metadata schema that do not match up with the outer elements of the SHARE metadata schema. For more information, see <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">schema details on the OSF.</a></p>
                 {{ form.property_list }}
             </div>
-            <br/>
+
             <div class="field_entry">
-                <p class="lead"><strong>Approved Sets</strong> <button id="select-all" class="btn btn-xs" style="margin-left: 10px;">Select All</button> <button id="unselect-all" class="btn btn-xs">Unselect All</button></p>
-                <p>Check the approved sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets">ListSets API endpoint</a>.</p>
-                <p>If you'd rather enter the approved sets manually, click here to access the <a href="/provider_registration/simple_oai_registration/">simple OAI registration form</a>.</p>
-                <br/>
+                <p class="lead"><strong>Approved Set List</strong></p>
+                Enter the approved sets that you'd like to appear in SHARE Notify. A list of these options can usually be found at your provider's <a href="{{ base_url }}?verb=ListSets">ListSets OAI API endpoint</a>.</p>
                 {{ form.approved_sets }}
             </div>
 
@@ -49,28 +47,5 @@
         </form>
     </div>
 </div>
-
-{% endblock %}
-
-
-{% block javascript_bottom %}
-
-<script type="application/javascript">
-    $(function () {
-        $('#select-all').click(function (event) {
-            event.preventDefault();
-            $('input[id^="id_approved_sets"]').each(function () {
-                this.checked = true;
-            });
-        });
-
-        $('#unselect-all').click(function (event) {
-            event.preventDefault();
-            $('input[id^="id_approved_sets"]').each(function () {
-                this.checked = false;
-            });
-        });
-    });
-</script>
 
 {% endblock %}

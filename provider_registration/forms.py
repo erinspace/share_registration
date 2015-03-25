@@ -5,16 +5,6 @@ from provider_registration.validators import URLResolves
 from provider_registration.models import RegistrationInfo
 
 
-class InitialProviderForm(forms.ModelForm):
-    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
-    reg_id = forms.CharField(widget=forms.HiddenInput())
-
-    class Meta:
-        model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'description',
-                  'oai_provider', 'reg_id']
-
-
 class ContactInfoForm(forms.ModelForm):
 
     class Meta:
@@ -30,6 +20,16 @@ class MetadataQuestionsForm(forms.ModelForm):
         fields = ['meta_tos', 'meta_privacy', 'meta_sharing_tos',
                   'meta_license', 'meta_license_extended',
                   'meta_future_license', 'reg_id']
+
+
+class InitialProviderForm(forms.ModelForm):
+    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
+    reg_id = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = RegistrationInfo
+        fields = ['provider_long_name', 'base_url', 'description',
+                  'oai_provider', 'reg_id', 'request_rate_limit']
 
 
 class OAIProviderForm(forms.ModelForm):
@@ -49,6 +49,15 @@ class OAIProviderForm(forms.ModelForm):
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url',
                   'property_list', 'approved_sets', 'reg_id']
+
+
+class SimpleOAIProviderForm(forms.ModelForm):
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
+    reg_id = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = RegistrationInfo
+        fields = ['provider_long_name', 'base_url', 'property_list', 'reg_id', 'approved_sets']
 
 
 class OtherProviderForm(forms.ModelForm):

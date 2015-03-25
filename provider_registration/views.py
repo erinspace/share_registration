@@ -10,7 +10,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from provider_registration import utils
 
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm, ContactInfoForm, MetadataQuestionsForm
+from provider_registration.forms import OAIProviderForm, OtherProviderForm, InitialProviderForm, ContactInfoForm, MetadataQuestionsForm, SimpleOAIProviderForm
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -138,12 +138,12 @@ def save_other_info(provider_long_name, base_url, reg_id):
     return True
 
 
-def save_oai_info(provider_long_name, base_url, reg_id):
+def save_oai_info(provider_long_name, base_url, reg_id, request_rate_limit):
     """ Gets and saves information about the OAI source
     """
     success = {'value': False, 'reason': 'XML Not Valid'}
     try:
-        oai_properties = utils.get_oai_properties(base_url)
+        oai_properties = utils.get_oai_properties(base_url, request_rate_limit)
 
         object_to_update = RegistrationInfo.objects.get(id=reg_id)
 
@@ -161,13 +161,16 @@ def save_oai_info(provider_long_name, base_url, reg_id):
     except XMLSyntaxError:
         success['reason'] = 'XML Not Valid'
 
+    except ValueError:
+        success['reason'] = 'OAI Information could not be automatically processed.'
+
     logger.info(success['reason'])
     return success
 
 
 @xframe_options_exempt
-def render_oai_provider_form(request, name, base_url, reg_id):
-    saving_successful = save_oai_info(name, base_url, reg_id)
+def render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit):
+    saving_successful = save_oai_info(name, base_url, reg_id, request_rate_limit)
     if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(id=reg_id)
 
@@ -197,8 +200,47 @@ def render_oai_provider_form(request, name, base_url, reg_id):
             'provider_registration/provider_questions.html',
             {'form': form}
         )
-    else:
-        return render_to_response('provider_registration/already_exists.html', {'provider': name})
+    elif saving_successful['reason'] == 'OAI Information could not be automatically processed.':
+        form = SimpleOAIProviderForm(
+            {
+                'provider_long_name': name,
+                'base_url': base_url,
+                'property_list': 'enter properties here',
+                'approved_sets': 'enter approved sets here',
+                'reg_id': reg_id
+            }
+        )
+        return render(
+            request,
+            'provider_registration/simple_oai_registration_form.html',
+            {'form': form, 'name': name, 'base_url': base_url}
+        )
+
+
+@xframe_options_exempt
+def redirect_to_simple_oai(request):
+    # TODO - fix this - dangerous if more than one person is registering?
+    # maybe pass reg_id somehow as a post request? Or session information from the request?
+    new_registration = RegistrationInfo.objects.last()
+
+    name = new_registration.provider_long_name
+    base_url = new_registration.base_url
+    reg_id = new_registration.id
+
+    form = SimpleOAIProviderForm(
+        {
+            'provider_long_name': name,
+            'base_url': base_url,
+            'property_list': 'enter property list',
+            'approved_sets': 'enter approved sets here',
+            'reg_id': reg_id
+        }
+    )
+    return render(
+        request,
+        'provider_registration/simple_oai_registration_form.html',
+        {'form': form, 'name': name, 'base_url': base_url}
+    )
 
 
 @xframe_options_exempt
@@ -260,13 +302,14 @@ def register_provider(request):
         name = request.POST['provider_long_name']
         base_url = request.POST['base_url']
         reg_id = request.POST['reg_id']
+        request_rate_limit = request.POST['request_rate_limit']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
             form = render_other_provider_form(request, name, base_url, reg_id)
             return form
         else:
             # If it's made it this far, request is an OAI provider
-            form = render_oai_provider_form(request, name, base_url, reg_id)
+            form = render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit)
             return form
     else:
         # Update the requested entries
