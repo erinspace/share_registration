@@ -1,9 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
 from dateutil.parser import parse
 
@@ -65,9 +62,9 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-@api_view(('GET',))
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'data': reverse('data-list', request=request, format=format)
-    })
+# @api_view(('GET',))
+# def api_root(request, format=None):
+#     return Response({
+#         'users': reverse('user-list', request=request, format=format),
+#         'data': reverse('data-list', request=request, format=format)
+#     })

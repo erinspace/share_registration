@@ -1,8 +1,10 @@
 import logging
 
 import requests
+
 from lxml import etree
 from django import forms
+from requests.exceptions import MissingSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,7 +19,7 @@ class URLResolves(object):
         ''' value is the serialized data to be validated '''
         try:
             data = requests.get(value)
-        except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema):
+        except (requests.exceptions.ConnectionError, MissingSchema):
             raise forms.ValidationError('URL does not resolve, please enter  a valid URL')
         if data.status_code == 404:
             raise forms.ValidationError('URL does not resolve, please enter  a valid URL')

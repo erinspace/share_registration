@@ -38,8 +38,6 @@ def get_oai_properties(base_url):
     set_url = base_url + '?verb=ListSets'
     set_data_request = requests.get(set_url)
     all_content = etree.XML(set_data_request.content)
-    set_names = all_content.xpath('//oai_dc:setSpec/node()', namespaces=NAMESPACES)
-    set_names = [name.replace('publication:', '') for name in set_names]
 
     all_sets = all_content.xpath('//oai_dc:set', namespaces=NAMESPACES)
     all_set_info = [one.getchildren() for one in all_sets]

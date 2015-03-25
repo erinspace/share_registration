@@ -181,7 +181,7 @@ def render_oai_provider_form(request, name, base_url, reg_id):
                 'property_list': pre_saved_data.property_list,
                 'reg_id': reg_id
             },
-            choices=approved_set_set
+            choices=sorted(approved_set_set, key=lambda x: x[1])
         )
         return render(
             request,
