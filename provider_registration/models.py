@@ -3,18 +3,15 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from provider_registration.validators import URLResolves
+
 
 class RegistrationInfo(models.Model):
-
-    # Basic Information
-    base_url = models.URLField()
-    description = models.TextField()
-    contact_email = models.EmailField()
-    contact_name = models.CharField(max_length=100)
-    oai_provider = models.BooleanField(default=False)
-    provider_short_name = models.CharField(max_length=50)
-    provider_long_name = models.CharField(max_length=100)
     link = 'Edit'
+
+    # Contact Information
+    contact_name = models.CharField(max_length=100)
+    contact_email = models.EmailField()
 
     # Terms of Service and Metadata Permissions Questions
     meta_tos = models.BooleanField(default=False)
@@ -24,9 +21,18 @@ class RegistrationInfo(models.Model):
     meta_license_extended = models.BooleanField(default=False)
     meta_future_license = models.BooleanField(default=False)
 
-    # OAI Harvester Information
+    #Provider Information
+    base_url = models.URLField()
+    description = models.TextField()
+    oai_provider = models.BooleanField(default=False)
+    provider_short_name = models.CharField(max_length=50, blank=True, default='')
+    provider_long_name = models.CharField(max_length=100)
+
+    # Harvester Information
     property_list = models.TextField()
     approved_sets = models.TextField()
+
+    # Added automatically
     registration_date = models.DateTimeField('date registered')
 
     def __unicode__(self):

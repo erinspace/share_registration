@@ -21,5 +21,8 @@
         <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'bower_components/pym.js/dist/pym.min.js' %}"></script>
         <script>var pymChild = new pym.Child({ id: 'share_registration_iframe' });</script>
+
+        {% block javascript_bottom %}
+        {% endblock %}
     </body>
 </html>
