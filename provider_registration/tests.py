@@ -67,8 +67,7 @@ class RegistrationFormTests(TestCase):
             'oai_provider': False,
             'meta_license': 'MIT'
         })
-        with self.assertRaises(requests.exceptions.MissingSchema):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
 
     def test_formed_not_valid(self):
         form = InitialProviderForm({
