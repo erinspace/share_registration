@@ -1,6 +1,6 @@
 import vcr
 import datetime
-import requests
+from xml.etree import ElementTree
 
 from django import forms
 from django.utils import timezone
@@ -163,6 +163,7 @@ class ViewTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.client = Client()
+        # self.tree = ElementTree()
 
     def test_get_index(self):
         request = self.factory.get('/')
@@ -184,6 +185,19 @@ class ViewTests(TestCase):
 
         response = self.client.get('provider_registration/provider_detail/Stardust Weekly/')
         self.assertEqual(response.status_code, 404)  # TODO - this is broken
+
+    def test_get_contact_info(self):
+        request = self.factory.get('provider_registration/contact_information/')
+        view_processing = views.get_contact_info(request)
+        self.assertEqual(view_processing.status_code, 200)
+
+    def test_post_contact_info(self):
+        request = self.factory.post('provider_registration/contact_information/')
+        view_processing = views.get_contact_info(request)
+        # TODO - get this to parse for errors
+        # html_str = view_processing.serialize()
+        # root = ElementTree.fromstring(view_processing.content)
+        self.assertEqual(view_processing.status_code, 200)
 
 
 class ViewMethodTests(TestCase):
