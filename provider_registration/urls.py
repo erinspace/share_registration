@@ -9,7 +9,8 @@ urlpatterns = patterns(
     url(r'^provider_detail/(?P<provider_long_name>.*)/$', views.detail, name='detail'),
     url(r'^contact_information', views.get_contact_info, name='contact_information'),
     url(r'^provider_information', views.save_metadata_render_provider, name='provider_information'),
-    url(r'^register', views.register_provider, name='register')
+    url(r'^register', views.register_provider, name='register'),
+    url(r'^simple_oai_registration', views.redirect_to_simple_oai, name='register')
 )
 
 urlpatterns += staticfiles_urlpatterns()
