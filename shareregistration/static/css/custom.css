@@ -91,3 +91,7 @@ input[type=number] {
 input[type=email] {
   width: 100%;
 }
+
+.breadcrumb > li + li:before {
+    content: "> ";
+}
