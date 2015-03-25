@@ -25,9 +25,9 @@ interactions:
       content-encoding: [gzip]
       content-length: ['540']
       content-type: [text/html;charset=utf-8]
-      date: ['Sun, 22 Mar 2015 21:01:38 GMT']
+      date: ['Wed, 25 Mar 2015 13:21:58 GMT']
       server: [Apache-Coyote/1.1]
-      set-cookie: [BIGipServerlbapp_scitech=3892314634.41030.0000; path=/, BIGipServerwww.osti.gov_pool=1132494278.20480.0000;
+      set-cookie: [BIGipServerlbapp_scitech=3875537418.41030.0000; path=/, BIGipServerwww.osti.gov_pool=1132494278.20480.0000;
           path=/]
       vary: [Accept-Encoding]
       x-cnection: [close, close]

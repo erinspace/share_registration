@@ -10,7 +10,7 @@ from provider_registration import views
 from provider_registration import utils
 from provider_registration import validators
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import InitialProviderForm, OAIProviderForm
+from provider_registration.forms import InitialProviderForm, OAIProviderForm, ContactInfoForm
 
 
 class RegistrationMethodTests(TestCase):
@@ -133,6 +133,13 @@ class RegistrationFormTests(TestCase):
         })
         self.assertFalse(form.is_valid())
 
+    def test_contact_info_valid(self):
+        form = ContactInfoForm({
+            'contact_email': 'email@email.com',
+            'contact_name': 'A REAL NAME'
+        })
+        self.assertTrue(form.is_valid())
+
 
 class TestOAIProviderForm(TestCase):
 
@@ -165,7 +172,6 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 301)
 
     def test_get_provider_detail(self):
-        c = Client()
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
             base_url='http://repository.stcloudstate.edu/do/oai/',
@@ -174,7 +180,7 @@ class ViewTests(TestCase):
             registration_date=timezone.now()
         ).save()
 
-        response = c.get('provider_registration/provider_detail/Stardust Weekly/')
+        response = self.client.get('provider_registration/provider_detail/Stardust Weekly/')
         self.assertEqual(response.status_code, 404)  # TODO - this is broken
 
 
