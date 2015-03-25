@@ -17,9 +17,8 @@ class MetadataQuestionsForm(forms.ModelForm):
 
     class Meta:
         model = RegistrationInfo
-        fields = ['meta_tos', 'meta_privacy', 'meta_sharing_tos',
-                  'meta_license', 'meta_license_extended',
-                  'meta_future_license', 'reg_id']
+        fields = ['meta_tos', 'meta_rights', 'meta_privacy', 'meta_sharing',
+                  'meta_license_cc0', 'reg_id']
 
 
 class InitialProviderForm(forms.ModelForm):
@@ -29,7 +28,7 @@ class InitialProviderForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url', 'description',
-                  'oai_provider', 'reg_id', 'request_rate_limit']
+                  'oai_provider', 'reg_id', 'rate_limit_text_box']
 
 
 class OAIProviderForm(forms.ModelForm):
