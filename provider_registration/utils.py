@@ -47,8 +47,9 @@ def get_oai_properties(base_url):
         one_group = (item[0].text, item[1].text)
         set_groups.append(one_group)
 
-    # request 2 for records 30 days back just in case
-    start_date = str(date.today() - timedelta(30))
+    # request 2 for records 30 days back from a set point - just in case
+    # Note - This is a set point so that the tests can use consistent VCRs
+    start_date = '2015-03-16'
     prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}T00:00:00Z'.format(start_date)
     prop_data_request = requests.get(prop_url)
     all_prop_content = etree.XML(prop_data_request.content)

@@ -140,12 +140,6 @@ class RegistrationFormTests(TestCase):
         })
         self.assertTrue(form.is_valid())
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
-    def test_get_contact_info(self):
-        info = views.get_contact_info()
-        info = 'yeah'
-        return info
-
 
 class TestOAIProviderForm(TestCase):
 
@@ -178,7 +172,6 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 301)
 
     def test_get_provider_detail(self):
-        c = Client()
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
             base_url='http://repository.stcloudstate.edu/do/oai/',
@@ -187,7 +180,7 @@ class ViewTests(TestCase):
             registration_date=timezone.now()
         ).save()
 
-        response = c.get('provider_registration/provider_detail/Stardust Weekly/')
+        response = self.client.get('provider_registration/provider_detail/Stardust Weekly/')
         self.assertEqual(response.status_code, 404)  # TODO - this is broken
 
 
