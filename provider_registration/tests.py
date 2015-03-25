@@ -1,5 +1,6 @@
 import vcr
 import datetime
+from lxml import etree
 from xml.etree import ElementTree
 
 from django import forms
@@ -191,13 +192,76 @@ class ViewTests(TestCase):
         view_processing = views.get_contact_info(request)
         self.assertEqual(view_processing.status_code, 200)
 
-    def test_post_contact_info(self):
+    def test_post_incorrect_contact_info(self):
         request = self.factory.post('provider_registration/contact_information/')
         view_processing = views.get_contact_info(request)
-        # TODO - get this to parse for errors
-        # html_str = view_processing.serialize()
-        # root = ElementTree.fromstring(view_processing.content)
-        self.assertEqual(view_processing.status_code, 200)
+        root = etree.fromstring(view_processing.content)
+        form_element = root.xpath('//form')[0]
+        error = form_element.getchildren()[0]
+        self.assertEqual(error.text, 'Please correct the errors below.')
+
+    def test_post_contact_info(self):
+        info = {'contact_name': 'Fabulous Moolah', 'contact_email': 'moolah@moolah.com'}
+        request = self.factory.post('provider_registration/contact_information/', info)
+        view_processing = views.get_contact_info(request)
+        root = etree.fromstring(view_processing.content)
+        form_element = root.xpath('//form')[0]
+        new_form_title = form_element.getchildren()[0].text
+        self.assertEqual(new_form_title, 'Metadata Sharing Questions')
+
+    def test_post_some_incorrect_contact_info(self):
+        info = {'contact_name': '', 'contact_email': 'moolah@moolah.com'}
+        request = self.factory.post('provider_registration/contact_information/', info)
+        view_processing = views.get_contact_info(request)
+        root = etree.fromstring(view_processing.content)
+        form_element = root.xpath('//form')[0]
+        error = form_element.getchildren()[0]
+        self.assertEqual(error.text, 'Please correct the error below.')
+
+    def test_save_metadata_render_provider(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        meta_form = {
+            'meta_tos': True,
+            'meta_privacy': False,
+            'meta_sharing_tos': True,
+            'meta_license': False,
+            'meta_license_extended': False,
+            'meta_future_license': False,
+            'reg_id': RegistrationInfo.objects.last().pk
+        }
+        request = self.factory.post('provider_registration/provider_information/', meta_form)
+        response = views.save_metadata_render_provider(request)
+        root = etree.fromstring(response.content)
+        form_element = root.xpath('//form')
+        new_form_title = form_element[0].getchildren()[0].text
+        self.assertEqual(new_form_title, 'Basic Provider Information')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery.yaml')
+    def test_render_oai_provider_form(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://repository.stcloudstate.edu/do/oai/',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        request = self.factory.post('provider_registration/register/')
+        name = "Some Name"
+        base_url = 'http://repository.stcloudstate.edu/do/oai/'
+        reg_id = RegistrationInfo.objects.last().pk
+        request_rate_limit = 0
+
+        response = views.render_oai_provider_form(request, name, base_url, reg_id, request_rate_limit)
+        root = etree.fromstring(response.content)
+        form_element = root.xpath('//form')[0]
+        title = form_element.getchildren()[0]
+        self.assertEqual(title.text, 'Provider Information')
 
 
 class ViewMethodTests(TestCase):
