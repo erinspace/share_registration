@@ -10,7 +10,7 @@ from provider_registration import views
 from provider_registration import utils
 from provider_registration import validators
 from provider_registration.models import RegistrationInfo
-from provider_registration.forms import InitialProviderForm, OAIProviderForm
+from provider_registration.forms import InitialProviderForm, OAIProviderForm, ContactInfoForm
 
 
 class RegistrationMethodTests(TestCase):
@@ -132,6 +132,19 @@ class RegistrationFormTests(TestCase):
             'meta_license': 'MIT'
         })
         self.assertFalse(form.is_valid())
+
+    def test_contact_info_valid(self):
+        form = ContactInfoForm({
+            'contact_email': 'email@email.com',
+            'contact_name': 'A REAL NAME'
+        })
+        self.assertTrue(form.is_valid())
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response.yaml')
+    def test_get_contact_info(self):
+        info = views.get_contact_info()
+        info = 'yeah'
+        return info
 
 
 class TestOAIProviderForm(TestCase):
