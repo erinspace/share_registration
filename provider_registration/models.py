@@ -3,8 +3,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-from provider_registration.validators import URLResolves
-
 
 class RegistrationInfo(models.Model):
     link = 'Edit'

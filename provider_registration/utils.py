@@ -52,7 +52,14 @@ def get_oai_properties(base_url):
     prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}T00:00:00Z'.format(start_date)
     prop_data_request = requests.get(prop_url)
     all_prop_content = etree.XML(prop_data_request.content)
-    pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
+    try:
+        pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
+    except IndexError:
+        prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}'.format(start_date)
+        prop_data_request = requests.get(prop_url)
+        all_prop_content = etree.XML(prop_data_request.content)
+        pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
+
     all_names = [name.tag.replace('{' + NAMESPACES['dc'] + '}', '') for name in pre_names]
     property_names = list({name for name in all_names if name not in BASE_SCHEMA})
 
