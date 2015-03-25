@@ -34,11 +34,13 @@
         </div>
 
         <div class="field_entry">
-            <p><strong>{{ form.request_rate_limit}} If your provider API has a rate limit between requests, please enter it here as a number of seconds.</strong></p>
+            <p><strong>If there are rate limits for gathing from your service, please list them below.</strong></p>
+            {{ form.rate_limit_text_box }}
+            <p><small>Example: 1 request/second</small></p>
         </div>
 
         <div class="field_entry">
-            <p><strong>{{ form.oai_provider}} This content provider is based on OAI-PMH Standards.</strong></p>
+            <p><strong>{{ form.oai_provider }} This content provider is based on OAI-PMH Standards.</strong></p>
         </div>
 
         <div class="field_entry">
