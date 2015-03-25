@@ -1,4 +1,5 @@
 import ast
+import time
 from datetime import date, timedelta
 
 import requests
@@ -20,7 +21,7 @@ def format_set_choices(pre_saved_data):
     return approved_set_set
 
 
-def get_oai_properties(base_url):
+def get_oai_properties(base_url, request_rate_limit):
     """ Makes 2 requests to the provided base URL:
         1 for the sets available
         1 for the list of properties
@@ -33,34 +34,40 @@ def get_oai_properties(base_url):
         The sets available are added as multiple selections for the next form,
         the properties are pre-loaded into the properties field.
     """
-
-    # request 1 for the setSpecs available
-    set_url = base_url + '?verb=ListSets'
-    set_data_request = requests.get(set_url)
-    all_content = etree.XML(set_data_request.content)
-
-    all_sets = all_content.xpath('//oai_dc:set', namespaces=NAMESPACES)
-    all_set_info = [one.getchildren() for one in all_sets]
-
-    set_groups = []
-    for item in all_set_info:
-        one_group = (item[0].text, item[1].text)
-        set_groups.append(one_group)
-
-    # request 2 for records 30 days back just in case
-    start_date = str(date.today() - timedelta(30))
-    prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}T00:00:00Z'.format(start_date)
-    prop_data_request = requests.get(prop_url)
-    all_prop_content = etree.XML(prop_data_request.content)
     try:
-        pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
-    except IndexError:
-        prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}'.format(start_date)
+        # request 1 for the setSpecs available
+        set_url = base_url + '?verb=ListSets'
+        set_data_request = requests.get(set_url)
+        all_content = etree.XML(set_data_request.content)
+
+        all_sets = all_content.xpath('//oai_dc:set', namespaces=NAMESPACES)
+        all_set_info = [one.getchildren() for one in all_sets]
+
+        set_groups = []
+        for item in all_set_info:
+            one_group = (item[0].text, item[1].text)
+            set_groups.append(one_group)
+
+        time.sleep(int(request_rate_limit))
+
+        # request 2 for records 30 days back just in case
+        start_date = str(date.today() - timedelta(30))
+        prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}T00:00:00Z'.format(start_date)
         prop_data_request = requests.get(prop_url)
         all_prop_content = etree.XML(prop_data_request.content)
-        pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
+        try:
+            pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
+        except IndexError:
+            prop_url = base_url + '?verb=ListRecords&metadataPrefix=oai_dc&from={}'.format(start_date)
+            prop_data_request = requests.get(prop_url)
+            all_prop_content = etree.XML(prop_data_request.content)
+            pre_names = all_prop_content.xpath('//ns0:metadata', namespaces=NAMESPACES)[0].getchildren()[0].getchildren()
 
-    all_names = [name.tag.replace('{' + NAMESPACES['dc'] + '}', '') for name in pre_names]
-    property_names = list({name for name in all_names if name not in BASE_SCHEMA})
+        all_names = [name.tag.replace('{' + NAMESPACES['dc'] + '}', '') for name in pre_names]
+        property_names = list({name for name in all_names if name not in BASE_SCHEMA})
 
-    return {'properties': property_names, 'sets': set_groups}
+        return {'properties': property_names, 'sets': set_groups}
+
+    # If anything at all goes wrong, just render a blank form...
+    except Exception:
+        raise ValueError('OAI Processing Error')
