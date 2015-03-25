@@ -83,6 +83,11 @@ input[type=text] {
   width: 100%;
 }
 
+input[type=number] {
+  margin-right: 10px;
+  width: 75px;
+}
+
 input[type=email] {
   width: 100%;
 }
