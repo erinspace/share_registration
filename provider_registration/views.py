@@ -218,15 +218,12 @@ def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_lim
             {'form': form}
         )
     elif saving_successful['reason'] == 'OAI Information could not be automatically processed.':
-        form = SimpleOAIProviderForm(
-            {
-                'reg_id': reg_id,
-                'base_url': base_url,
-                'provider_long_name': name,
-                'property_list': 'enter properties here',
-                'approved_sets': 'enter approved sets here'
-            }
-        )
+        form = SimpleOAIProviderForm(initial={
+            'reg_id': reg_id,
+            'base_url': base_url,
+            'provider_long_name': name,
+            'property_list': 'enter properties here'
+        })
         return render(
             request,
             'provider_registration/simple_oai_registration_form.html',
@@ -244,15 +241,12 @@ def redirect_to_simple_oai(request):
     base_url = new_registration.base_url
     reg_id = new_registration.id
 
-    form = SimpleOAIProviderForm(
-        {
-            'reg_id': reg_id,
-            'base_url': base_url,
-            'provider_long_name': name,
-            'approved_sets': 'enter approved sets here',
-            'property_list': 'enter properties'
-        }
-    )
+    form = SimpleOAIProviderForm(initial={
+        'reg_id': reg_id,
+        'base_url': base_url,
+        'provider_long_name': name,
+        'property_list': 'enter properties'
+    })
     return render(
         request,
         'provider_registration/simple_oai_registration_form.html',
