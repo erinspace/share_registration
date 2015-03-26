@@ -35,8 +35,13 @@
 
         <div class="field_entry">
             <p><strong>If there are rate limits for gathing from your service, please list them below.</strong></p>
-            {{ form.rate_limit_text_box }}
+            {{ form.rate_limit }}
             <p><small>Example: 1 request/second</small></p>
+        </div>
+
+        <div class="field_entry">
+            <p><strong>If your provider API has documentation online, please enter the URL below.</strong></p>
+            {{ form.api_docs }}
         </div>
 
         <div class="field_entry">

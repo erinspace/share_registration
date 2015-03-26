@@ -30,19 +30,14 @@
             </div>
 
             <div class="field_entry">
-                <p class="lead"><strong>Property List</strong></p>
-                <p>Enter the elements in your metadata schema that do not match up with the outer elements of the SHARE metadata schema. For more information, see <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">schema details on the OSF.</a></p>
-                {{ form.property_list }}
-            </div>
-
-            <div class="field_entry">
                 <p class="lead"><strong>Approved Set List</strong></p>
                 Enter the approved sets that you'd like to appear in SHARE Notify. A list of these options can usually be found at your provider's <a href="{{ base_url }}?verb=ListSets">ListSets OAI API endpoint</a>.</p>
                 {{ form.approved_sets }}
             </div>
 
-        {{ form.provider_long_name}}
         {{ form.reg_id }}
+        {{ form.property_list }}
+        {{ form.provider_long_name }}
 
         <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
         </form>
