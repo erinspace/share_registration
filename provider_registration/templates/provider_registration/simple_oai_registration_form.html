@@ -5,9 +5,10 @@
 <div class="row">
     <div class="col-xs-12">
         <ol class="breadcrumb">
-            <li><small>Contact Information</small></li>
-            <li><small>Metadata Information</small></li>
-            <li class="active"><b>Provider Information</b></li>
+            <li><small>Contact</small></li>
+            <li><small>Metadata</small></li>
+            <li><small>Provider Part 1</small></li>
+            <li  class="active"><b>Provider Part 2</b></li>
         </ol>
     </div>
 </div>
@@ -29,19 +30,17 @@
             </div>
 
             <div class="field_entry">
-                <p class="lead"><strong>Property List</strong></p>
-                <p>Enter the elements in your metadata schema that do not match up with the outer elements of the SHARE metadata schema. For more information, see <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">schema details on the OSF.</a></p>
-                {{ form.property_list }}
-            </div>
-
-            <div class="field_entry">
                 <p class="lead"><strong>Approved Set List</strong></p>
-                Enter the approved sets that you'd like to appear in SHARE Notify. A list of these options can usually be found at your provider's <a href="{{ base_url }}?verb=ListSets">ListSets OAI API endpoint</a>.</p>
+                Enter the sets from your OAI-PMH data provider that you'd like to appear in SHARE Notify. A list of these options can usually be found at your provider's <a href="{{ base_url }}?verb=ListSets">ListSets OAI API endpoint</a>. Enter the sets you'd like to be included as they are represented in the setSpec element of your provider. Enter each set seperated by a comma.</p>
+
+                <p>Sets that you specify will be included in SHARE, and sets that you do not specify will be  ignored and not processed by SHARE.</p>
                 {{ form.approved_sets }}
+                <p><small>Example: 'academicsenate, agb_fac, biosp'</small></p>
             </div>
 
-        {{ form.provider_long_name}}
         {{ form.reg_id }}
+        {{ form.property_list }}
+        {{ form.provider_long_name }}
 
         <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
         </form>

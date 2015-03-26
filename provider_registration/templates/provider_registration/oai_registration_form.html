@@ -5,9 +5,10 @@
 <div class="row">
     <div class="col-xs-12">
         <ol class="breadcrumb">
-            <li><small>Contact Information</small></li>
-            <li><small>Metadata Information</small></li>
-            <li class="active"><b>Provider Information</b></li>
+            <li><small>Contact</small></li>
+            <li><small>Metadata</small></li>
+            <li><small>Provider Part 1</small></li>
+            <li  class="active"><b>Provider Part 2</b></li>
         </ol>
     </div>
 </div>
@@ -27,23 +28,20 @@
             <div class="field_entry">
                 <p class="lead"><strong>Base URL:</strong> {{ base_url }}</p>
             </div>
-
-            <div class="field_entry">
-                <p class="lead"><strong>Property List</strong></p>
-                <p>Enter the elements in your metadata schema that do not match up with the outer elements of the SHARE metadata schema. For more information, see <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">schema details on the OSF.</a></p>
-                {{ form.property_list }}
-            </div>
             <br/>
             <div class="field_entry">
                 <p class="lead"><strong>Approved Sets</strong> <button id="select-all" class="btn btn-xs" style="margin-left: 10px;">Select All</button> <button id="unselect-all" class="btn btn-xs">Unselect All</button></p>
-                <p>Check the approved sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets">ListSets API endpoint</a>.</p>
+                <p>Check the sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets">ListSets API endpoint</a>. Displayed here are the setNames for the corresponding setSpec options in your publically accessable database.</p>
                 <p>If you'd rather enter the approved sets manually, click here to access the <a href="/provider_registration/simple_oai_registration/">simple OAI registration form</a>.</p>
+
+                <p>Sets that you specify will be included in SHARE, and sets that you do not specify will be  ignored and not processed by SHARE.</p>
                 <br/>
                 {{ form.approved_sets }}
             </div>
 
-        {{ form.provider_long_name}}
         {{ form.reg_id }}
+        {{ form.property_list }}
+        {{ form.provider_long_name}}
 
         <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
         </form>

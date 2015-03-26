@@ -5,9 +5,10 @@
 <div class="row">
     <div class="col-xs-12">
         <ol class="breadcrumb">
-            <li><small>Contact Information</small></li>
-            <li class="active"><b>Metadata Information</b></li>
-            <li><small>Provider Information</small></li>
+            <li><small>Contact</small></li>
+            <li class="active"><b>Metadata</b></li>
+            <li><small>Provider Part 1</small></li>
+            <li><small>Provider Part 2</small></li>
         </ol>
     </div>
 </div>
@@ -21,38 +22,27 @@
                 <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
             {% endif %}
 
-            <h2>Metadata Sharing Questions</h2>
-            <p class="lead">SHARE Notify will gather together research release event reports from the metadata you provide. Since we will be reusing your metadata and then retransmitting it to others as notifications, we need to be sure the rights to use that metadata are not encumbered.</p>
+            <h2>Metadata Sharing</h2>
+            <p class="lead">Please confirm the following statements about the metadata you will be providing to SHARE:</p>
 
             <div class="field_entry">
-                <p>{{ form.meta_tos }} Metadata gathering violates this provider's Terms of Service.</p>
+                <p>{{ form.meta_tos }} Metadata gathering does not violate your own Terms of Service.</p>
             </div>
 
             <div class="field_entry">
-                <p>{{ form.meta_privacy }} Metadata gathering violates this provider's Privacy Policy.</p>
+                <p>{{ form.meta_privacy }} Metadata gathering does not violate your own Privacy Policy.</p>
             </div>
 
             <div class="field_entry">
-                <p>{{ form.meta_sharing_tos }} SHARE distributing your metadata violates this provider's Privacy Policy.</p>
+                <p>{{ form.meta_sharing }} Distributing this metadata does not violate your own Terms of Service or Privacy Policy</p>
             </div>
 
             <div class="field_entry">
-                <p>What license does this provider's metadata have?</p>
-                {% if form.meta_license.errors %}
-                  <span class="help-block">
-                    {% for error in form.meta_license.errors %}{{ error }}{% endfor %}
-                  </span>
-                {% endif %}
-                {{ form.meta_license }}
-                <p><small>Example: MIT, Apache, GPL</small></p>
+                <p>{{ form.meta_license_cc0 }} The metadata can be distributed under CC0 license and that does not violate your own license, Terms of Service, or Privacy Policy.</p>
             </div>
 
             <div class="field_entry">
-                <p>{{ form.meta_license_extended }} The license above extends to those beyond the group that gathered it.</p>
-            </div>
-
-            <div class="field_entry">
-                <p>{{ form.meta_future_license }} If unlicensed, this provider will explicitly license the content at a later date.</p>
+                <p>{{ form.meta_rights }} You have the right to acknowledge the above statements for your institution.</p>
             </div>
             {{ form.reg_id }}
 

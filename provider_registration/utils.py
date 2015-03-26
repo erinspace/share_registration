@@ -1,5 +1,4 @@
 import ast
-import time
 import logging
 from datetime import date, timedelta
 
@@ -23,7 +22,7 @@ def format_set_choices(pre_saved_data):
     return approved_set_set
 
 
-def get_oai_properties(base_url, request_rate_limit):
+def get_oai_properties(base_url):
     """ Makes 2 requests to the provided base URL:
         1 for the sets available
         1 for the list of properties
@@ -49,8 +48,6 @@ def get_oai_properties(base_url, request_rate_limit):
         for item in all_set_info:
             one_group = (item[0].text, item[1].text)
             set_groups.append(one_group)
-
-        time.sleep(int(request_rate_limit))
 
         # request 2 for records 30 days back just in case
         start_date = str(date.today() - timedelta(30))

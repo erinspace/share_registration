@@ -5,9 +5,10 @@
 <div class="row">
     <div class="col-xs-12">
         <ol class="breadcrumb">
-            <li><small>Contact Information</small></li>
-            <li><small>Metadata Information</small></li>
-            <li class="active"><b>Provider Information</b></li>
+            <li><small>Contact</small></li>
+            <li><small>Metadata</small></li>
+            <li class="active"><b>Provider Part 1</b></li>
+            <li><small>Provider Part 2</small></li>
         </ol>
     </div>
 </div>
@@ -33,11 +34,18 @@
         </div>
 
         <div class="field_entry">
-            <p><strong>{{ form.request_rate_limit}} If your provider API has a rate limit between requests, please enter it here as a number of seconds.</strong></p>
+            <p><strong>If there are rate limits for gathing from your service, please list them below.</strong></p>
+            {{ form.rate_limit }}
+            <p><small>Example: 1 request/second</small></p>
         </div>
 
         <div class="field_entry">
-            <p><strong>{{ form.oai_provider}} This content provider is based on OAI-PMH Standards.</strong></p>
+            <p><strong>If your provider API has documentation online, please enter the URL below.</strong></p>
+            {{ form.api_docs }}
+        </div>
+
+        <div class="field_entry">
+            <p><strong>{{ form.oai_provider }} This content provider is based on OAI-PMH Standards.</strong></p>
         </div>
 
         <div class="field_entry">
@@ -65,7 +73,7 @@
 
     {{ form.reg_id }}
 
-    <input class="btn btn-primary btn-bottom" type="submit" value="Submit" />
+    <input class="btn btn-primary btn-bottom" type="submit" value="Next" />
     </form>
 
 </div>
