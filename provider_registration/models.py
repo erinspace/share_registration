@@ -46,3 +46,6 @@ class RegistrationInfo(models.Model):
     was_registered_recently.boolean = True
     was_registered_recently.admin_order_field = 'registration_date'
     was_registered_recently.short_description = 'Registered recently?'
+
+    class Meta:
+        verbose_name = 'Registration'
