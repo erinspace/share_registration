@@ -245,8 +245,9 @@ class ViewTests(TestCase):
         name = "Some Name"
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
         reg_id = RegistrationInfo.objects.last().pk
-
-        response = views.render_oai_provider_form(request, name, base_url, reg_id)
+        api_docs = ''
+        rate_limit = ''
+        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit)
         root = etree.fromstring(response.content)
         form_element = root.xpath('//form')[0]
         title = form_element.getchildren()[0]
@@ -267,7 +268,9 @@ class ViewMethodTests(TestCase):
         provider_long_name = 'New Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
         reg_id = RegistrationInfo.objects.last().pk
-        success = views.save_oai_info(provider_long_name, base_url, reg_id)
+        api_docs = ''
+        rate_limit = ''
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
 
@@ -276,7 +279,9 @@ class ViewMethodTests(TestCase):
         provider_long_name = 'Golddust Monthly'
         base_url = 'http://wwe.com'
         reg_id = 1
-        success = views.save_oai_info(provider_long_name, base_url, reg_id)
+        api_docs = ''
+        rate_limit = ''
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'OAI Information could not be automatically processed.')
 
@@ -291,9 +296,11 @@ class ViewMethodTests(TestCase):
         ).save()
         provider_long_name = 'The COSMIC KEEEEEY'
         base_url = 'http://wwe.com'
+        rate_limit = ''
+        api_docs = ''
         new_registration = RegistrationInfo.objects.last()
         reg_id = new_registration.pk
-        success = views.save_other_info(provider_long_name, base_url, reg_id)
+        success = views.save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
         self.assertTrue(success)
 
 
