@@ -11,3 +11,6 @@ class PushedData(models.Model):
     contributors = models.TextField()
     dateUpdated = models.DateField(auto_now_add=True)
     source = models.ForeignKey('auth.User', related_name='data')
+
+    class Meta:
+        verbose_name = 'Data Object'
