@@ -69,6 +69,5 @@ def get_oai_properties(base_url):
 
     # If anything at all goes wrong, just render a blank form...
     except Exception as e:
-        import ipdb; ipdb.set_trace()
         logger.info(e)
         raise ValueError('OAI Processing Error - {}'.format(e))
