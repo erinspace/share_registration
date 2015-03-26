@@ -1,9 +1,17 @@
 {% extends "admin/base.html" %}
+{% load staticfiles %}
+
+{% block extrastyle %}
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" media="screen"/>
+{% endblock %}
+
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">SHARE Provider Registration</a></h1>
+
+
+<h1 id="site-name" class="admin_header"><img class="logo" src="{% static 'img/share.png' %}" style="max-width: 60px; margin-right: 10px;"/><a href="{% url 'admin:index' %}">SHARE Provider Registration</a></h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
