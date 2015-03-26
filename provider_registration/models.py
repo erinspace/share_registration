@@ -23,14 +23,15 @@ class RegistrationInfo(models.Model):
     base_url = models.URLField()
     description = models.TextField()
     oai_provider = models.BooleanField(default=False)
+    api_docs = models.URLField(blank=True, default='')
     provider_long_name = models.CharField(max_length=100)
     per_request_rate_limit = models.PositiveSmallIntegerField(default=0)
+    rate_limit = models.CharField(max_length=100, blank=True, default='')
     provider_short_name = models.CharField(max_length=50, blank=True, default='')
-    rate_limit_text_box = models.CharField(max_length=100, blank=True, default='')
 
     # Harvester Information
-    property_list = models.TextField()
-    approved_sets = models.TextField()
+    property_list = models.TextField(default='None')
+    approved_sets = models.TextField(blank=True, default='')
 
     # Added automatically
     registration_date = models.DateTimeField('date registered')
@@ -42,6 +43,6 @@ class RegistrationInfo(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days) <= self.registration_date <= now
 
-    was_registered_recently.admin_order_field = 'registration_date'
     was_registered_recently.boolean = True
+    was_registered_recently.admin_order_field = 'registration_date'
     was_registered_recently.short_description = 'Registered recently?'
