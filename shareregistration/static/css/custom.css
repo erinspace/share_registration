@@ -2,7 +2,7 @@
   padding-top: 30px;
 }
 
-ul {
+ul#id_approved_sets {
   width: 100%;
   margin-bottom:20px;
   overflow:hidden;
@@ -118,4 +118,11 @@ div#user-tools {
 
 div#user-tools a:link {
   color: #06B4EA;
+}
+
+table#result_list input {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
 }
