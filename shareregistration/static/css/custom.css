@@ -126,3 +126,8 @@ table#result_list input {
   padding-right: 0px;
   padding-left: 0px;
 }
+
+div.help_information {
+  text-align: right;
+  margin-bottom: 10px;
+}
