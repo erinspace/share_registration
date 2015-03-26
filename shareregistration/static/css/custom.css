@@ -2,7 +2,7 @@
   padding-top: 30px;
 }
 
-ul {
+ul#id_approved_sets {
   width: 100%;
   margin-bottom:20px;
   overflow:hidden;
@@ -30,7 +30,7 @@ ul#id_approved_sets {
   padding-left: 0px;
 }
 
-.logo {
+.logo_jumbotron {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -102,4 +102,27 @@ input[type=email] {
 
 span.help-block {
   color: #a94442;
+}
+
+#header {
+  background: #f5f5f5;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+  color: #5D625C;
+}
+
+div#user-tools {
+  color: #5D625C;
+}
+
+div#user-tools a:link {
+  color: #06B4EA;
+}
+
+table#result_list input {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
 }

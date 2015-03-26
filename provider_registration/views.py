@@ -139,12 +139,13 @@ def save_metadata_render_provider(request):
         )
 
 
-def save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit):
+def save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description):
     object_to_update = RegistrationInfo.objects.get(id=reg_id)
 
     object_to_update.api_docs = api_docs
     object_to_update.base_url = base_url
     object_to_update.rate_limit = rate_limit
+    object_to_update.description = description
     object_to_update.registration_date = timezone.now()
     object_to_update.provider_long_name = provider_long_name
 
@@ -153,7 +154,7 @@ def save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit):
     return True
 
 
-def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit):
+def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description):
     """ Gets and saves information about the OAI source
     """
     success = {'value': False, 'reason': 'XML Not Valid'}
@@ -164,6 +165,7 @@ def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit):
 
         object_to_update.api_docs = api_docs
         object_to_update.base_url = base_url
+        object_to_update.description = description
         object_to_update.rate_limit = rate_limit
         object_to_update.registration_date = timezone.now()
         object_to_update.approved_sets = oai_properties['sets']
@@ -186,8 +188,8 @@ def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit):
 
 
 @xframe_options_exempt
-def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit):
-    saving_successful = save_oai_info(name, base_url, reg_id, api_docs, rate_limit)
+def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description):
+    saving_successful = save_oai_info(name, base_url, reg_id, api_docs, rate_limit, description)
     if saving_successful['value']:
         pre_saved_data = RegistrationInfo.objects.get(id=reg_id)
 
@@ -255,8 +257,8 @@ def redirect_to_simple_oai(request):
 
 
 @xframe_options_exempt
-def render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit):
-    saving_successful = save_other_info(name, base_url, reg_id, api_docs, rate_limit)
+def render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description):
+    saving_successful = save_other_info(name, base_url, reg_id, api_docs, rate_limit, description)
     if saving_successful:
         form = OtherProviderForm(
             {
@@ -314,13 +316,14 @@ def register_provider(request):
         base_url = request.POST['base_url']
         rate_limit = request.POST['rate_limit']
         name = request.POST['provider_long_name']
+        description = request.POST['description']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
-            form = render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit)
+            form = render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
             return form
         else:
             # If it's made it this far, request is an OAI provider
-            form = render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit)
+            form = render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
             return form
     else:
         # Update the requested entries

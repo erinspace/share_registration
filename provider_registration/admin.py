@@ -4,15 +4,65 @@ from provider_registration.models import RegistrationInfo
 
 class RegistrationAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['provider_short_name', 'provider_long_name', 'base_url', 'property_list', 'approved_sets']}),
-        ('Date information', {'fields': ['registration_date'], 'classes': ['collapse']})
+        ('Contact', {
+            'fields': [
+                'contact_name',
+                'contact_email',
+            ]
+        }),
+        ('Provider', {
+            'fields': [
+                'api_docs',
+                'base_url',
+                'description',
+                'oai_provider',
+                'provider_short_name',
+                'provider_long_name',
+                'rate_limit'
+            ]
+        }),
+        ('Harvester', {
+            'fields': [
+                'base_url',
+                'property_list',
+                'approved_sets',
+                'per_request_rate_limit',
+            ]
+        }),
+        ('Metadata', {
+            'fields': [
+                'meta_tos',
+                'meta_rights',
+                'meta_privacy',
+                'meta_sharing',
+                'meta_license_cc0',
+                'meta_license'
+            ]
+        }),
+        ('Date information', {
+            'fields': ['registration_date'],
+            'classes': ['collapse']
+        })
     ]
 
     list_display_links = ['link']
-    list_display = ('link', 'provider_short_name', 'provider_long_name', 'registration_date', 'was_registered_recently', 'base_url')
+    list_display = (
+        'link',
+        'id',
+        'contact_name',
+        'contact_email',
+        'provider_short_name',
+        'provider_long_name',
+        'registration_date',
+        'base_url'
+    )
+
     list_filter = ['registration_date']
     search_fields = ['provider_long_name']
 
     list_editable = ['provider_long_name', 'provider_short_name']
+
+    def __unicode__(self):
+        return "Registration"
 
 admin.site.register(RegistrationInfo, RegistrationAdmin)

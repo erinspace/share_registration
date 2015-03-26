@@ -247,11 +247,34 @@ class ViewTests(TestCase):
         reg_id = RegistrationInfo.objects.last().pk
         api_docs = ''
         rate_limit = ''
-        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit)
+        description = 'A thing again!'
+        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
         root = etree.fromstring(response.content)
         form_element = root.xpath('//form')[0]
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Provider Information')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_dataquery.yaml')
+    def test_render_oai_provider_form_invaid_xml(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://wwe.com',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        request = self.factory.post('provider_registration/register/')
+        name = "Some Name"
+        base_url = 'http://wwe.com'
+        reg_id = RegistrationInfo.objects.last().pk
+        api_docs = ''
+        rate_limit = ''
+        description = 'A thing again!'
+        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
+        root = etree.fromstring(response.content)
+        form_element = root.xpath('//form')[0]
+        title = form_element.getchildren()[0]
+        self.assertEqual(title.text, 'Simple Provider Information')
 
 
 class ViewMethodTests(TestCase):
@@ -270,7 +293,8 @@ class ViewMethodTests(TestCase):
         reg_id = RegistrationInfo.objects.last().pk
         api_docs = ''
         rate_limit = ''
-        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        description = 'COSMC EKEEEEEEYYYYy'
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
 
@@ -281,7 +305,8 @@ class ViewMethodTests(TestCase):
         reg_id = 1
         api_docs = ''
         rate_limit = ''
-        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        description = 'SHAAAwwwwww'
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'OAI Information could not be automatically processed.')
 
@@ -298,9 +323,10 @@ class ViewMethodTests(TestCase):
         base_url = 'http://wwe.com'
         rate_limit = ''
         api_docs = ''
+        description = 'A thing!'
         new_registration = RegistrationInfo.objects.last()
         reg_id = new_registration.pk
-        success = views.save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        success = views.save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertTrue(success)
 
 
