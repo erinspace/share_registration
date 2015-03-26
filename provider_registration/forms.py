@@ -37,8 +37,8 @@ class OAIProviderForm(forms.ModelForm):
         super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
-    property_list = forms.CharField(widget=forms.HiddenInput)
     reg_id = forms.CharField(widget=forms.HiddenInput())
+    property_list = forms.CharField(widget=forms.HiddenInput)
     provider_long_name = forms.CharField(widget=forms.HiddenInput())
     base_url = forms.URLField()
 
