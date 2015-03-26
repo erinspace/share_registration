@@ -27,8 +27,8 @@ class InitialProviderForm(forms.ModelForm):
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'description',
-                  'oai_provider', 'reg_id', 'rate_limit_text_box']
+        fields = ['provider_long_name', 'base_url', 'description', 'oai_provider',
+                  'reg_id', 'rate_limit', 'api_docs']
 
 
 class OAIProviderForm(forms.ModelForm):
@@ -37,11 +37,11 @@ class OAIProviderForm(forms.ModelForm):
         super(OAIProviderForm, self).__init__(*args, **kwargs)
         self.fields['approved_sets'].choices = self.choices
 
-    provider_long_name = forms.CharField(widget=forms.HiddenInput())
+    property_list = forms.CharField(widget=forms.HiddenInput)
     reg_id = forms.CharField(widget=forms.HiddenInput())
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
     base_url = forms.URLField()
 
-    property_list = forms.CharField(widget=forms.Textarea)
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
 
     class Meta:
@@ -51,18 +51,20 @@ class OAIProviderForm(forms.ModelForm):
 
 
 class SimpleOAIProviderForm(forms.ModelForm):
-    provider_long_name = forms.CharField(widget=forms.HiddenInput())
     reg_id = forms.CharField(widget=forms.HiddenInput())
+    property_list = forms.CharField(widget=forms.HiddenInput)
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'property_list', 'reg_id', 'approved_sets']
+        fields = ['provider_long_name', 'base_url', 'reg_id', 'approved_sets', 'property_list']
 
 
 class OtherProviderForm(forms.ModelForm):
-    provider_long_name = forms.CharField(widget=forms.HiddenInput())
     reg_id = forms.CharField(widget=forms.HiddenInput())
+    property_list = forms.CharField(widget=forms.HiddenInput)
+    provider_long_name = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RegistrationInfo
-        fields = ['provider_long_name', 'base_url', 'property_list', 'reg_id']
+        fields = ['provider_long_name', 'base_url', 'reg_id', 'property_list']
