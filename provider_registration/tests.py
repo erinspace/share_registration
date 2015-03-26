@@ -247,7 +247,8 @@ class ViewTests(TestCase):
         reg_id = RegistrationInfo.objects.last().pk
         api_docs = ''
         rate_limit = ''
-        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit)
+        description = 'A thing again!'
+        response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
         root = etree.fromstring(response.content)
         form_element = root.xpath('//form')[0]
         title = form_element.getchildren()[0]
@@ -270,7 +271,8 @@ class ViewMethodTests(TestCase):
         reg_id = RegistrationInfo.objects.last().pk
         api_docs = ''
         rate_limit = ''
-        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        description = 'COSMC EKEEEEEEYYYYy'
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertTrue(success['value'])
         self.assertEqual(success['reason'], 'New Stardust Weekly registered and saved successfully')
 
@@ -281,7 +283,8 @@ class ViewMethodTests(TestCase):
         reg_id = 1
         api_docs = ''
         rate_limit = ''
-        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        description = 'SHAAAwwwwww'
+        success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertFalse(success['value'])
         self.assertEqual(success['reason'], 'OAI Information could not be automatically processed.')
 
@@ -298,9 +301,10 @@ class ViewMethodTests(TestCase):
         base_url = 'http://wwe.com'
         rate_limit = ''
         api_docs = ''
+        description = 'A thing!'
         new_registration = RegistrationInfo.objects.last()
         reg_id = new_registration.pk
-        success = views.save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit)
+        success = views.save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertTrue(success)
 
 

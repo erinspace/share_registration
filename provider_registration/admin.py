@@ -62,4 +62,7 @@ class RegistrationAdmin(admin.ModelAdmin):
 
     list_editable = ['provider_long_name', 'provider_short_name']
 
+    def __unicode__(self):
+        return "Registration"
+
 admin.site.register(RegistrationInfo, RegistrationAdmin)
