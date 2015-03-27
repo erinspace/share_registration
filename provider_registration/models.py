@@ -31,6 +31,7 @@ class RegistrationInfo(models.Model):
 
     # Harvester Information
     property_list = models.TextField(default='None')
+    active_provider = models.BooleanField(default=False)
     approved_sets = models.TextField(blank=True, default='')
 
     # Added automatically

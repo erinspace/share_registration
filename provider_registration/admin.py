@@ -27,6 +27,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                 'property_list',
                 'approved_sets',
                 'per_request_rate_limit',
+                'active_provider'
             ]
         }),
         ('Metadata', {
@@ -51,6 +52,7 @@ class RegistrationAdmin(admin.ModelAdmin):
         'id',
         'contact_name',
         'contact_email',
+        'active_provider',
         'provider_short_name',
         'provider_long_name',
         'registration_date',
@@ -60,7 +62,7 @@ class RegistrationAdmin(admin.ModelAdmin):
     list_filter = ['registration_date']
     search_fields = ['provider_long_name']
 
-    list_editable = ['provider_long_name', 'provider_short_name']
+    list_editable = ['provider_long_name', 'provider_short_name', 'active_provider']
 
     def __unicode__(self):
         return "Registration"

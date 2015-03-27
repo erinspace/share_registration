@@ -101,7 +101,12 @@ input[type=email] {
 }
 
 span.help-block {
-  color: #a94442;
+  background-color: #FF7B7B;
+  background-image: linear-gradient(90deg, transparent 60%, rgba(255,255,255,.5) 50%);
+  background-size: 3px 3px;
+  color: black;
+  font-weight: bold;
+  padding-left: 10px;
 }
 
 #header {
