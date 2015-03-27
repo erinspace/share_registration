@@ -257,21 +257,13 @@ def redirect_to_simple_oai(request):
 
 
 @xframe_options_exempt
-def render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description):
+def save_other_provider(request, name, base_url, reg_id, api_docs, rate_limit, description):
     saving_successful = save_other_info(name, base_url, reg_id, api_docs, rate_limit, description)
     if saving_successful:
-        form = OtherProviderForm(
-            {
-                'reg_id': reg_id,
-                'base_url': base_url,
-                'provider_long_name': name,
-                'property_list': 'property list'
-            }
-        )
         return render(
             request,
-            'provider_registration/other_registration_form.html',
-            {'form': form, 'name': name, 'base_url': base_url}
+            'provider_registration/confirmation.html',
+            {'provider': name}
         )
 
 
@@ -319,7 +311,7 @@ def register_provider(request):
         description = request.POST['description']
         # if it's a first request and not an oai request, render the other provider form
         if not request.POST.get('oai_provider'):
-            form = render_other_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
+            form = save_other_provider(request, name, base_url, reg_id, api_docs, rate_limit, description)
             return form
         else:
             # If it's made it this far, request is an OAI provider
