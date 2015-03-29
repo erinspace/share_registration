@@ -71,10 +71,10 @@ def get_contact_info(request):
 def save_contact_info(contact_name, contact_email):
     logger.info('Saving provider with contact name {} and email {}'.format(contact_name, contact_email))
     RegistrationInfo(
+        base_url=PLACEHOLDER,
         contact_name=contact_name,
         contact_email=contact_email,
         provider_long_name=PLACEHOLDER,
-        base_url=PLACEHOLDER,
         registration_date=timezone.now()
     ).save()
     new_registration = RegistrationInfo.objects.last()
