@@ -1,5 +1,9 @@
 SECRET_KEY = 'My Secret Key'
 
+DEBUG = True
+
+DOMAIN = 'http://localhost:8000'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -10,3 +14,5 @@ DATABASES = {
         # 'PORT': '5432'
     }
 }
+
+STATIC_URL = '{}/static/'.format(DOMAIN)

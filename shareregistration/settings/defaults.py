@@ -24,6 +24,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+DOMAIN = 'http://localhost:8000'
+
 ALLOWED_HOSTS = []
 
 
@@ -100,7 +102,8 @@ STATICFILES_DIRS = (
     ),
 )
 
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join('..', BASE_DIR, 'static')
+STATIC_URL = '{}/static/'.format(DOMAIN)
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 

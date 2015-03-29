@@ -58,3 +58,4 @@ target/
 **/bower_components
 **/settings/local.py
 .env
+static
