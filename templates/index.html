@@ -1,14 +1,9 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<div class="row">
-    <div class="col-xs-12">
-        <a class="btn btn-default btn-lg" role="button" href="/provider_registration">Register a Provider</a>
+{% block header_content %}
         <br/>
+        <p class="lead">Interact with SHARE Notify</p>
         <br/>
-        <a class="btn btn-default btn-lg" role="button" href="/pushed_data">Access Provider API</a>
-    </div>
-</div>
-
+        <a type="button" class="btn btn-primary btn-lg" href="/provider_registration" style="margin-right:10px;">Register a Provider</a>
+        <a type="button" class="btn btn-primary btn-lg" href="/pushed_data" style="margin-left: 10px;">Access Provider API</a>
 {% endblock %}
