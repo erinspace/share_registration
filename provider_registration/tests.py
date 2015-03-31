@@ -232,7 +232,7 @@ class ViewTests(TestCase):
         new_form_title = form_element[0].getchildren()[0].text
         self.assertEqual(new_form_title, 'Basic Provider Information')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery1.yaml')
     def test_render_oai_provider_form(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
@@ -254,7 +254,7 @@ class ViewTests(TestCase):
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Provider Information')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_dataquery.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_dataquery3.yaml')
     def test_render_oai_provider_form_invaid_xml(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
