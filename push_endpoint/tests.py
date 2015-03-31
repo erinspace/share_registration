@@ -1,10 +1,11 @@
 import copy
 import json
 
+import httpretty
 from django.test import TestCase
-from push_endpoint.views import DataList
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
+from push_endpoint.views import DataList, EstablishedDataList
 
 
 VALID_POST = {
@@ -36,7 +37,22 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    def test_established_view(self):
+        view = EstablishedDataList.as_view()
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(VALID_POST),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+
+        self.assertEqual(response.status_code, 201)
+
+    @httpretty.activate
     def test_missing_doi(self):
+        httpretty.register_uri(httpretty.GET, "http://dx.doi.org/", body='Looks good.', status=200)
+        httpretty.register_uri(httpretty.GET, "http://www.nature.com/", body='Looks good.', status=200)
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
         invalid_post.pop('doi')
@@ -70,7 +86,10 @@ class APIPostTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+    @httpretty.activate
     def test_missing_url(self):
+        httpretty.register_uri(httpretty.GET, "http://dx.doi.org/", body='Looks good.', status=200)
+        httpretty.register_uri(httpretty.GET, "http://www.nature.com/", body='Looks good.', status=200)
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
         invalid_post.pop('url')

@@ -42,6 +42,20 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         return queryset
 
 
+class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
+    """
+    List all pushed data that comes from an established provider
+    """
+    serializer_class = PushedDataSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(source=self.request.user)
+
+    def get_queryset(self):
+        return PushedData.fetch_established()
+
+
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete pushed data
@@ -60,11 +74,3 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-# @api_view(('GET',))
-# def api_root(request, format=None):
-#     return Response({
-#         'users': reverse('user-list', request=request, format=format),
-#         'data': reverse('data-list', request=request, format=format)
-#     })

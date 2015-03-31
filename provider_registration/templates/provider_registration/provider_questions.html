@@ -39,6 +39,11 @@
         </div>
 
         <div class="field_entry">
+            {% if form.api_docs.errors %}
+              <span class="help-block">
+                {% for error in form.api_docs.errors %}{{ error }}{% endfor %}
+              </span>
+            {% endif %}
             <p><strong>If your provider API has documentation online, please enter the URL below.</strong></p>
             {{ form.api_docs }}
         </div>

@@ -232,7 +232,7 @@ class ViewTests(TestCase):
         new_form_title = form_element[0].getchildren()[0].text
         self.assertEqual(new_form_title, 'Basic Provider Information')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery1.yaml')
     def test_render_oai_provider_form(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
@@ -254,7 +254,7 @@ class ViewTests(TestCase):
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Provider Information')
 
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_dataquery.yaml')
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_dataquery3.yaml')
     def test_render_oai_provider_form_invaid_xml(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
@@ -271,6 +271,24 @@ class ViewTests(TestCase):
         rate_limit = ''
         description = 'A thing again!'
         response = views.render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_limit, description)
+        root = etree.fromstring(response.content)
+        form_element = root.xpath('//form')[0]
+        title = form_element.getchildren()[0]
+        self.assertEqual(title.text, 'Simple Provider Information')
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_redirect.yaml')
+    def test_render_simple_oai_form(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://wwe.com',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        request = self.factory.post('provider_registration/register/')
+        response = views.redirect_to_simple_oai(request)
+        self.assertEqual(response.status_code, 200)
+
         root = etree.fromstring(response.content)
         form_element = root.xpath('//form')[0]
         title = form_element.getchildren()[0]
