@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<div class="container">
-    <h1>SHARE API ENDPOINT!</h1>
-    <ul>
-        <li><a href="/provider_registration">Register a Provider</a></li>
-        <li><a href="/push_endpoint">See Pushed Data</a></li>
-    </ul>
-</div>
+{% block header_content %}
+        <br/>
+        <p class="lead">Interact with SHARE Notify</p>
+        <br/>
+        <a type="button" class="btn btn-primary btn-lg" href="/provider_registration" style="margin-right:10px;">Register a Provider</a>
+        <a type="button" class="btn btn-primary btn-lg" href="/pushed_data" style="margin-left: 10px;">Access Provider API</a>
 {% endblock %}
