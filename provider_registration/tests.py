@@ -280,7 +280,7 @@ class ViewTests(TestCase):
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Simple Provider Information')
 
-    @mock.patch('provider_registration.utils.get_session_id')
+    @mock.patch('provider_registration.utils.get_session_item')
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_redirect.yaml')
     def test_render_simple_oai_form(self, mocked_id):
         RegistrationInfo(
