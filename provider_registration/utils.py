@@ -22,8 +22,8 @@ def format_set_choices(pre_saved_data):
     return approved_set_set
 
 
-def get_session_id(request):
-    return request.session['reg_id']
+def get_session_item(request, item):
+    return request.session[item]
 
 
 def get_oai_properties(base_url):
