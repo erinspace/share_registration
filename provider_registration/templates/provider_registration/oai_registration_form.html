@@ -32,7 +32,7 @@
                 <p class="lead">
                     <strong>Approved Sets</strong>
                     <button id="select-all" class="btn btn-xs" style="margin-left: 10px;">Select All</button>
-                    <button id="unselect-all" class="btn btn-xs">Unselect All</button>
+                    <button id="deselect-all" class="btn btn-xs">Deselect All</button>
                 </p>
                 <p>Check the sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets" target="_blank">ListSets API endpoint</a>. Displayed here are the setNames for the corresponding setSpec options in your publically accessable database.</p>
                 <p>If you'd rather enter the approved sets manually, click here to access the <a href="/provider_registration/simple_oai_registration/">simple OAI registration form</a>.</p>
@@ -65,7 +65,7 @@
             });
         });
 
-        $('#unselect-all').click(function (event) {
+        $('#deselect-all').click(function (event) {
             event.preventDefault();
             $('input[id^="id_approved_sets"]').each(function () {
                 this.checked = false;

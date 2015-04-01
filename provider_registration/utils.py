@@ -22,6 +22,10 @@ def format_set_choices(pre_saved_data):
     return approved_set_set
 
 
+def get_session_id(request):
+    return request.session['reg_id']
+
+
 def get_oai_properties(base_url):
     """ Makes 2 requests to the provided base URL:
         1 for the sets available
