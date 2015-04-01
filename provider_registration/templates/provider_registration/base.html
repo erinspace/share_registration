@@ -28,6 +28,7 @@
             pymChild.sendMessage('height', 0);
             $(window).load(function () {
                 setTimeout(pymChild.sendHeight(), 200);
+                pymChild.sendMessage('scroll');
             });
         </script>
         {% block javascript_bottom %}
