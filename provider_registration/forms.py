@@ -6,6 +6,8 @@ from provider_registration.models import RegistrationInfo
 
 
 class ContactInfoForm(forms.ModelForm):
+    contact_name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+    contact_email = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
 
     class Meta:
         model = RegistrationInfo
@@ -22,8 +24,11 @@ class MetadataQuestionsForm(forms.ModelForm):
 
 
 class InitialProviderForm(forms.ModelForm):
-    base_url = forms.CharField(max_length=100, validators=[URLResolves()])
     reg_id = forms.CharField(widget=forms.HiddenInput())
+    provider_long_name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+    api_docs = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), required=False)
+    rate_limit = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), required=False)
+    base_url = forms.URLField(validators=[URLResolves()], widget=forms.TextInput(attrs={'autocomplete': 'off'}))
 
     class Meta:
         model = RegistrationInfo
@@ -40,7 +45,7 @@ class OAIProviderForm(forms.ModelForm):
     reg_id = forms.CharField(widget=forms.HiddenInput())
     property_list = forms.CharField(widget=forms.HiddenInput)
     provider_long_name = forms.CharField(widget=forms.HiddenInput())
-    base_url = forms.URLField()
+    base_url = forms.URLField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
 
     approved_sets = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
 
