@@ -235,8 +235,6 @@ def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_lim
 
 @xframe_options_exempt
 def redirect_to_simple_oai(request):
-    # TODO - fix this - dangerous if more than one person is registering?
-    # maybe pass reg_id somehow as a post request? Or session information from the request?
     reg_id = request.session['reg_id']
     new_registration = RegistrationInfo.objects.get(id=reg_id)
 
