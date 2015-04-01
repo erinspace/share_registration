@@ -53,6 +53,7 @@ def get_contact_info(request):
         if form.is_valid():
             contact_name = request.POST.get('contact_name')
             contact_email = request.POST.get('contact_email')
+            request.session['contact_name'] = contact_name
             reg_id = save_contact_info(contact_name, contact_email)
             form = MetadataQuestionsForm({'reg_id': reg_id, 'meta_license': ' '})
             return render(
@@ -258,11 +259,12 @@ def redirect_to_simple_oai(request):
 @xframe_options_exempt
 def save_other_provider(request, name, base_url, reg_id, api_docs, rate_limit, description):
     saving_successful = save_other_info(name, base_url, reg_id, api_docs, rate_limit, description)
+    contact_name = request.session['contact_name']
     if saving_successful:
         return render(
             request,
             'provider_registration/confirmation.html',
-            {'provider': name}
+            {'provider': name, 'contact_name': contact_name}
         )
 
 
@@ -324,8 +326,9 @@ def register_provider(request):
         else:
             form_data = update_other_entry(request)
 
+        contact_name = request.session['contact_name']
         return render(
             request,
             'provider_registration/confirmation.html',
-            {'provider': form_data['provider_long_name'].value()}
+            {'provider': form_data['provider_long_name'].value(), 'contact_name': contact_name}
         )
