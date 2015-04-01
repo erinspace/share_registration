@@ -2,6 +2,8 @@ import vcr
 import datetime
 from lxml import etree
 
+import mock
+
 from django import forms
 from django.utils import timezone
 from django.test import TestCase, RequestFactory, Client
@@ -232,8 +234,10 @@ class ViewTests(TestCase):
         new_form_title = form_element[0].getchildren()[0].text
         self.assertEqual(new_form_title, 'Basic Provider Information')
 
+    @mock.patch('provider_registration.utils.get_oai_properties')
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery1.yaml')
-    def test_render_oai_provider_form(self):
+    def test_render_oai_provider_form(self, mock_properties):
+        mock_properties.return_value = {'properties': 'shtuff', 'sets': [('star', 'dust')]}
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
             base_url='http://repository.stcloudstate.edu/do/oai/',
@@ -276,8 +280,9 @@ class ViewTests(TestCase):
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Simple Provider Information')
 
+    @mock.patch('provider_registration.utils.get_session_id')
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/invalid_xml_oai_redirect.yaml')
-    def test_render_simple_oai_form(self):
+    def test_render_simple_oai_form(self, mocked_id):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
             base_url='http://wwe.com',
@@ -285,6 +290,7 @@ class ViewTests(TestCase):
             approved_sets=['some', 'sets'],
             registration_date=timezone.now()
         ).save()
+        mocked_id.return_value = RegistrationInfo.objects.last().pk
         request = self.factory.post('provider_registration/register/')
         response = views.redirect_to_simple_oai(request)
         self.assertEqual(response.status_code, 200)
@@ -297,8 +303,9 @@ class ViewTests(TestCase):
 
 class ViewMethodTests(TestCase):
 
+    @mock.patch('provider_registration.utils.get_oai_properties')
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/oai_response_datequery2.yaml')
-    def test_valid_oai_url(self):
+    def test_valid_oai_url(self, mock_properties):
         RegistrationInfo(
             provider_long_name='The Old Stardust Weekly',
             base_url='http://aurl.com',
@@ -306,6 +313,7 @@ class ViewMethodTests(TestCase):
             approved_sets=['some', 'sets'],
             registration_date=timezone.now()
         ).save()
+        mock_properties.return_value = {'properties': 'shtuff', 'sets': [('star', 'dust')]}
         provider_long_name = 'New Stardust Weekly'
         base_url = 'http://repository.stcloudstate.edu/do/oai/'
         reg_id = RegistrationInfo.objects.last().pk
