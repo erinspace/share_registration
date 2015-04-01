@@ -19,7 +19,8 @@
             {% if form.errors %}
                 <div class="text-danger">Please correct the error{{ form.errors|pluralize }} below.</div>
             {% endif %}
-            <h2>Contact Information</h2>
+            <h2>Technical Contact Information</h2>
+            <p>Please let us know who we can ask questsions about your data provider.</p>
 
             <div class="field_entry">
                 {% if form.contact_name.errors %}
@@ -27,7 +28,7 @@
                     {% for error in form.contact_name.errors %}{{ error }}{% endfor %}
                   </span>
                 {% endif %}
-                <p><strong>Your Name</strong></p>
+                <p><strong>Name</strong></p>
                 {{ form.contact_name }}
             </div>
             <div class="field_entry">
@@ -36,7 +37,7 @@
                     {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
                   </span>
                 {% endif %}
-                <p><strong>Your Email</strong></p>
+                <p><strong>Email</strong></p>
                 {{ form.contact_email }}
             </div>
                 <input class="btn btn-primary btn-bottom" type="submit" value="Next" />
