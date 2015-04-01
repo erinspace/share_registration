@@ -237,7 +237,8 @@ def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_lim
 def redirect_to_simple_oai(request):
     # TODO - fix this - dangerous if more than one person is registering?
     # maybe pass reg_id somehow as a post request? Or session information from the request?
-    new_registration = RegistrationInfo.objects.last()
+    reg_id = request.session['reg_id']
+    new_registration = RegistrationInfo.objects.get(id=reg_id)
 
     name = new_registration.provider_long_name
     base_url = new_registration.base_url
@@ -295,6 +296,7 @@ def register_provider(request):
     """
     ## TODO - request.POST['property_list'] is '' here and so this needs to be fixed!!!
     if not request.POST.get('property_list'):
+        request.session['reg_id'] = request.POST['reg_id']
         # this is the initial post, and needs to be checked
         form = InitialProviderForm(request.POST)
         if not form.is_valid():
