@@ -25,6 +25,7 @@
         <script src="{% static 'bower_components/pym.js/dist/pym.min.js' %}"></script>
         <script>
             var pymChild = new pym.Child({ id: 'share_registration_iframe' });
+            pymChild.sendMessage('scroll_top_now', ' ');
             pymChild.sendMessage('height', 0);
             $(window).load(function () {
                 setTimeout(pymChild.sendHeight(), 200);
