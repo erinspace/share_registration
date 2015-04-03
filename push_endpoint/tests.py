@@ -51,6 +51,15 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    def test_get_established_view(self):
+        view = EstablishedDataList.as_view()
+        request = self.factory.get(
+            '/pushed_data/established'
+        )
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_doi(self):
         view = DataList.as_view()
