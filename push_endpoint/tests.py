@@ -1,7 +1,7 @@
 import copy
 import json
 
-import httpretty
+import vcr
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
@@ -25,6 +25,7 @@ class APIPostTests(TestCase):
         self.factory = APIRequestFactory()
         self.user = User.objects.create(username='bubbaray', password='dudley')
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi1.yaml')
     def test_valid_submission(self):
         view = DataList.as_view()
         request = self.factory.post(
@@ -37,6 +38,7 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
     def test_established_view(self):
         view = EstablishedDataList.as_view()
         request = self.factory.post(
@@ -49,10 +51,8 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
-    @httpretty.activate
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_doi(self):
-        httpretty.register_uri(httpretty.GET, "http://dx.doi.org/", body='Looks good.', status=200)
-        httpretty.register_uri(httpretty.GET, "http://www.nature.com/", body='Looks good.', status=200)
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
         invalid_post.pop('doi')
@@ -67,6 +67,7 @@ class APIPostTests(TestCase):
 
         self.assertEqual(data['doi'], ['This field is required.'])
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_invalid_doi(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -86,10 +87,8 @@ class APIPostTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-    @httpretty.activate
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_url(self):
-        httpretty.register_uri(httpretty.GET, "http://dx.doi.org/", body='Looks good.', status=200)
-        httpretty.register_uri(httpretty.GET, "http://www.nature.com/", body='Looks good.', status=200)
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
         invalid_post.pop('url')
@@ -105,6 +104,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['url'], ['This field is required.'])
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_invalid_url(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -121,6 +121,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['url'], ['Enter a valid URL.'])
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_title_fails(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -137,6 +138,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['title'], ['This field is required.'])
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_service_id_fails(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -153,6 +155,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['serviceID'], ['This field is required.'])
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_contributors_fails(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -169,6 +172,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['contributors'], ['This field is required.'])
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi3.yaml')
     def test_missing_tags_is_ok(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -183,6 +187,7 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
     def test_missing_description_is_ok(self):
         view = DataList.as_view()
         invalid_post = copy.copy(VALID_POST)
@@ -197,6 +202,7 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_anonomous_user_can_view(self):
         view = DataList.as_view()
         request = self.factory.get('/pushed_data/')
@@ -205,6 +211,7 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_anonomous_user_can_not_post(self):
         view = DataList.as_view()
         request = self.factory.post(
@@ -219,6 +226,7 @@ class APIPostTests(TestCase):
         self.assertEqual(data['detail'], 'Authentication credentials were not provided.')
         self.assertEqual(response.status_code, 401)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi2.yaml')
     def test_source_is_same_as_user(self):
         view = DataList.as_view()
         request = self.factory.post(
