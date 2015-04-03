@@ -40,7 +40,7 @@ class APIPostTests(TestCase):
     def test_established_view(self):
         view = EstablishedDataList.as_view()
         request = self.factory.post(
-            '/pushed_data/',
+            '/pushed_data/established',
             json.dumps(VALID_POST),
             content_type='application/json'
         )
@@ -217,7 +217,7 @@ class APIPostTests(TestCase):
         data = response.data
 
         self.assertEqual(data['detail'], 'Authentication credentials were not provided.')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 401)
 
     def test_source_is_same_as_user(self):
         view = DataList.as_view()
