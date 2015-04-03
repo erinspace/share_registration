@@ -44,6 +44,7 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
 class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
     """
     List all pushed data that comes from an established provider
+    Example query: pushed_data/established?from=2015-03-16&to=2015-04-06
     """
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
