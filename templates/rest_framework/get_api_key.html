@@ -11,6 +11,7 @@
             <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap-tweaks.css" %}"/>
         {% endblock %}
         <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/default.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static "css/api_custom.css" %}"/>
         {% endblock %}
     </head>
 
@@ -22,10 +23,9 @@
                     <div class="row-fluid">
                         <div>
                             {% block branding %}
-                            <h3 style="margin: 0 0 20px;">SHARE</h3>
-
-                            <h4>Please contact <a href="mailto:share-support@osf.io">share-support@osf.io</a> for login information</h4>
-                            <br>
+                                <img class="logo" src="{% static 'img/share.png' %}"/>
+                                <h4>Please contact <a href="mailto:share-support@osf.io">share-support@osf.io</a> for login information</h4>
+                                <br/>
                             {% endblock %}
                         </div>
                     </div><!-- /row fluid -->
