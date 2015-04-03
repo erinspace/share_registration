@@ -1,18 +1,14 @@
+from dateutil.parser import parse
+from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
-
-from dateutil.parser import parse
-from django.shortcuts import render
-
+from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
-
-from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
 
 class DataList(ListBulkCreateUpdateDestroyAPIView):
@@ -51,7 +47,6 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
     """
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    authentication_classes = (BasicAuthentication, TokenAuthentication)
 
     def perform_create(self, serializer):
         serializer.save(source=self.request.user)
