@@ -28,9 +28,7 @@ class PushedData(models.Model):
 
     @classmethod
     def fetch_established(cls):
-        test = cls.objects.all().filter(source__provider__established=True)
-        return test
-        # return cls.objects.find(source__provider__established=True)
+        return cls.objects.all().filter(source__provider__established=True)
 
     class Meta:
         verbose_name = 'Data Object'
