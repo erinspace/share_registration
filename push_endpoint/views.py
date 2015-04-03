@@ -3,6 +3,8 @@ from rest_framework import permissions
 from django.contrib.auth.models import User
 
 from dateutil.parser import parse
+from django.shortcuts import render
+
 
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import UserSerializer
@@ -55,7 +57,21 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
         serializer.save(source=self.request.user)
 
     def get_queryset(self):
-        return PushedData.fetch_established()
+        queryset = PushedData.fetch_established()
+        filter = {}
+
+        from_date = self.request.QUERY_PARAMS.get('from')
+        to_date = self.request.QUERY_PARAMS.get('to')
+
+        if from_date:
+            filter['dateUpdated__gte'] = parse(from_date)
+
+        if to_date:
+            filter['dateUpdated__lte'] = parse(to_date)
+
+        queryset = queryset.filter(**filter)
+
+        return queryset
 
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -76,3 +92,10 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+def render_api_form(request):
+    return render(
+        request,
+        'rest_framework/get_api_key.html'
+    )
