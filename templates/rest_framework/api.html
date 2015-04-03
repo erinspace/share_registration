@@ -1,5 +1,6 @@
 {% extends "rest_framework/base.html" %}
-
+    {% load url from future %}
+    {% load rest_framework %}
     {% load static %}
 
     {% block title %}SHARE Notify{% endblock %}
@@ -16,6 +17,13 @@
 
     {% block branding %}
         <img class="logo" src="{% static 'img/share.png' %}"/>
+    {% endblock %}
+
+    {% block userlinks %}
+    {{ block.super }}
+    
+        <li><a href="../get-api-key/">Get API Key</a></li>
+
     {% endblock %}
 
 
