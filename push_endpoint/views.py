@@ -91,7 +91,9 @@ class UserDetail(generics.RetrieveAPIView):
 
 
 def render_api_form(request):
+    token = request.user.auth_token
     return render(
         request,
-        'rest_framework/get_api_key.html'
+        'rest_framework/get_api_key.html',
+        {'auth_token': token}
     )

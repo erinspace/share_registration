@@ -36,7 +36,3 @@ router.register(r'pushed_data/established', views.DataList.as_view(), base_name=
 urlpatterns = format_suffix_patterns(urlpatterns)
 
 urlpatterns += router.urls
-
-urlpatterns += [
-    url(r'^api-token-auth/', auth_views.obtain_auth_token, name='api-token-auth')
-]
