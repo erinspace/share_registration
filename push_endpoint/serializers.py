@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework_bulk import BulkSerializerMixin, BulkListSerializer
 
 from push_endpoint.models import PushedData
-from push_endpoint.validators import ValidDOI
+from push_endpoint.validators import ValidDOI, JsonSchema
 
 
 class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSerializer):
@@ -16,7 +16,8 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSeri
         list_serializer_class = BulkListSerializer
 
         validators = [
-            ValidDOI()
+            ValidDOI(),
+            JsonSchema()
         ]
 
 
