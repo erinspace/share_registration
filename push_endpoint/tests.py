@@ -5,7 +5,7 @@ import vcr
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
-from push_endpoint.views import DataList, EstablishedDataList
+from push_endpoint.views import DataList, EstablishedDataList, render_api_help
 
 
 VALID_POST = {
@@ -55,6 +55,15 @@ class APIPostTests(TestCase):
         view = EstablishedDataList.as_view()
         request = self.factory.get(
             '/pushed_data/established'
+        )
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_api_docs(self):
+        view = render_api_help
+        request = self.factory.get(
+            '/help'
         )
         response = view(request)
 
