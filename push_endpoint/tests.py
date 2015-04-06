@@ -2,11 +2,10 @@ import copy
 import json
 
 import vcr
-import mock
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
-from push_endpoint.views import DataList, EstablishedDataList, render_api_help, render_api_form
+from push_endpoint.views import DataList, EstablishedDataList, render_api_help
 
 
 VALID_POST = {
