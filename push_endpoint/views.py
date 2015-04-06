@@ -98,6 +98,7 @@ def render_api_form(request):
         {'auth_token': token}
     )
 
+
 def render_api_help(request):
     return render(
         request,
