@@ -1,35 +1,15 @@
 ## custom validators
-from rest_framework import serializers
+import jsonschema
 from rest_framework.exceptions import ParseError
 
 from push_endpoint import schemas
 
-import requests
-import jsonschema
-
-DOI_URL = 'https://dx.doi.org/'
-
-
-class ValidDOI(object):
-    def __call__(self, value):
-        ''' value is the serialized data to be validated '''
-
-        doi = value.get('doi')
-
-        if doi.startswith(DOI_URL):
-            request_url = doi
-        else:
-            request_url = DOI_URL + doi
-
-        response = requests.get(request_url)
-
-        if response.status_code == 404:
-            raise serializers.ValidationError('DOI does not resolve, please enter a valid DOI')
-
 
 class JsonSchema(object):
     def __call__(self, value):
+
+        json = value.get('jsonData')
         try:
-            jsonschema.validate(value, schemas.share)
+            jsonschema.validate(json, schemas.share)
         except ValueError as error:
             raise ParseError(detail=error.message)
