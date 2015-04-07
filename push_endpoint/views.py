@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-from rest_framework import status
-=======
+
 from dateutil.parser import parse
 from django.shortcuts import render
->>>>>>> b1fba159edde82a6238520ba34183115d4f92f5c
+
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
@@ -14,17 +12,6 @@ from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
 
-<<<<<<< HEAD
-from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
-
-from rest_framework import views
-from rest_framework.exceptions import ParseError
-from rest_framework.response import Response
-
-from . import negotiators, parsers, utils
-
-=======
->>>>>>> b1fba159edde82a6238520ba34183115d4f92f5c
 
 class DataList(ListBulkCreateUpdateDestroyAPIView):
     """
@@ -46,10 +33,10 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         to_date = self.request.QUERY_PARAMS.get('to')
 
         if from_date:
-            filter['dateUpdated__gte'] = parse(from_date)
+            filter['collectionDateTime__gte'] = parse(from_date)
 
         if to_date:
-            filter['dateUpdated__lte'] = parse(to_date)
+            filter['collectionDateTime__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
@@ -75,10 +62,10 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
         to_date = self.request.QUERY_PARAMS.get('to')
 
         if from_date:
-            filter['dateUpdated__gte'] = parse(from_date)
+            filter['collectionDateTime__gte'] = parse(from_date)
 
         if to_date:
-            filter['dateUpdated__lte'] = parse(to_date)
+            filter['collectionDateTime__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
@@ -103,24 +90,6 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class ProductView(views.APIView):
-
-    parser_classes = (parsers.JSONSchemaParser,)
-    content_negotiation_class = negotiators.IgnoreClientContentNegotiation
-
-    def post(self, request, *args, **kwargs):
-        try:
-            # implicitly calls parser_classes
-            request.DATA
-        except ParseError as error:
-            return Response(
-                'Invalid JSON - {0}'.format(error.message),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        utils.store_the_json(request.DATA)
-        return Response()
 
 
 def render_api_form(request):
