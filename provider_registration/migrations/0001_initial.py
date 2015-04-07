@@ -31,10 +31,12 @@ class Migration(migrations.Migration):
                 ('rate_limit', models.CharField(default=b'', max_length=100, blank=True)),
                 ('provider_short_name', models.CharField(default=b'', max_length=50, blank=True)),
                 ('property_list', models.TextField(default=b'None')),
+                ('active_provider', models.BooleanField(default=False)),
                 ('approved_sets', models.TextField(default=b'', blank=True)),
                 ('registration_date', models.DateTimeField(verbose_name=b'date registered')),
             ],
             options={
+                'verbose_name': 'Registration',
             },
             bases=(models.Model,),
         ),

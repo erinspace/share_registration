@@ -1,5 +1,7 @@
+
 from dateutil.parser import parse
 from django.shortcuts import render
+
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
@@ -31,10 +33,10 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         to_date = self.request.QUERY_PARAMS.get('to')
 
         if from_date:
-            filter['dateUpdated__gte'] = parse(from_date)
+            filter['collectionDateTime__gte'] = parse(from_date)
 
         if to_date:
-            filter['dateUpdated__lte'] = parse(to_date)
+            filter['collectionDateTime__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
@@ -60,10 +62,10 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
         to_date = self.request.QUERY_PARAMS.get('to')
 
         if from_date:
-            filter['dateUpdated__gte'] = parse(from_date)
+            filter['collectionDateTime__gte'] = parse(from_date)
 
         if to_date:
-            filter['dateUpdated__lte'] = parse(to_date)
+            filter['collectionDateTime__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
