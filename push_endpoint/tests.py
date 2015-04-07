@@ -6,6 +6,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
 from push_endpoint.views import DataList, EstablishedDataList, render_api_help
+from shareregistration.views import index as main_index
 
 
 VALID_POST = {
@@ -266,3 +267,12 @@ class APIPostTests(TestCase):
         data = response.data
 
         self.assertEqual(data['source'], request.user.username)
+
+    def test_render_index(self):
+        view = main_index
+        request = self.factory.get(
+            '/index'
+        )
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
