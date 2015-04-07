@@ -1,5 +1,80 @@
 share = {
     "definitions": {
+        "person": {
+            "required": [
+                "name"
+            ],
+            "type": "object",
+            "description": "A person that is a contributor to the research object.",
+            "properties": {
+                "affiliation": {
+                    "items": [
+                        {
+                            "$ref": "#/definitions/organization"
+                        }
+                    ],
+                    "type": "array",
+                    "description": "The organization(s) that this person is affiliated with. For example, a school/university."
+                },
+                "givenName": {
+                    "type": "string",
+                    "description": "Also called the \"first name\",this element is preferred over using the combined \"name\" field."
+                },
+                "additionalName": {
+                    "type": "string",
+                    "description": "Also called the \"middle name\",this element will be derived from the creator.name by SHARE if not supplied by the source."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the person if familyName, givenName, and/or additionalName."
+                },
+                "sameAs": {
+                    "items": {
+                        "type": "string",
+                        "description": "An HTTP URI that describes the person.",
+                        "format": "uri"
+                    },
+                    "type": "array",
+                    "description": "An array of identifiers expressed as HTTP URIs that describe the person. For example, an ORCID, ResearcherID, arXiv author ID, ScopusID,  ISNI, or other unique identifier expressed as an HTTP URI."
+                },
+                "familyName": {
+                    "type": "string",
+                    "description": "Also called the \"last name\",this element is preferred over using the combined \"name\" field."
+                },
+                "email": {
+                    "type": "string",
+                    "description": "The email address for this person.",
+                    "format": "email"
+                }
+            }
+        },
+        "organization": {
+            "required": [
+                "name"
+            ],
+            "type": "object",
+            "description": "An organization or institution.",
+            "properties": {
+                "sameAs": {
+                    "items": {
+                        "type": "string",
+                        "description": "A single HTTP URI that describes this organization",
+                        "format": "uri"
+                    },
+                    "type": "array",
+                    "description": "Identifiers that describe this organization"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the organization."
+                },
+                "email": {
+                    "type": "string",
+                    "description": "An email address for this organization",
+                    "format": "uri"
+                }
+            }
+        },
         "sponsor": {
             "required": [
                 "sponsorName"
@@ -14,76 +89,6 @@ share = {
                 "sponsorIdentifier": {
                     "type": "string",
                     "description": "A globally unique identifier for the sponsor of the resource should be recorded here.",
-                    "format": "uri"
-                }
-            }
-        },
-        "person": {
-            "required": [
-                "name"
-            ],
-            "type": "object",
-            "description": "A person that is a contributor to the research object",
-            "properties": {
-                "affiliation": {
-                    "type": "string",
-                    "description": "An organization that this person is affiliated with. For example, a school/university."
-                },
-                "givenName": {
-                    "type": "string",
-                    "description": "Also called the \"first name\", this element is preferred over using the combined \"name\" field."
-                },
-                "additionalName": {
-                    "type": "string",
-                    "description": "Also called the \"middle name\", this element will be derived from the creator.name by SHARE if not supplied by the source."
-                },
-                "name": {
-                    "type": "string",
-                    "description": "The name of the person if familyName, givenName, and/or additionalName."
-                },
-                "sameAs": {
-                    "items": {
-                        "type": "string",
-                        "description": "An HTTP URI that describes the person.",
-                        "format": "uri"
-                    },
-                    "type": "array",
-                    "description": "An array of identifiers expressed as HTTP URIs that describe the person. For example, an ORCID, ResearcherID, arXiv author ID, ScopusID, ISNI, or other unique identifier expressed as an HTTP URI."
-                },
-                "familyName": {
-                    "type": "string",
-                    "description": "Also called the \"last name\",this element is preferred over using the combined \"name\" field."
-                },
-                "email": {
-                    "type": "string",
-                    "description": "The email address for this person.",
-                    "format": "email"
-                }
-            }
-        },
-        "institution": {
-            "required": [
-                "name"
-            ],
-            "type": "object",
-            "description": "An institution that is a contributor to the research object",
-            "properties": {
-                "sameAs": {
-                    "items": {
-                        "type": "string",
-                        "description": "A single HTTP URI that describes this institution",
-                        "format": "uri"
-                    },
-                    "type": "array",
-                    "description": "Identifiers that describe this organization"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Name of the organization."
-                },
-                "email": {
-                    "type": "string",
-                    "description": "An email address for this institution",
                     "format": "uri"
                 }
             }
@@ -194,7 +199,7 @@ share = {
                         "$ref": "#/definitions/person"
                     },
                     {
-                        "$ref": "#/definitions/institution"
+                        "$ref": "#/definitions/organization"
                     }
                 ]
             },
