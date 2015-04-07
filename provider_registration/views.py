@@ -3,8 +3,8 @@ import logging
 from lxml.etree import XMLSyntaxError
 
 from django.utils import timezone
+from django.shortcuts import render
 from django.forms.util import ErrorList
-from django.shortcuts import get_object_or_404, render
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from provider_registration import utils
@@ -20,21 +20,7 @@ PLACEHOLDER = 'temp_value'
 
 @xframe_options_exempt
 def index(request):
-    latest_provider_list = RegistrationInfo.objects.order_by('-registration_date')[:20]
-
-    context = {'latest_provider_list': latest_provider_list}
-
-    return render(request, 'provider_registration/index.html', context)
-
-
-@xframe_options_exempt
-def detail(request, provider_long_name):
-    provider = get_object_or_404(RegistrationInfo, provider_long_name=provider_long_name)
-    return render(
-        request,
-        'provider_registration/detail.html',
-        {'provider': provider}
-    )
+    return render(request, 'provider_registration/index.html')
 
 
 @xframe_options_exempt

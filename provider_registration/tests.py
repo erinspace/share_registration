@@ -164,10 +164,6 @@ class ViewTests(TestCase):
         view = views.index(request)
         self.assertEqual(view.status_code, 200)
 
-    def test_get_provider_detail_fails(self):
-        response = self.client.get('/provider_registration/provider_detail/THISISNONSENSE')
-        self.assertEqual(response.status_code, 301)
-
     def test_get_provider_detail(self):
         RegistrationInfo(
             provider_long_name='Stardust Weekly',
