@@ -1,9 +1,13 @@
+import collections
+
 from django.db import models
 from django.conf import settings
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
+
+from jsonfield import JSONField
 
 
 class Provider(models.Model):
@@ -12,15 +16,9 @@ class Provider(models.Model):
 
 
 class PushedData(models.Model):
-    url = models.URLField()
-    doi = models.TextField()
-    title = models.TextField()
-    serviceID = models.TextField()
-    contributors = models.TextField()
-    tags = models.TextField(blank=True)
-    description = models.TextField(blank=True)
-    dateUpdated = models.DateField(auto_now_add=True)
+    jsonData = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
     source = models.ForeignKey('auth.User', related_name='data')
+    collectionDateTime = models.DateTimeField(auto_now_add=True)
 
     @property
     def established(self):
