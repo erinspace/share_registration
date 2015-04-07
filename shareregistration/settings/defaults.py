@@ -34,10 +34,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
+    'rest_framework.authtoken',
     'provider_registration',
     'rest_framework',
     'push_endpoint'
@@ -108,5 +109,10 @@ STATIC_URL = '{}/static/'.format(DOMAIN)
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }

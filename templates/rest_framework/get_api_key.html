@@ -1,0 +1,41 @@
+{% load url from future %}
+{% load rest_framework %}
+{% load static %}
+
+<html>
+
+    <head>
+        {% block style %}
+        {% block bootstrap_theme %}
+            <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap.min.css" %}"/>
+            <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap-tweaks.css" %}"/>
+        {% endblock %}
+        <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/default.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static "css/api_custom.css" %}"/>
+        {% endblock %}
+    </head>
+
+    <body class="container">
+
+        <div class="container-fluid" style="margin-top: 30px">
+            <div class="row-fluid">
+                <div class="well" style="width: 520px; margin-left: auto; margin-right: auto">
+                    <div class="row-fluid">
+                        <div>
+                            {% block branding %}
+                                <img class="logo" src="{% static 'img/share.png' %}"/>
+                                <h3>API Key</h3>
+                                <p>Use this token as your authentication when pushing data to the SHARE API.</p>
+                                <br/>
+                                <h4>Token {{ auth_token }}</h4>
+                                <br/>
+                                <p>For more information on the SHARE API and authenticaion, see
+                                the <a href="https://osf.io/api/v1/share/help" target="_blank">API Documentation</a>.</p>
+                            {% endblock %}
+                        </div>
+                    </div><!-- /row fluid -->
+                </div><!--/.well-->
+            </div><!-- /.row-fluid -->
+        </div><!-- /.container-fluid -->
+    </body>
+</html>

@@ -1,9 +1,10 @@
 {% extends "rest_framework/login_base.html" %}
+{% load static %}
 
 {% block branding %}
-<h3 style="margin: 0 0 20px;">SHARE</h3>
+    <img class="logo" src="{% static 'img/share.png' %}"/>
 
-<h4>Please contact <a href="mailto:share@cos.io">share@cos.io</a> for login information</h4>
-<br>
+    <h4>Please contact <a href="mailto:share@cos.io">share@cos.io</a> for login information</h4>
+    <br/>
 
 {% endblock %}
