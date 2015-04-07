@@ -11,7 +11,7 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSeri
 
     class Meta:
         model = PushedData
-        fields = ('id', 'collectionDateTime', 'source')
+        fields = ('id', 'collectionDateTime', 'source', 'jsonData')
         list_serializer_class = BulkListSerializer
 
         validators = [
