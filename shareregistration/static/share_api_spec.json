@@ -10,7 +10,7 @@
             "url": "http://osf.io/share"
         }
     },
-    "host": "localhost:5000",
+    "host": "staging.osf.io",
     "basePath": "/api/v1",
     "tags": [
         {
@@ -19,7 +19,8 @@
         }
     ],
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "consumes": [
         "application/json"
