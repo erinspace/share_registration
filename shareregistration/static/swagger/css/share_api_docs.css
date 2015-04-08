@@ -14,3 +14,7 @@ div#api_doc_header {
   font-family: "Droid Sans", sans-serif;
   max-width: 960px;
 }
+
+#SHARE_post_share_search_content form div input.submit {
+    display: none !important;
+}
