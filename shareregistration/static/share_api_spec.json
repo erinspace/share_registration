@@ -4,7 +4,6 @@
         "version": "1.0.0",
         "title": "SHARE Data",
         "description": "SHARE Research Release Events",
-        "termsOfService": "http://helloreverb.com/terms/",
         "contact": {
             "name": "Center for Open Science",
             "email": "share-support@osf.io",
@@ -17,12 +16,6 @@
     },
     "host": "localhost:5000",
     "basePath": "/api/v1",
-    "tags": [
-        {
-            "name": "SHARE",
-            "description": "API Endpoints"
-        }
-    ],
     "schemes": [
         "http"
     ],
@@ -35,7 +28,6 @@
     "paths": {
         "/share/search": {
             "get": {
-                "tags": ["SHARE"],
                 "description": "Normalized SHARE Data from all content providers",
                 "produces": [
                     "application/json"
@@ -90,12 +82,201 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/share/data": {
             "post": {
-                "tags": ["SHARE"],
                 "description": "Normalized SHARE Data from all content providers",
                 "produces": [
                     "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "creationDate",
+                        "in": "body",
+                        "description": "Creation date of the research object.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "contributor",
+                        "in": "body",
+                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an institution.",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "person",
+                            "$ref": "institution"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "body",
+                        "description": "A textual description of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "directLink",
+                        "required": true,
+                        "in": "body",
+                        "description": "A persistent HTTP URI that points to the research object.",
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    {
+                        "name": "releaseDate",
+                        "in": "body",
+                        "description": "The date of public release when the research object is freely available.",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "releaseDate",
+                        "in": "body",
+                        "required": true,
+                        "format": "date",
+                        "type": "string",
+                        "description": "The date of public release when the research object is freely available."
+                    },
+                    {
+                        "name": "freeToRead",
+                        "in": "body",
+                        "description": "An object consisting of a date range specifying when this research object will be free to read.",
+                        "object": "array",
+                        "schema": {
+                            "$ref": "freeToRead"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "body",
+                        "type": "string",
+                        "description": "The language of the resouce, in a 3 letter pattern",
+                        "pattern": "[a-z][a-z][a-z]"
+                    },
+                    {
+                        "name": "license",
+                        "in": "body",
+                        "description": "The licenses under which the object has been released. Can be an array of multiple liscenses.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "liscense"
+                        }
+                    },
+                    {
+                        "name": "contributor",
+                        "in": "body",
+                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an institution.",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "person",
+                            "$ref": "institution"
+                        }
+                    },
+                    {
+                        "name": "notificationLink",
+                        "in": "body",
+                        "required": true,
+                        "type": "string",
+                        "format": "uri",
+                        "description": "The persistent HTTP URI at which the individual record of this research release event can be retrieved in the future. (Same as @id.)"
+                    },
+                    {
+                        "name": "publisher",
+                        "in": "body",
+                        "type": "string",
+                        "description": "This element contains the name of the entity, typically a 'publisher', responsible for making the version of record of the resource available. This could be a person, organisation or service"
+                    },
+                    {
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "type": "string",
+                        "format": "uri",
+                        "description": "The URL of the raw record either harvested or pushed to SHARE by the source. These raw records are provided exactly as it was delivered to SHARE, which means they are widely varying in format and content."
+                    },
+                    {
+                        "name": "relation",
+                        "in": "body",
+                        "type": "array",
+                        "description": "Related resources",
+                        "items": {
+                            "$ref": "relation"
+                        }
+                    },
+                    {
+                        "name": "resourceIdentifier",
+                        "required": true,
+                        "type": "string",
+                        "in": "body",
+                        "format": "uri",
+                        "description": "An HTTP URI which unambiguously and persistently indicates the resource's identifier at a specific location."
+                    },
+                    {
+                        "name": "revisionTime",
+                        "type": "string",
+                        "format": "date-time",
+                        "in": "body",
+                        "description": "The time this record was last revised by the provider"
+                    },
+                    {
+                        "name": "sponsorship",
+                        "type": "array",
+                        "in": "body",
+                        "description": "Sponsorships associated with the array. Can consist of an award, or a sponsoring organization.",
+                        "items": {
+                            "$ref": "sponsorship"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The title and any sub-titles of the resource.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "version",
+                        "in": "body",
+                        "description": "This element indicates which 'version' of the resource is being described. While intended primarily for journal articles, it might be applicable to other types of resources as well.",
+                        "type": "string",
+                        "enum": [
+                            "AO",
+                            "SMUR",
+                            "AM",
+                            "P",
+                            "VoR",
+                            "CVoR",
+                            "EVoR",
+                            "NA"
+                        ]
+                    },
+                    {
+                        "name": "versionOfRecord",
+                        "type": "string",
+                        "in": "body",
+                        "format": "uri",
+                        "description": "This field MUST contain an HTTP URI which is a persistent identifier for the published version of the resource. If a DOI has been issued by the publisher then this MUST be used. Such a DOI MUST be represented as an HTTP URI."
+                    },
+                    {
+                        "name": "otherProperties",
+                        "type": "array",
+                        "in": "body",
+                        "description": "Structured or unstructured properties that don't fall into the general schema",
+                        "items": {
+                            "$ref": "otherProperties"
+                        }
+                    },
+                    {
+                        "name": "shareProperties",
+                        "type": "object",
+                        "in": "body",
+                        "description": "Structured or unstructured properties that don't fall into the general schema, and are for SHARE general use",
+                        "schema": {
+                            "$ref": "shareProperties"
+                        }
+                    }
                 ],
                 "responses": {
                     "201": {
@@ -115,7 +296,6 @@
         },
         "/share/stats": {
             "get": {
-                "tags": ["SHARE"],
                 "description": "Elasticsearch aggregations of SHARE data. Includes the results of the\npre-defined aggregations used to generate the dynaimic graphs on the\nSHARE Search page located on the OSF.\n",
                 "produces": [
                     "application/json"
@@ -364,6 +544,79 @@
                     "description": "A globally unique identifier for the sponsor of the resource should be recorded here."
                 }
             }
+        },
+        "shareProperties": {
+            "type": "object",
+            "properties": {
+                "collectionDateTime": {
+                    "description": "Date time the resource was collected by SHARE",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "moreProperties": {
+                    "description": "Other properties gathered for SHARE",
+                    "type": "string"
+                }
+            }
+        },
+        "otherProperties": {
+            "type": "object",
+            "properties": {
+                "moreProperties": {
+                    "description": "Other properties gathered that do not fit into the main schema",
+                    "type": "string"
+                }
+            }
+        },
+        "liscense": {
+            "type": "array",
+            "description": "The licenses under which the research object is available",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "The HTTP URI of the license in effect during the period describe by this lincenseRef"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The start date of the license period. If the resource was always licensed this way, then this date can be the same as creationDate or the date \\0000-00-00\\"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The date on which this resource will no longer be licensed in this way."
+                    }
+                }
+            }
+        },
+        "freeToRead": {
+            "type": "object",
+            "description": "A date range specifying when this research object will be free to read.",
+            "properties": {
+                "uri": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The HTTP URI of the license in effect during the period describe by this lincenseRef"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The start date of the free to read period"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date on which this resource will no longer be free to read."
+                }
+            }
+        },
+        "relation": {
+            "type": "string",
+            "format": "uri",
+            "description": "An HTTP URI which points to a related resource."
         },
         "person": {
             "type": "object",
