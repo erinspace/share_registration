@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from provider_registration import views
 
@@ -12,5 +11,3 @@ urlpatterns = [
         url(r'^simple_oai_registration/$', views.redirect_to_simple_oai, name='simple_oai_registration')
     ]))
 ]
-
-urlpatterns += staticfiles_urlpatterns()
