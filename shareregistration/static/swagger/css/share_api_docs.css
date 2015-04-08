@@ -18,3 +18,15 @@ div#api_doc_header {
 #SHARE_post_share_search_content form div input.submit {
     display: none !important;
 }
+
+#default_post_share_data_content form div input.submit {
+    display: none !important;
+}
+
+div.beta_warning p {
+  margin-top: 25px;
+}
+
+div.beta_warning p a {
+  color: #0018BB;
+}
