@@ -6,6 +6,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
 from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import UserSerializer
@@ -101,6 +102,7 @@ def render_api_form(request):
     )
 
 
+@xframe_options_exempt
 def render_api_help(request):
     return render(
         request,
