@@ -9,5 +9,6 @@ urlpatterns = patterns(
     url(r'^$', push_views.DataList.as_view(), name='index'),
     url(r'^', include('push_endpoint.urls')),
     url(r'^share-admin', include(admin.site.urls)),
-    url(r'^provider_registration', include('provider_registration.urls', namespace="provider_registration"))
+    url(r'^provider_registration', include('provider_registration.urls', namespace="provider_registration")),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
