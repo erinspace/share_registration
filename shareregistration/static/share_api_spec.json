@@ -2,20 +2,22 @@
     "swagger": "2.0",
     "info": {
         "version": "1.0.0",
-        "title": "SHARE Data",
-        "description": "SHARE Research Release Events",
+        "title": "SHARE API Documentation",
+        "description": "The SHARE API allows you to access all Research Release Events in the SHARE database and publish your organization's publications, data, repository holdings, or other research directly to SHARE.  The API has three endpoints.  “search,” “data,” and “stats.”  “search” allows you to access information in SHARE, “data” allows you to post to SHARE, and “stats” gives metrics on the different providers in SHARE.",
         "contact": {
-            "name": "Center for Open Science",
+            "name": "the Center for Open Science",
             "email": "share-support@osf.io",
             "url": "http://osf.io/share"
-        },
-        "license": {
-            "name": "MIT",
-            "url": "http://opensource.org/licenses/MIT"
         }
     },
     "host": "localhost:5000",
     "basePath": "/api/v1",
+    "tags": [
+        {
+            "name": "SHARE",
+            "description": "API endpoints"
+        }
+    ],
     "schemes": [
         "http"
     ],
@@ -31,6 +33,9 @@
                 "description": "Normalized SHARE Data from all content providers",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "SHARE"
                 ],
                 "parameters": [
                     {
@@ -86,9 +91,12 @@
         },
         "/share/data": {
             "post": {
-                "description": "Normalized SHARE Data from all content providers",
+                "description": "POST endpoint for sending pre-formatted data to SHARE. Requires an API key - contact us at share-support@osf.io for more information.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "SHARE"
                 ],
                 "parameters": [
                     {
@@ -296,9 +304,21 @@
         },
         "/share/stats": {
             "get": {
-                "description": "Elasticsearch aggregations of SHARE data. Includes the results of the\npre-defined aggregations used to generate the dynaimic graphs on the\nSHARE Search page located on the OSF.\n",
+                "description": "Elasticsearch aggregations of SHARE data, using the pre-beta metadata schema. Includes the results of the\npre-defined aggregations used to generate the dynaimic graphs on the\nSHARE Search page located on the OSF.\n This API endpoint returns metadata in an older version of the schema, so may not prove immedtiately useful for anyone looking for more than basic aggregations of the data, including source information.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "SHARE"
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Any valid Lucene query string matching the SHARE schema",
+                        "required": false,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
