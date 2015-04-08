@@ -123,3 +123,5 @@ CORS_ORIGIN_WHITELIST = (
     'osf.io',
     'staging.osf.io'
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
