@@ -1,16 +1,17 @@
 from push_endpoint import views
-from django.conf.urls import url
+from django.conf.urls import include, url
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter, SimpleRouter, Route
 
 urlpatterns = [
-    url(r'^pushed_data/$', views.DataList.as_view()),
-    url(r'^pushed_data/established$', views.EstablishedDataList.as_view()),
-    url(r'^pushed_data/(?P<pk>[0-9]+)/$', views.DataDetail.as_view(), name='data-detail'),
-    url(r'^users/$', views.UserList.as_view()),
-    url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view(), name='user-detail'),
-    url(r'^get-api-key', views.render_api_form, name='get-api-key'),
-    url(r'^help', views.render_api_help, name='help')
+    url(r'^api/', include([
+        url(r'^$', views.DataList.as_view()),
+        url(r'^established$', views.EstablishedDataList.as_view()),
+        url(r'^(?P<pk>[0-9]+)/$', views.DataDetail.as_view(), name='data-detail'),
+        url(r'^get-api-key', views.render_api_form, name='get-api-key'),
+        url(r'^help', views.render_api_help, name='help'),
+        url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    ]))
 ]
 
 
