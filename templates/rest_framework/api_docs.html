@@ -29,7 +29,7 @@
     <script type="text/javascript">
       $(function () {
         window.swaggerUi = new SwaggerUi({
-          url: "/static/share_api_spec.json",
+          url: "{% static "share_api_spec.json" %}",
           dom_id: "swagger-ui-container",
           supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
           onComplete: function(swaggerApi, swaggerUi){
