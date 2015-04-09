@@ -19,7 +19,7 @@ div#api_doc_header {
     display: none !important;
 }
 
-#default_post_share_data_content form div input.submit {
+#SHARE_post_share_data_content form div input.submit {
     display: none !important;
 }
 
