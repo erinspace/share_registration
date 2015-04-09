@@ -32,6 +32,7 @@
           url: "{% static "share_api_spec.json" %}",
           dom_id: "swagger-ui-container",
           supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+          validatorUrl: null,
           onComplete: function(swaggerApi, swaggerUi){
             if(typeof initOAuth == "function") {
               /*
