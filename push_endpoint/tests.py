@@ -11,72 +11,70 @@ from shareregistration.views import index as main_index
 
 VALID_POST = {
     "jsonData":
-    {
-        "creationDate": "2014-09-12",
-        "contributor": [
-            {
-                "name": "Roger Danger Ebert",
-                "sameAs": [
-                    "https://osf.io/wrgr2/"
-                ],
-                "familyName": "Ebert",
-                "givenName": "Roger",
-                "additionalName": "Danger",
-                "email": "roger@example.com",
-                "affiliation": "University of Movies"
-            },
-            {
-                "name": "Roger Madness Ebert",
-                "sameAs": [
-                    "http://osf.io/wrgr3/"
-                ],
-                "familyName": "Ebert",
-                "givenName": "Roger",
-                "additionalName": "Madness",
-                "email": "rogermadness@example.com",
-                "affiliation": "University of Movies"
-            }
-        ],
-        "language": "eng",
-        "description": "This is a thing",
-        "directLink": "https://www.example.com/stuff",
-        "releaseDate": "2014-12-12",
-        "freeToRead": {
+        {
+      "creationDate": "2014-09-12",
+      "contributors": [
+        {
+          "name": "Roger Danger Ebert",
+          "sameAs": [
+            "https://osf.io/thing"
+          ],
+          "familyName": "Ebert",
+          "givenName": "Roger",
+          "additionalName": "Danger",
+          "email": "rogerebert@example.com"
+        },
+        {
+          "name": "Roger Madness Ebert"
+        }
+      ],
+      "language": "eng",
+      "description": "This is a thing",
+      "directLink": "https://www.example.com/stuff",
+      "providerUpdatedDateTime": "2014-12-12T00:00:00Z",
+      "freeToRead": {
         "startDate": "2014-09-12",
         "endDate": "2014-10-12"
-        },
-        "licenseRef": [
+      },
+      "licenseRef": [
         {
-            "uri": "http://www.mitlicense.com",
-            "startDate": "2014-10-12",
-            "endDate": "2014-11-12"
+          "uri": "http://www.mitlicense.com",
+          "startDate": "2014-10-12",
+          "endDate": "2014-11-12"
         }
-        ],
-        "notificationLink": "http://myresearch.com/",
-        "publisher": "Roger Ebert Inc",
-        "raw": "http://osf.io/raw/thisdocument/",
-        "relation": [
+      ],
+      "notificationLink": "http://myresearch.com/",
+      "publisher": {
+        "name": "Roger Ebert Inc",
+        "email": "roger@example.com"
+      },
+      "raw": "http://osf.io/raw/thisdocument/",
+      "relation": [
         "http://otherresearch.com/this"
-        ],
-        "resourceIdentifier": "http://landingpage.com/this",
-        "revisionTime": "2014-02-12T15:25:02Z",
-        "source": "Big government",
-        "sponsorship": [
+      ],
+      "resourceIdentifier": "http://landingpage.com/this",
+      "revisionTime": "2014-02-12T15:25:02Z",
+      "source": "Big government",
+      "sponsorship": [
         {
-            "award": {
-                "awardName": "Participation",
-                "awardIdentifier": "http://example.com"
-            },
-            "sponsor": {
-                "sponsorName": "Orange",
+          "award": {
+            "awardName": "Participation",
+            "awardIdentifier": "http://example.com"
+          },
+          "sponsor": {
+            "sponsorName": "Orange",
             "sponsorIdentifier": "http://example.com/orange"
-            }
+          }
         }
-        ],
-        "title": "Interesting research",
-        "journalArticleVersion": "AO",
-        "versionOfRecord": "http://example.com/this/now/"
+      ],
+      "title": "Interesting research",
+      "journalArticleVersion": "AO",
+      "versionOfRecord": "http://example.com/this/now/",
+      "uris": {
+        "canonicalUri": "http://example.com"
+      }
     }
+
 }
 
 
@@ -131,10 +129,10 @@ class APIPostTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
-    def test_missing_resourceIdentifier(self):
+    def test_missing_providerUpdateDateTime(self):
         view = DataList.as_view()
         invalid_post = copy.deepcopy(VALID_POST)
-        invalid_post['jsonData'].pop('resourceIdentifier')
+        invalid_post['jsonData'].pop('providerUpdatedDateTime')
         request = self.factory.post(
             '/pushed_data/',
             json.dumps(invalid_post),
@@ -144,7 +142,7 @@ class APIPostTests(TestCase):
         response = view(request)
         data = response.data
 
-        self.assertEqual(data['detail'], "'resourceIdentifier' is a required property")
+        self.assertEqual(data['detail'], "'providerUpdatedDateTime' is a required property")
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
@@ -165,27 +163,10 @@ class APIPostTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
-    def test_missing_directLink_fails(self):
-        view = DataList.as_view()
-        invalid_post = copy.deepcopy(VALID_POST)
-        invalid_post['jsonData'].pop('directLink')
-        request = self.factory.post(
-            '/pushed_data/',
-            json.dumps(invalid_post),
-            content_type='application/json'
-        )
-        request.user = self.user
-        response = view(request)
-        data = response.data
-
-        self.assertEqual(data['detail'], "'directLink' is a required property")
-        self.assertEqual(response.status_code, 400)
-
-    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_missing_contributors_fails(self):
         view = DataList.as_view()
         invalid_post = copy.deepcopy(VALID_POST)
-        invalid_post['jsonData'].pop('contributor')
+        invalid_post['jsonData'].pop('contributors')
         request = self.factory.post(
             '/pushed_data/',
             json.dumps(invalid_post),
@@ -195,14 +176,14 @@ class APIPostTests(TestCase):
         response = view(request)
         data = response.data
 
-        self.assertEqual(data['detail'], "'contributor' is a required property")
+        self.assertEqual(data['detail'], "'contributors' is a required property")
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi3.yaml')
-    def test_missing_raw(self):
+    def test_missing_uris(self):
         view = DataList.as_view()
         invalid_post = copy.deepcopy(VALID_POST)
-        invalid_post['jsonData'].pop('raw')
+        invalid_post['jsonData'].pop('uris')
         request = self.factory.post(
             '/pushed_data/',
             json.dumps(invalid_post),
@@ -211,8 +192,7 @@ class APIPostTests(TestCase):
         request.user = self.user
         response = view(request)
         data = response.data
-
-        self.assertEqual(data['detail'], "'raw' is a required property")
+        self.assertEqual(data['detail'], "'uris' is a required property")
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
