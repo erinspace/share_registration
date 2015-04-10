@@ -10,7 +10,7 @@
             "url": "http://osf.io/share"
         }
     },
-    "host": "osf.io",
+    "host": "staging.osf.io",
     "basePath": "/api/v1",
     "tags": [
         {
@@ -71,17 +71,6 @@
                             "dateUpdated",
                             "Relevance"
                         ]
-                    },
-                    {
-                        "name": "v",
-                        "in": "query",
-                        "description": "Version of the metadata to retrieve. v=1 will retrieve an older version of the metadata, which currently powers the SHARE Search page.",
-                        "required": false,
-                        "type": "integer",
-                        "enum": [
-                            "2",
-                            "1"
-                        ]
                     }
                 ],
                 "responses": {
@@ -118,14 +107,14 @@
                         "type": "string"
                     },
                     {
-                        "name": "contributors",
+                        "name": "contributor",
                         "in": "body",
-                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an organization.",
+                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an institution.",
                         "required": true,
                         "type": "array",
                         "items": {
                             "$ref": "person",
-                            "$ref": "organization"
+                            "$ref": "institution"
                         }
                     },
                     {
@@ -136,6 +125,14 @@
                         "type": "string"
                     },
                     {
+                        "name": "directLink",
+                        "required": true,
+                        "in": "body",
+                        "description": "A persistent HTTP URI that points to the research object.",
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    {
                         "name": "releaseDate",
                         "in": "body",
                         "description": "The date of public release when the research object is freely available.",
@@ -143,41 +140,47 @@
                         "format": "date"
                     },
                     {
+                        "name": "releaseDate",
+                        "in": "body",
+                        "required": true,
+                        "format": "date",
+                        "type": "string",
+                        "description": "The date of public release when the research object is freely available."
+                    },
+                    {
                         "name": "freeToRead",
                         "in": "body",
                         "description": "An object consisting of a date range specifying when this research object will be free to read.",
-                        "type": "object",
+                        "object": "array",
                         "schema": {
                             "$ref": "freeToRead"
                         }
                     },
                     {
-                        "name": "languages",
+                        "name": "language",
                         "in": "body",
-                        "type": "array",
+                        "type": "string",
                         "description": "The language of the resouce, in a 3 letter pattern",
-                        "items": {
-                            "$ref": "languages"
-                        }
+                        "pattern": "[a-z][a-z][a-z]"
                     },
                     {
                         "name": "license",
                         "in": "body",
-                        "description": "The licenses under which the object has been released. Can be an array of multiple licenses.",
+                        "description": "The licenses under which the object has been released. Can be an array of multiple liscenses.",
                         "type": "array",
                         "items": {
-                            "$ref": "license"
+                            "$ref": "liscense"
                         }
                     },
                     {
                         "name": "contributor",
                         "in": "body",
-                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an organization.",
+                        "description": "The people or organizations responsible for making contributions to an object. Each contributor is either a person or an institution.",
                         "required": true,
                         "type": "array",
                         "items": {
                             "$ref": "person",
-                            "$ref": "organization"
+                            "$ref": "institution"
                         }
                     },
                     {
@@ -365,46 +368,15 @@
                             "person": {
                                 "$ref": "#/definitions/person"
                             },
-                            "organization": {
-                                "$ref": "#/definitions/organization"
+                            "institution": {
+                                "$ref": "#/definitions/institution"
                             }
                         }
                     }
                 },
-                "uris": {
-                    "required": true,
-                    "type": "object", 
-                    "properties": {
-                        "canonicalUri": {
-                            "type": "string", 
-                            "description": "The preferred persistent HTTP URI that represents the research object. This should be repeated in exactly one other field in the uris object.", 
-                            "format": "uri"
-                        }, 
-                        "providerUris": {
-                            "items": {
-                                "type": "string",
-                                "format": "uri"
-                            }, 
-                            "type": "array",
-                            "description": "The persistent HTTP URI that points to the object's record at the SHARE provider regardless of format."
-                        }, 
-                        "descriptorUris": {
-                            "items": {
-                                "type": "string", 
-                                "format": "uri"
-                            }, 
-                            "type": "array", 
-                            "description": "A persistent HTTP URI that points to a description of the research object."
-                        },
-                        "objectUris": {
-                            "items": {
-                                "type": "string", 
-                                "format": "uri"
-                            }, 
-                            "type": "array", 
-                            "description": "A persistent HTTP URI that points directly to the research object."
-                        }
-                    }
+                "id": {
+                    "$ref": "#/definitions/idComponents",
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",
@@ -412,15 +384,29 @@
                 },
                 "tags": {
                     "type": "array",
-                    "description": "Non-hierarchical terms or keywords assigned to an object to aid browsing or searching.",
+                    "description": "A list of tags or keywords identified in the resource itself,\nnormalized to be all lower case.\n",
                     "items": {
                         "type": "string"
                     }
                 },
-                "providerUpdatedDateTime": {
+                "source": {
                     "type": "string",
-                    "description": "The date and time the provider describing the object has been updated about either the creation or update of an object by its contributors. E.g., this may be the date a manuscript is published, but not necessarily the date the manuscript was written.", 
-                    "format": "date-time"
+                    "description": "A string identifying where the resource came from."
+                },
+                "creationDate": {
+                    "type": "string",
+                    "description": "Creation date of the research object.",
+                    "format": "date"
+                },
+                "directLink": {
+                    "type": "string",
+                    "description": "A persistent HTTP URI that points to the research object.",
+                    "format": "uri"
+                },
+                "releaseDate": {
+                    "type": "string",
+                    "description": "The date of public release when the research object is freely available.",
+                    "format": "date"
                 },
                 "freeToRead": {
                     "type": "object",
@@ -438,47 +424,67 @@
                         }
                     }
                 },
-                "languages": {
-                    "type": "array",
-                    "description": "The primary languages in which the content of the resource is presented. Values used for this element MUST conform to ISO 639\u20133. This offers two and three letter tags e.g. \"en\" or \"eng\" for English and \"en-GB\" for English used in the UK.",
-                    "items": {
-                        "pattern": "[a-z][a-z][a-z]",
-                        "type": "string"
-                    }
+                "language": {
+                    "type": "string"
                 },
-                "licenses": {
+                "licenseRef": {
                     "type": "array",
                     "description": "The licenses under which the research object is available",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "startDate": {
-                                "type": "string", 
-                                "description": "The date and time at which the license will apply to this object. If the resource was always licensed this way, then this date can be omitted.", 
-                                "format": "date-time"
-                            }, 
-                            "endDate": {
-                                "type": "string", 
-                                "description": "The date and time at which this resource will no longer be licensed in this way.", 
-                                "format": "date-time"
-                            }, 
                             "uri": {
                                 "type": "string",
-                                "description": "The HTTP URI of the license of the object or--if startDate and endDate are included--in effect during the period listed.", 
-                                "format": "uri"
+                                "format": "uri",
+                                "description": "The HTTP URI of the license in effect during the period describe by this lincenseRef"
                             },
-                            "description": {
-                                "type": "string", 
-                                "description": "Text describing to what aspect of the object the license is applied."
+                            "startDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "The start date of the license period. If the resource was always licensed this way, then this date can be the same as creationDate or the date \\0000-00-00\\"
+                            },
+                            "endDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "The date on which this resource will no longer be licensed in this way."
                             }
                         }
                     }
+                },
+                "notificationLink": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The persistent HTTP URI at which the individual record of this\nresearch release event can be retrieved in the future.\n(Same as @id.)\n"
                 },
                 "publisher": {
                     "type": "string",
                     "description": "This element contains the name of the entity, typically a 'publisher',\nresponsible for making the version of record of the resource available.\nThis could be a person, organisation or service\n"
                 },
-                "sponsorships": {
+                "raw": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The URL of the raw record either harvested or pushed to SHARE by the\nsource. These raw records are provided exactly as it was delivered to\nSHARE, which means they are widely varying in format and content.\n"
+                },
+                "relation": {
+                    "type": "array",
+                    "description": "Related resources",
+                    "items": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "An HTTP URI which points to a related resource."
+                    }
+                },
+                "resourceIdentifier": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "An HTTP URI which unambiguously and persistently indicates the\nresource's identifier at a specific location.\n"
+                },
+                "revisionTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The time this record was last revised by the provider"
+                },
+                "sponsorship": {
                     "type": "array",
                     "description": "Sponsorships associated with the array",
                     "items": {
@@ -486,24 +492,24 @@
                     }
                 },
                 "version": {
-                    "type": "object", 
-                    "description": "Infomation about this version of the object.", 
-                    "properties": {
-                        "versionId": {
-                            "description": "The name or number representing this version of the object."
-                        }, 
-                        "versionDateTime": {
-                            "type": "string", 
-                            "description": "The date and time the object was created or updated by its contributors. If the data for the object describes the first version of that object, it will be the date and time of object creation, otherwise it will be considered the date and time the object was updated.", 
-                            "format": "date-time"
-                        }, 
-                        "versionOf": {
-                            "type": "string", 
-                            "description": "If the object is an update, the HTTP URI of the object the content is updating. Depending upon what the upate is relative to, that could be the object at creation or a previous version.", 
-                            "format": "uri"
-                        }
-                    }
-                }, 
+                    "type": "string",
+                    "description": "This element indicates which 'version' of the resource is being\ndescribed. While intended primarily for journal articles, it might\nbe applicable to other types of resources as well.\ntype: \"string\"\n",
+                    "enum": [
+                        "AO",
+                        "SMUR",
+                        "AM",
+                        "P",
+                        "VoR",
+                        "CVoR",
+                        "EVoR",
+                        "NA"
+                    ]
+                },
+                "versionOfRecord": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "This field MUST contain an HTTP URI which is a persistent identifier\nfor the published version of the resource. If a DOI has been issued\nby the publisher then this MUST be used. Such a DOI MUST be\nrepresented as an HTTP URI.\n"
+                },
                 "otherProperties": {
                     "type": "object"
                 },
@@ -582,7 +588,7 @@
                 }
             }
         },
-        "licenses": {
+        "liscense": {
             "type": "array",
             "description": "The licenses under which the research object is available",
             "items": {
@@ -607,20 +613,30 @@
             }
         },
         "freeToRead": {
-            "type": "object", 
-            "description": "A date range specifying when this research object will be accessible, without restrictsions such as fee or registration). If the object is free to read, then only the startDate is required.", 
+            "type": "object",
+            "description": "A date range specifying when this research object will be free to read.",
             "properties": {
+                "uri": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The HTTP URI of the license in effect during the period describe by this lincenseRef"
+                },
                 "startDate": {
-                    "type": "string", 
-                    "description": "The date and time at which the object will be accessible. If the resource was always free to read, then the date the object was created should be used.", 
-                    "format": "date"
-                }, 
+                    "type": "string",
+                    "format": "date",
+                    "description": "The start date of the free to read period"
+                },
                 "endDate": {
-                    "type": "string", 
-                    "description": "The date and time at which restrictions such as fees or registrations will be in place limiting accessibility.", 
-                    "format": "date"
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date on which this resource will no longer be free to read."
                 }
             }
+        },
+        "relation": {
+            "type": "string",
+            "format": "uri",
+            "description": "An HTTP URI which points to a related resource."
         },
         "person": {
             "type": "object",
@@ -630,9 +646,13 @@
                     "type": "string",
                     "description": "Name of the person. May be blank"
                 },
-                "givenName": {
+                "given": {
                     "type": "string",
                     "description": "The first name of the contributor."
+                },
+                "suffix": {
+                    "type": "string",
+                    "description": "The suffix of the contributor."
                 },
                 "familyName": {
                     "type": "string",
@@ -647,11 +667,8 @@
                     "description": "The prefix of the contributor."
                 },
                 "affiliation": {
-                    "type": "array",
-                    "description": "The organization(s) that this person is affiliated with. For example, a school/university.",
-                    "items": {
-                        "$ref": "organization"
-                    }
+                    "type": "string",
+                    "description": "An organization that this person is affiliated with. For example,\na school/university.\n"
                 },
                 "email": {
                     "type": "string",
@@ -668,9 +685,9 @@
                 }
             }
         },
-        "organization": {
+        "institution": {
             "type": "object",
-            "description": "An organization that is a contributor to the research object",
+            "description": "An institution that is a contributor to the research object",
             "properties": {
                 "name": {
                     "description": "Name of the organization. May be blank",
@@ -682,13 +699,30 @@
                     "items": {
                         "type": "string",
                         "format": "uri",
-                        "description": "A single HTTP URI that describes this organization"
+                        "description": "A single HTTP URI that describes this institution"
                     }
                 },
                 "email": {
                     "type": "string",
                     "format": "uri",
-                    "description": "an email address for this organization"
+                    "description": "an email address for this institution"
+                }
+            }
+        },
+        "idComponents": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "A URL linking back to the original resource."
+                },
+                "serviceID": {
+                    "type": "string",
+                    "description": "A unique identifier for the resource, originting from the\noriginal source.\n"
+                },
+                "doi": {
+                    "type": "string",
+                    "description": "A DOI for the resource."
                 }
             }
         },

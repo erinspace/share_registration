@@ -10,6 +10,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+from django.conf import global_settings
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
@@ -26,8 +29,9 @@ TEMPLATE_DEBUG = True
 
 DOMAIN = 'http://localhost:8000'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '.osf.io',
+]
 
 # Application definition
 
@@ -56,6 +60,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.debug',
 )
 
 ROOT_URLCONF = 'shareregistration.urls'
