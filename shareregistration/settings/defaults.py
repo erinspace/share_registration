@@ -64,6 +64,7 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.debug',
+    'django.contrib.auth.context_processors.auth',
 )
 
 ROOT_URLCONF = 'shareregistration.urls'
