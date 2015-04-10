@@ -29,8 +29,9 @@ TEMPLATE_DEBUG = True
 
 DOMAIN = 'http://localhost:8000'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '.osf.io',
+]
 
 # Application definition
 
