@@ -7,7 +7,7 @@
         "contact": {
             "name": "the Center for Open Science",
             "email": "share-support@osf.io",
-            "url": "http://osf.io/share"
+            "url": "http://staging.osf.io/share"
         }
     },
     "host": "staging.osf.io",
