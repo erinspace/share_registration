@@ -215,7 +215,7 @@ def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_lim
         return render(
             request,
             'provider_registration/simple_oai_registration_form.html',
-            {'form': form, 'name': name, 'base_url': base_url}
+            {'form': form, 'name': name, 'base_url': base_url.strip()}
         )
 
 
@@ -237,7 +237,7 @@ def redirect_to_simple_oai(request):
     return render(
         request,
         'provider_registration/simple_oai_registration_form.html',
-        {'form': form, 'name': name, 'base_url': base_url}
+        {'form': form, 'name': name, 'base_url': base_url.strip()}
     )
 
 
