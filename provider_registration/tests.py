@@ -322,11 +322,18 @@ class ViewMethodTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
     def test_invalid_oai_url(self):
-        provider_long_name = 'Golddust Monthly'
-        base_url = 'http://wwe.com'
-        reg_id = 1
+        RegistrationInfo(
+            provider_long_name='Golddust Monthly',
+            base_url='http://aurl.com',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        reg_id = RegistrationInfo.objects.last().pk
+        base_url = 'http://aurl.com'
         api_docs = ''
         rate_limit = ''
+        provider_long_name = 'Golddust Monthly'
         description = 'SHAAAwwwwww'
         success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertFalse(success['value'])
