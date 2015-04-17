@@ -296,6 +296,26 @@ class ViewTests(TestCase):
         title = form_element.getchildren()[0]
         self.assertEqual(title.text, 'Simple Provider Information')
 
+    def test_registration_complete(self):
+        RegistrationInfo(
+            provider_long_name='Stardust Weekly',
+            base_url='http://wwe.com',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        request = self.factory.get('/')
+        provider_long_name = 'The COSMIC KEEEEEY'
+        base_url = 'http://wwe.com'
+        rate_limit = ''
+        api_docs = ''
+        description = 'A thing!'
+        new_registration = RegistrationInfo.objects.last()
+        reg_id = new_registration.pk
+        success = views.save_other_provider(request, provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
+        self.assertTrue(success)
+        self.assertFalse(new_registration.registration_complete)
+
 
 class ViewMethodTests(TestCase):
 
@@ -322,11 +342,18 @@ class ViewMethodTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/other_response_oai.yaml')
     def test_invalid_oai_url(self):
-        provider_long_name = 'Golddust Monthly'
-        base_url = 'http://wwe.com'
-        reg_id = 1
+        RegistrationInfo(
+            provider_long_name='Golddust Monthly',
+            base_url='http://aurl.com',
+            property_list=['some', 'properties'],
+            approved_sets=['some', 'sets'],
+            registration_date=timezone.now()
+        ).save()
+        reg_id = RegistrationInfo.objects.last().pk
+        base_url = 'http://aurl.com'
         api_docs = ''
         rate_limit = ''
+        provider_long_name = 'Golddust Monthly'
         description = 'SHAAAwwwwww'
         success = views.save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, description)
         self.assertFalse(success['value'])
