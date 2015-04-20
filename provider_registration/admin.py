@@ -45,7 +45,7 @@ class RegistrationAdmin(admin.ModelAdmin):
             'classes': ['collapse']
         }),
         ('Registration Complete', {
-            'fields': ['registration_complete']
+            'fields': ['registration_complete', 'metadata_complete']
         })
     ]
 
@@ -60,7 +60,8 @@ class RegistrationAdmin(admin.ModelAdmin):
         'provider_long_name',
         'registration_date',
         'base_url',
-        'registration_complete'
+        'registration_complete',
+        'metadata_complete'
     )
 
     list_filter = ['registration_date']
