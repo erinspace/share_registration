@@ -134,7 +134,7 @@ def save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, 
     object_to_update.description = description
     object_to_update.registration_date = timezone.now()
     object_to_update.provider_long_name = provider_long_name
-
+    object_to_update.metadata_complete = True
     object_to_update.save()
 
     return True
@@ -152,6 +152,8 @@ def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, de
     object_to_update.rate_limit = rate_limit
     object_to_update.registration_date = timezone.now()
     object_to_update.provider_long_name = provider_long_name
+    object_to_update.metadata_complete = True
+    object_to_update.oai_provider = True
     object_to_update.save()
 
     try:
