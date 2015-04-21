@@ -103,6 +103,8 @@ def save_metadata_render_provider(request):
         current_registration.save()
 
         if len(all_clear) < 5:
+            current_registration.registration_complete = True
+            current_registration.save()
             return render(
                 request,
                 'provider_registration/registration_paused.html',
