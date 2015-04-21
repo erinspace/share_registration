@@ -1,9 +1,16 @@
 import ast
+import json
 import logging
+from django.utils import timezone
 from datetime import date, timedelta
+
 
 import requests
 from lxml import etree
+from nameparser import HumanName
+from requests_oauthlib import OAuth1
+
+from shareregistration import settings
 
 NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
               'oai_dc': 'http://www.openarchives.org/OAI/2.0/',
@@ -11,6 +18,8 @@ NAMESPACES = {'dc': 'http://purl.org/dc/elements/1.1/',
 BASE_SCHEMA = ['title', 'contributor', 'creator', 'subject', 'description']
 
 logger = logging.getLogger(__name__)
+
+DESK_BASE = 'https://openscience.desk.com/api/v2/'
 
 
 def format_set_choices(pre_saved_data):
@@ -75,3 +84,78 @@ def get_oai_properties(base_url):
     except Exception as e:
         logger.info(e)
         raise ValueError('OAI Processing Error - {}'.format(e))
+
+
+def get_desk_customer(email):
+
+    # authorize the request with OAuth1 maybe
+    auth = OAuth1(settings.YOUR_APP_KEY, settings.YOUR_APP_SECRET,
+                  settings.USER_OAUTH_TOKEN, settings.USER_OAUTH_TOKEN_SECRET)
+
+    customer_search_route = DESK_BASE + 'customers/search?email={}'.format(email)
+    customer_search = requests.post(customer_search_route, auth=auth)
+
+    return json.loads(customer_search)
+
+
+def create_desk_customer(name, email):
+
+    # check to see if the person exists on desk
+    customer_search = get_desk_customer(email)
+
+    # If the customer does not exist, make one
+    if customer_search['total_entries'] == 0:
+        parsed_name = HumanName(name)
+        customer = {
+            "first_name": parsed_name.first,
+            "last_name": parsed_name.last,
+            "emails": [
+                {
+                    "type": "work",
+                    "value": email
+                }
+            ]
+        }
+
+        requests.post(DESK_BASE, json=customer, auth=settings.DESK_AUTH)
+
+
+def create_desk_case(email, metadata_complete):
+
+    if metadata_complete:
+        status = 'Complete'
+        subject = 'SHARE - Registration Confirmation'
+        body = 'Registration complete message'
+    else:
+        status = 'Metadata Incomplete'
+        subject = 'SHARE Registration Follow-up'
+        body = 'Registration incomplete message'
+
+    customer = get_desk_customer(email)
+    customer_object = customer['_embedded']['entries'][0]['_links']['self']
+
+    case_post = {
+        "type": "email",
+        "subject": "SHARE Registration {}".format(status),
+        "priority": 4,
+        "status": "new",
+        "created_at": timezone.now(),
+        "_links": {
+            "customer": customer_object,
+            "assigned_group": {
+                "href": "/api/v2/groups/1",
+                "class": "group"
+            }
+        },
+        "message": {
+            "direction": "out",
+            "status": "draft",
+            "to": email,
+            "from": "Contact@cos.io",
+            "subject": subject,
+            "body": body,
+            "created_at": timezone.now()
+        }
+    }
+
+    requests.post(json=case_post, auth=settings.DESK_AUTH)
