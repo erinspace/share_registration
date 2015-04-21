@@ -61,13 +61,14 @@ class RegistrationAdmin(admin.ModelAdmin):
         'registration_date',
         'base_url',
         'registration_complete',
-        'metadata_complete'
+        'metadata_complete',
+        'desk_contact'
     )
 
     list_filter = ['registration_date']
     search_fields = ['provider_long_name']
 
-    list_editable = ['provider_long_name', 'provider_short_name', 'active_provider']
+    list_editable = ['provider_long_name', 'provider_short_name', 'active_provider', 'desk_contact']
 
     def __unicode__(self):
         return "Registration"
