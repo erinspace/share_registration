@@ -16,3 +16,5 @@ DATABASES = {
 }
 
 STATIC_URL = '{}/static/'.format(DOMAIN)
+
+DESK_AUTH = ('username', 'password')
