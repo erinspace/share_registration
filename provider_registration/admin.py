@@ -45,7 +45,7 @@ class RegistrationAdmin(admin.ModelAdmin):
             'classes': ['collapse']
         }),
         ('Registration Complete', {
-            'fields': ['registration_complete', 'metadata_complete']
+            'fields': ['registration_complete', 'metadata_complete', 'desk_contact']
         })
     ]
 
