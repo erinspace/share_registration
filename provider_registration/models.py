@@ -40,6 +40,7 @@ class RegistrationInfo(models.Model):
     # Registation or metadata complete?
     registration_complete = models.BooleanField(default=False)
     metadata_complete = models.BooleanField(default=False)
+    desk_contact = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.provider_long_name
