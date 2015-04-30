@@ -23,27 +23,19 @@
 
             <h2>Metadata Sharing</h2>
             <p class="lead">Please confirm the following statements about the metadata you will be providing to SHARE:</p>
+            <p>Please note these statements only apply to the <strong>metadata</strong> in your API, not to the research objects themselves.</p><br/>
 
-            <div class="field_entry">
                 <p>{{ form.meta_tos }} Metadata gathering does not violate your own Terms of Service.</p>
-            </div>
-
-            <div class="field_entry">
                 <p>{{ form.meta_privacy }} Metadata gathering does not violate your own Privacy Policy.</p>
-            </div>
 
-            <div class="field_entry">
                 <p>{{ form.meta_sharing }} Distributing this metadata does not violate your own Terms of Service or Privacy Policy</p>
-            </div>
 
-            <div class="field_entry">
                 <p>{{ form.meta_license_cc0 }} The metadata you are providing can be distributed under a <a href="http://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 license</a>.</p>
-            </div>
 
-            <div class="field_entry">
                 <p>{{ form.meta_rights }} You have the right to acknowledge the above statements for your organization.</p>
-            </div>
             {{ form.reg_id }}
+
+            <button id="select-all" class="btn btn-default" style="margin-left: 10px; margin-top:8px;">Select All</button>
 
             <input class="btn btn-primary btn-bottom" type="submit" value="Next" />
         </form>
@@ -51,3 +43,19 @@
 </div>
 
 {% endblock %}
+
+{% block javascript_bottom %}
+
+<script type="application/javascript">
+    $(function () {
+        $('#select-all').click(function (event) {
+            event.preventDefault();
+            $('input[type^="checkbox"]').each(function () {
+                this.checked = true;
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
