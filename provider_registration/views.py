@@ -1,5 +1,7 @@
 import logging
 
+import requests
+import collections
 from lxml.etree import XMLSyntaxError
 
 from django.utils import timezone
@@ -20,8 +22,14 @@ PLACEHOLDER = 'temp_value'
 
 @xframe_options_exempt
 def index(request):
-    return render(request, 'provider_registration/index.html')
+    providers_orig = requests.get('https://osf.io/api/v1/share/providers/').json()['providerMap']
 
+    providers = collections.OrderedDict(sorted(providers_orig.items()))
+
+    number_of_providers = len(providers.keys())
+    context = {'providers': providers, 'number_of_providers': number_of_providers}
+    
+    return render(request, 'provider_registration/index.html', context)
 
 @xframe_options_exempt
 def get_contact_info(request):
