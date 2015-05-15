@@ -23,13 +23,16 @@ PLACEHOLDER = 'temp_value'
 @xframe_options_exempt
 def index(request):
     providers_orig = requests.get('https://osf.io/api/v1/share/providers/').json()['providerMap']
+    doc_count = requests.get('https://osf.io/api/v1/share/search/?v=1').json()['count']
+    doc_count = format(doc_count, ",d")
 
     providers = collections.OrderedDict(sorted(providers_orig.items()))
 
     number_of_providers = len(providers.keys())
-    context = {'providers': providers, 'number_of_providers': number_of_providers}
-    
+    context = {'providers': providers, 'number_of_providers': number_of_providers, 'doc_count': doc_count}
+
     return render(request, 'provider_registration/index.html', context)
+
 
 @xframe_options_exempt
 def get_contact_info(request):
