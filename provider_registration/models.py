@@ -37,6 +37,11 @@ class RegistrationInfo(models.Model):
     # Added automatically
     registration_date = models.DateTimeField('date registered')
 
+    # Registation or metadata complete?
+    registration_complete = models.BooleanField(default=False)
+    metadata_complete = models.BooleanField(default=False)
+    desk_contact = models.BooleanField(default=False)
+
     def __unicode__(self):
         return self.provider_long_name
 

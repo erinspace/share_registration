@@ -1,15 +1,17 @@
+
+from dateutil.parser import parse
+from django.shortcuts import render
+
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
-
-from dateutil.parser import parse
+from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from push_endpoint.models import PushedData
 from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
-
-from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 
 
 class DataList(ListBulkCreateUpdateDestroyAPIView):
@@ -32,10 +34,10 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         to_date = self.request.QUERY_PARAMS.get('to')
 
         if from_date:
-            filter['dateUpdated__gte'] = parse(from_date)
+            filter['collectionDateTime__gte'] = parse(from_date)
 
         if to_date:
-            filter['dateUpdated__lte'] = parse(to_date)
+            filter['collectionDateTime__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 
@@ -45,6 +47,7 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
 class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
     """
     List all pushed data that comes from an established provider
+    Example query: pushed_data/established?from=2015-03-16&to=2015-04-06
     """
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -53,7 +56,21 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
         serializer.save(source=self.request.user)
 
     def get_queryset(self):
-        return PushedData.fetch_established()
+        queryset = PushedData.fetch_established()
+        filter = {}
+
+        from_date = self.request.QUERY_PARAMS.get('from')
+        to_date = self.request.QUERY_PARAMS.get('to')
+
+        if from_date:
+            filter['collectionDateTime__gte'] = parse(from_date)
+
+        if to_date:
+            filter['collectionDateTime__lte'] = parse(to_date)
+
+        queryset = queryset.filter(**filter)
+
+        return queryset
 
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -74,3 +91,20 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+def render_api_form(request):
+    token = request.user.auth_token
+    return render(
+        request,
+        'rest_framework/get_api_key.html',
+        {'auth_token': token}
+    )
+
+
+@xframe_options_exempt
+def render_api_help(request):
+    return render(
+        request,
+        'rest_framework/api_docs.html',
+    )

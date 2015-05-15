@@ -5,8 +5,8 @@ import collections
 from lxml.etree import XMLSyntaxError
 
 from django.utils import timezone
+from django.shortcuts import render
 from django.forms.util import ErrorList
-from django.shortcuts import get_object_or_404, render
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from provider_registration import utils
@@ -28,19 +28,8 @@ def index(request):
 
     number_of_providers = len(providers.keys())
     context = {'providers': providers, 'number_of_providers': number_of_providers}
-
+    
     return render(request, 'provider_registration/index.html', context)
-
-
-@xframe_options_exempt
-def detail(request, provider_long_name):
-    provider = get_object_or_404(RegistrationInfo, provider_long_name=provider_long_name)
-    return render(
-        request,
-        'provider_registration/detail.html',
-        {'provider': provider}
-    )
-
 
 @xframe_options_exempt
 def get_contact_info(request):
@@ -122,6 +111,8 @@ def save_metadata_render_provider(request):
         current_registration.save()
 
         if len(all_clear) < 5:
+            current_registration.registration_complete = True
+            current_registration.save()
             return render(
                 request,
                 'provider_registration/registration_paused.html',
@@ -153,7 +144,7 @@ def save_other_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, 
     object_to_update.description = description
     object_to_update.registration_date = timezone.now()
     object_to_update.provider_long_name = provider_long_name
-
+    object_to_update.metadata_complete = True
     object_to_update.save()
 
     return True
@@ -163,20 +154,23 @@ def save_oai_info(provider_long_name, base_url, reg_id, api_docs, rate_limit, de
     """ Gets and saves information about the OAI source
     """
     success = {'value': False, 'reason': 'XML Not Valid'}
+    print('saving OAI info...')
+    object_to_update = RegistrationInfo.objects.get(id=reg_id)
+    object_to_update.api_docs = api_docs
+    object_to_update.base_url = base_url
+    object_to_update.description = description
+    object_to_update.rate_limit = rate_limit
+    object_to_update.registration_date = timezone.now()
+    object_to_update.provider_long_name = provider_long_name
+    object_to_update.metadata_complete = True
+    object_to_update.oai_provider = True
+    object_to_update.save()
+
     try:
         oai_properties = utils.get_oai_properties(base_url)
 
-        object_to_update = RegistrationInfo.objects.get(id=reg_id)
-
-        object_to_update.api_docs = api_docs
-        object_to_update.base_url = base_url
-        object_to_update.description = description
-        object_to_update.rate_limit = rate_limit
-        object_to_update.registration_date = timezone.now()
         object_to_update.approved_sets = oai_properties['sets']
-        object_to_update.provider_long_name = provider_long_name
         object_to_update.property_list = oai_properties['properties']
-
         object_to_update.save()
 
         success['value'] = True
@@ -234,7 +228,7 @@ def render_oai_provider_form(request, name, base_url, reg_id, api_docs, rate_lim
         return render(
             request,
             'provider_registration/simple_oai_registration_form.html',
-            {'form': form, 'name': name, 'base_url': base_url}
+            {'form': form, 'name': name, 'base_url': base_url.strip()}
         )
 
 
@@ -256,14 +250,17 @@ def redirect_to_simple_oai(request):
     return render(
         request,
         'provider_registration/simple_oai_registration_form.html',
-        {'form': form, 'name': name, 'base_url': base_url}
+        {'form': form, 'name': name, 'base_url': base_url.strip()}
     )
 
 
 @xframe_options_exempt
 def save_other_provider(request, name, base_url, reg_id, api_docs, rate_limit, description):
     saving_successful = save_other_info(name, base_url, reg_id, api_docs, rate_limit, description)
+    object_to_update = RegistrationInfo.objects.get(id=reg_id)
     if saving_successful:
+        object_to_update.registration_complete = True
+        object_to_update.save()
         return render(
             request,
             'provider_registration/confirmation.html',
@@ -278,6 +275,7 @@ def update_oai_entry(request):
 
     object_to_update.property_list = form_data['property_list'].value()
     object_to_update.approved_sets = str(form_data['approved_sets'].value())
+    object_to_update.registration_complete = True
 
     object_to_update.save()
     return form_data
@@ -287,6 +285,7 @@ def update_other_entry(request):
     form_data = OtherProviderForm(request.POST)
     object_to_update = RegistrationInfo.objects.get(id=request.POST['reg_id'])
     object_to_update.property_list = form_data['property_list'].value()
+    object_to_update.registration_complete = True
 
     object_to_update.save()
     return form_data

@@ -1,23 +1,22 @@
 ## custom validators
-from rest_framework import serializers
+from __future__ import unicode_literals
 
-import requests
+import json
+import jsonschema
+from rest_framework.exceptions import ParseError
 
-DOI_URL = 'https://dx.doi.org/'
+from push_endpoint import schemas
 
 
-class ValidDOI(object):
+class JsonSchema(object):
     def __call__(self, value):
-        ''' value is the serialized data to be validated '''
+        json_text = value.get('jsonData')
+        # TODO - figure out why this isn't a dict automatically - this is
+        # problematic with pushed data with single quotes in it!!
+        json_text = json_text.replace("u'", '"').replace("'", '"')
+        json_data = json.loads(json_text)
 
-        doi = value.get('doi')
-
-        if doi.startswith(DOI_URL):
-            request_url = doi
-        else:
-            request_url = DOI_URL + doi
-
-        response = requests.get(request_url)
-
-        if response.status_code == 404:
-            raise serializers.ValidationError('DOI does not resolve, please enter a valid DOI')
+        try:
+            jsonschema.validate(json_data, schemas.share)
+        except jsonschema.exceptions.ValidationError as error:
+            raise ParseError(detail=error.message)

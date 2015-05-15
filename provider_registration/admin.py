@@ -43,6 +43,9 @@ class RegistrationAdmin(admin.ModelAdmin):
         ('Date information', {
             'fields': ['registration_date'],
             'classes': ['collapse']
+        }),
+        ('Registration Complete', {
+            'fields': ['registration_complete', 'metadata_complete', 'desk_contact']
         })
     ]
 
@@ -56,13 +59,16 @@ class RegistrationAdmin(admin.ModelAdmin):
         'provider_short_name',
         'provider_long_name',
         'registration_date',
-        'base_url'
+        'base_url',
+        'registration_complete',
+        'metadata_complete',
+        'desk_contact'
     )
 
     list_filter = ['registration_date']
     search_fields = ['provider_long_name']
 
-    list_editable = ['provider_long_name', 'provider_short_name', 'active_provider']
+    list_editable = ['provider_long_name', 'provider_short_name', 'active_provider', 'desk_contact']
 
     def __unicode__(self):
         return "Registration"

@@ -2,9 +2,9 @@
 
 {% block header_content %}
         <br/>
-        <p class="lead">Start here to register a provider for SHARE Notify</p>
+        <p class="lead">To include your organization's publications, data, repository holdings, or other research in <a href="http://www.share-research.org/" target="_blank">SHARE</a>, please register here.</p>
         <br/>
-        <a type="button" class="btn btn-primary btn-lg" href="contact_information">Register a Provider</a>
+        <a type="button" class="btn btn-primary btn-lg" href="{% url 'provider_registration:contact_information' %}">Register as a Provider</a>
 {% endblock %}
 
 {% block content %}
@@ -14,9 +14,10 @@
     <div class="row">
         <div class="col-xs-12">
 
-            <p class="lead">To include your library or provider’s research in <a href="http://www.arl.org/focus-areas/shared-access-research-ecosystem-share#.VRwSVTvF-5J" target="_blank">SHARE</a>, please register here.  We will look at your data, and see if it can be added to the system.</p>
+            <p>We will look at your data, and see if it can be added to the system. For more information about who can register and what is included in the registration form, please see the section on <a href="https://osf.io/cpsin/wiki/home/" target="_blank">Frequently Asked Questions</a>.</p>
 
             <p>If your data already conforms to the <a href="https://osf.io/wur56/wiki/Schema/" target="_blank">SHARE data schema</a>, no registration is necessary. You can push it directly to our system. See the <a href="https://osf.io/wur56/wiki/Pushing%20data%20directly%20to%20SHARE/" target="_blank">documentation</a> for more information.</p>
+
         </div>
     </div>
 

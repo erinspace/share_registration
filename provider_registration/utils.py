@@ -41,7 +41,7 @@ def get_oai_properties(base_url):
     """
     try:
         # request 1 for the setSpecs available
-        set_url = base_url + '?verb=ListSets'
+        set_url = base_url.strip() + '?verb=ListSets'
         set_data_request = requests.get(set_url)
         all_content = etree.XML(set_data_request.content)
 

@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+SDFlib/
 lib64/
 parts/
 sdist/
@@ -58,4 +58,7 @@ target/
 **/bower_components
 **/settings/local.py
 .env
+static/bower_components
+
+**/node_modules
 static
