@@ -19,6 +19,18 @@ ul#id_approved_sets {
   font-weight: inherit;
 }
 
+#provider_list {
+  width:50%;
+  line-height:1.5em;
+  float:left;
+  display:inline;
+  margin-bottom: 10px;
+}
+
+#provider_list img {
+  max-width: 16px;
+}
+
 .front_page {
   width:33%;
   line-height:1.5em;
