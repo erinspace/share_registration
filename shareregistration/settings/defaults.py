@@ -43,11 +43,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'rest_framework.authtoken',
+    'robots',
     'provider_registration',
     'rest_framework',
     'push_endpoint',
     'corsheaders'
 )
+
+SITE_ID = 1
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
