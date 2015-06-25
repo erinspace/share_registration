@@ -1,0 +1,20 @@
+*********
+ChangeLog
+*********
+
+(2015-06-24)
+==================
+- Update of SHARE metadata questions. Questions now read:
+
+    Metadata gathering does not violate my organization's Terms of Service.
+    Metadata gathering does not violate my organization's Privacy Policy.
+    Distributing this metadata does not violate my organization's Terms of Service or Privacy Policy.
+    I understand and acknowledge that the metadata my organization provides will be redistributed by SHARE.
+    I have the right to acknowledge the above statements for my organization.
+
+
+(2015-06-15)
+==================
+- Update of SHARE metadata question pertaining to licensing of metadata. Question now reads:
+
+The data/metadata you are providing is in the public domain or can be distributed under a CC0 license; license of the data/metadata only applies to the information in the feed, not content linked from the feed (i.e. full-text journal articles linked in the metadata would not need to be public domain/CC0 license).
