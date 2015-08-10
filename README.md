@@ -9,3 +9,5 @@ push API conent for SHARE Notify.
 Features a Registration form to register new SHARE providers, and a push API endpoint
 and data viewer to serve as a staging area before being pulled into the main
 SHARE Notify system.
+
+See the registration page in action at http://osf.io/share/registration, and the API documentation online at http://osf.io/share/docs
