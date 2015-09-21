@@ -64,3 +64,4 @@ static/bower_components
 static
 
 .DS_Store
+*.sublime
