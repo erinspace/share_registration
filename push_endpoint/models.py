@@ -13,6 +13,9 @@ from jsonfield import JSONField
 class Provider(models.Model):
     user = models.OneToOneField(User)
     established = models.BooleanField(default=False)
+    url = models.URLField(max_length=255, null=True)
+    shortname = models.CharField(max_length=50, null=True)
+    longname = models.CharField(max_length=255, null=True)
 
 
 class PushedData(models.Model):
