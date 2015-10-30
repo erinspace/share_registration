@@ -1,20 +1,21 @@
 
 from dateutil.parser import parse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
-from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
+# from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
+from rest_framework_bulk import ListBulkCreateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
-from push_endpoint.models import PushedData
+from push_endpoint.models import PushedData, Provider
 from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer
 
 
-class DataList(ListBulkCreateUpdateDestroyAPIView):
+class DataList(ListBulkCreateAPIView):
     """
     List all pushed data, or push to the API
     """
@@ -44,7 +45,7 @@ class DataList(ListBulkCreateUpdateDestroyAPIView):
         return queryset
 
 
-class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
+class EstablishedDataList(ListBulkCreateAPIView):
     """
     List all pushed data that comes from an established provider
     Example query: pushed_data/established?from=2015-03-16&to=2015-04-06
@@ -73,7 +74,7 @@ class EstablishedDataList(ListBulkCreateUpdateDestroyAPIView):
         return queryset
 
 
-class DataDetail(generics.RetrieveUpdateDestroyAPIView):
+class DataDetail(generics.RetrieveAPIView):
     """
     Retrieve, update or delete pushed data
     """
@@ -107,4 +108,45 @@ def render_api_help(request):
     return render(
         request,
         'rest_framework/api_docs.html',
+    )
+
+
+@xframe_options_exempt
+def gather_provider_information(request):
+    user = request.user
+
+    if request.method == 'POST':
+        longname = request.POST.get('longname')
+        shortname = request.POST.get('shortname')
+        url = request.POST.get('url')
+
+        try:
+            provider_obj = Provider.objects.get(user=user)
+        except Provider.DoesNotExist:
+            provider_obj = Provider.objects.create(user=user)
+
+        provider_obj.longname = longname
+        provider_obj.shortname = shortname
+        provider_obj.url = url
+
+        provider_obj.save()
+
+    return redirect('/provider_information/')
+
+
+@xframe_options_exempt
+def provider_information(request):
+    user = request.user
+
+    provider_details = Provider.objects.get(user=user)
+
+    url = provider_details.url
+    shortname = provider_details.shortname
+    longname = provider_details.longname
+    token = request.user.auth_token
+
+    return render(
+        request,
+        'registration/preferences.html',
+        {'request': request, 'shortname': shortname, 'longname': longname, 'url': url, 'auth_token': token}
     )
