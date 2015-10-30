@@ -7,12 +7,15 @@
 
     <body>
         <div class="container">
+
+            {% block headerbar %}
             <div class="jumbotron">
                 <img class="logo_jumbotron" src="{% static 'img/share.png' %}"/>
 
                 {% block header_content %}
                 {% endblock %}
             </div>
+            {% endblock %}
             <div class="help_information">
                     Questions or feedback? Contact us at <a href="mailto:share-support@osf.io">share-support@osf.io</a>
             </div>
