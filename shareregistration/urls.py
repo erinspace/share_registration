@@ -13,6 +13,8 @@ urlpatterns = patterns(
     url(r'^provider_registration', include('provider_registration.urls', namespace="provider_registration")),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^robots\.txt$', include('robots.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^accounts/profile/$', push_views.provider_information, name='profile_information'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
