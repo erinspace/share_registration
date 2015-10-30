@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles % }
+
+{% block headerbar %}
+
+    <nav class="navbar navbar-default">
+    <div>SHARE Provider Information</div>
+    <ul class="nav navbar-nav navbar-right">
+<!-- {{ user }} -->
+        {# <img class="logo" src="{% static 'img/share.png' %}"/> #}
+        <li>
+        {% if user.is_anonymous %}
+        <a href="{% url 'auth_login' %}">Login</a>
+        </li>
+        {% else %}
+        <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="/">API</a></li>
+            <li><a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a></li>
+        </ul>
+        </li>
+        {% endif %}
+        </li>
+    </ul>
+</nav>
+
+{% endblock %}
+

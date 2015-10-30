@@ -1,0 +1,27 @@
+{# {% extends "base.html" %} #}
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+
+<form action="/gather_provider_information/" method="post" id="push_registration">
+{% csrf_token %}
+
+        <div>
+            <p class="lead">Short Name</p>
+                <input type="text" name="shortname" id="shortname" placeholder="example: dataone"/>
+        </div>
+        <div>
+            <p class="lead">Long Name</p>
+                <input type="text" name="longname" id="longname" placeholder="example: Data Observation Network for Earth (DataONE)"/>
+        </div>
+        <div>
+            <p class="lead">Primary Url</p>
+                <input type="text" name="url" id="url" placeholder="example: http://dataone.org"/>
+        </div>
+    <input type="submit"/>
+</form>
+
+
+{% endblock %}
