@@ -67,8 +67,8 @@ ul#id_approved_sets {
   padding-bottom: 5px;
   padding-left: 5px;
   margin-bottom: 5px;
-  max-height: 150px;
-  max-width: 150px;
+  max-height: 75px;
+  max-width: 75px;
 }
 
 .main_body {
@@ -123,6 +123,10 @@ input[type=number] {
 }
 
 input[type=email] {
+  width: 100%;
+}
+
+input[type=password] {
   width: 100%;
 }
 
