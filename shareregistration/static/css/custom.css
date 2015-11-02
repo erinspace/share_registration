@@ -170,3 +170,11 @@ div.help_information {
   text-align: right;
   margin-bottom: 10px;
 }
+
+.pushregnav {
+  background:#BBBBBB;
+}
+
+.pushregnav li a {
+  color: white !important;
+}
