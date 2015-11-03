@@ -17,6 +17,8 @@ class Provider(models.Model):
     shortname = models.CharField(max_length=50, null=True)
     longname = models.CharField(max_length=255, null=True)
 
+    favicon = models.BinaryField(null=True)
+
 
 class PushedData(models.Model):
     jsonData = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
