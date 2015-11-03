@@ -1,11 +1,9 @@
-
 from dateutil.parser import parse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth.models import User
-# from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 from rest_framework_bulk import ListBulkCreateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
@@ -34,8 +32,8 @@ class DataList(ListBulkCreateAPIView):
         filter = {}
         queryset = PushedData.objects.all()
 
-        from_date = self.request.QUERY_PARAMS.get('from')
-        to_date = self.request.QUERY_PARAMS.get('to')
+        from_date = self.request.query_params.get('from')
+        to_date = self.request.query_params.get('to')
 
         if from_date:
             filter['collectionDateTime__gte'] = parse(from_date)
