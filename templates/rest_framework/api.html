@@ -20,7 +20,7 @@
     {% endblock %}
 
     {% block userlinks %}
-    <li><a href="{% url 'help' %}">API Documentation</a></li>
+    <li><a href="/help/#!/SHARE/post_share_data">API Documentation</a></li>
     {{ block.super }}
     {% if user.is_authenticated %}
         <li><a href="{% url 'provider_information' %}">View Provider Information</a></li>
