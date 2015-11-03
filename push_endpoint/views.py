@@ -17,7 +17,10 @@ from push_endpoint.serializers import PushedDataSerializer
 
 class DataList(ListBulkCreateAPIView):
     """
-    List all pushed data, or push to the API
+    List all pushed data, or push to the API.
+
+    Note: This endpoint acts as a staging area for SHARE data. It will not show up in the main
+    SHARE API data list until the data from your provider has been checked and pulled into SHARE.
     """
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -47,8 +50,11 @@ class DataList(ListBulkCreateAPIView):
 
 class EstablishedDataList(ListBulkCreateAPIView):
     """
-    List all pushed data that comes from an established provider
+    List all pushed data that comes from an established provider.
+
     Example query: pushed_data/established?from=2015-03-16&to=2015-04-06
+
+    Note: If your data shows up in this list, it will be pulled into SHARE when the data is harvested.
     """
     serializer_class = PushedDataSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
