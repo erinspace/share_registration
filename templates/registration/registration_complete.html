@@ -1,36 +1,7 @@
 {% extends "registration/registration_base.html" %}
+{% load static %}
 {% load i18n %}
 
-
-{% block content %}
-<div class="col-md-6">
-
-    <form action="/gather_provider_information/" method="post" id="push_registration">
-    {% csrf_token %}
-
-    <h2>Provider Information</h2>
-    <br/>
-
-        <p><strong>Name:</strong></p>
-        <p>Enter the full name of your data provider, as you would like it to appear.</p>
-        <p><input type="text" name="longname" id="longname" placeholder="example: Data Observation Network for Earth (DataONE)"/></p>
-
-        <br/>
-
-        <p><strong>Short Name:</strong></p>
-        <p>Enter a nickname for your data provider. This is the shorthand used to query for your source. Please only include lowercase, single word names.</p>
-        <p><input type="text" name="shortname" id="shortname" placeholder="example: dataone"/></p>
-
-        <br/>
-
-        <p><strong>Primary Url:</strong></p>
-        <p>Enter the URL for the home page for your data provider.</p>
-        <p><input type="text" name="url" id="url" placeholder="example: http://dataone.org"/></p>
-
-        <br/>
-
-        <input class="btn btn-primary" type="submit"/>
-    </form>
-</div>
-
+{% block head %}
+<meta http-equiv="refresh" content="0; url=/provider_information/"  />
 {% endblock %}
