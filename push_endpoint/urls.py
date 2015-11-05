@@ -11,6 +11,6 @@ urlpatterns = [
         url(r'^get-api-key/$', views.render_api_form, name='get-api-key'),
         url(r'^help/$', views.render_api_help, name='help'),
         url(r'^provider_information/$', views.provider_information, name='provider_information'),
-        url(r'^gather_provider_information/$', views.gather_provider_information, name='gather_provider_information')
+        url(r'^information/$', views.render_settings, name='render_settings'),
     ]))
 ]
