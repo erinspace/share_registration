@@ -1,5 +1,6 @@
 import copy
 import json
+import mock
 
 import vcr
 from django.test import TestCase
@@ -298,9 +299,16 @@ class APIPostTests(TestCase):
 
     def test_render_provider_form(self):
         view = provider_information
-        request = self.factory.get(
-            '/provider_information/'
+        favicon_image = open('shareregistration/static/img/share.png')
+        request = self.factory.post(
+            '/provider_information/', {
+                'longname': 'Dudley Boyz Strike Back',
+                'shortname': 'dbsb',
+                'url': 'http://url.com',
+                'favicon_image': favicon_image
+            }
         )
+        mock.MagicMock(spec=request.FILES)
         request.user = self.user
         response = view(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
