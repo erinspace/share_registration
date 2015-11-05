@@ -183,7 +183,8 @@ share = {
         "title",
         "contributors",
         "uris",
-        "providerUpdatedDateTime"
+        "providerUpdatedDateTime",
+        "shareProperties"
     ],
     "type": "object",
     "properties": {
@@ -223,7 +224,14 @@ share = {
         },
         "shareProperties": {
             "type": "object",
-            "description": "Properties that are generated and/or organized by the SHARE system (e.g., timestamps of when SHARE processes data). These properities are used internally and are not guaranteed to remain consistent."
+            "description": "Properties that are generated and/or organized by the SHARE system (e.g., timestamps of when SHARE processes data). These properities are used internally and are not guaranteed to remain consistent.",
+            "required": ["docID"],
+            "properties": {
+                "docID": {
+                    "type": "string",
+                    "description": "A service-unique identifier for the document"
+                }
+            }
         },
         "otherProperties": {
             "items": {
@@ -241,13 +249,14 @@ share = {
         },
         "uris": {
             "type": "object",
+            "required": ["canonicalUri"],
             "properties": {
+                "canonicalUri": {
+                    "type": "string",
+                    "description": "The preferred persistent HTTP URI that represents the research object. This should be repeated in exactly one other field in the uris object.",
+                    "format": "uri"
+                },
                 "anyOf": {
-                    "canonicalUri": {
-                        "type": "string",
-                        "description": "The preferred persistent HTTP URI that represents the research object. This should be repeated in exactly one other field in the uris object.",
-                        "format": "uri"
-                    },
                     "providerUris": {
                         "items": {
                             "type": "string",
@@ -277,8 +286,8 @@ share = {
         },
         "languages": {
             "items": {
-                "pattern": "[a-z][a-z][a-z]",
-                "type": "string"
+                "pattern": "[a-z][a-z]?[a-z]",
+                "type": ["string", "null"]
             },
             "type": "array",
             "description": "The primary languages in which the content of the resource is presented. Values used for this element MUST conform to ISO 639\u20133. This offers two and three letter tags e.g. \"en\" or \"eng\" for English and \"en-GB\" for English used in the UK."
@@ -322,7 +331,7 @@ share = {
             "description": "A date range specifying when this research object will be accessible, without restrictsions such as fee or registration). If the object is free to read, then only the startDate is required.",
             "properties": {
                 "startDate": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "description": "The date and time at which the object will be accessible. If the resource was always free to read, then the date the object was created should be used.",
                     "format": "date"
                 },

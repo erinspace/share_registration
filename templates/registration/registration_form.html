@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12">
+    <h2>Register for the SHARE push API</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <p>{{ form.username.label_tag }}</p>
+        <p> {{ form.username.errors }}</p>
+        <p>{{ form.username }}</p>
+
+        <p>{{ form.email.label_tag }}</p>
+        <p> {{ form.email.errors }}</p>
+        <p>{{ form.email }}</p>
+
+        <p>{{ form.password1.label_tag }} </p>
+        <p> {{ form.password1.errors }}</p>
+        <p>{{ form.password1 }}</p>
+
+        <p>{{ form.password2.label_tag }} </p>
+        <p>{{ form.password2.errors }}</p>
+        <p>{{ form.password2 }}</p>
+
+        <p><input class="btn btn-primary" type="submit" value="{% trans 'Submit' %}" /></p>
+    </form>
+</div>
+
+{% endblock %}

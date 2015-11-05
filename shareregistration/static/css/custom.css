@@ -61,6 +61,16 @@ ul#id_approved_sets {
   margin-bottom: 10px;
 }
 
+.logo_smaller {
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  max-height: 65px;
+  max-width: 65px;
+}
+
 .main_body {
   display: block;
   margin-left: auto;
@@ -97,6 +107,10 @@ textarea {
 
 input[type=text] {
   width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 input[type=url] {
@@ -109,6 +123,10 @@ input[type=number] {
 }
 
 input[type=email] {
+  width: 100%;
+}
+
+input[type=password] {
   width: 100%;
 }
 
@@ -151,4 +169,12 @@ table#result_list input {
 div.help_information {
   text-align: right;
   margin-bottom: 10px;
+}
+
+.pushregnav {
+  background:#BBBBBB;
+}
+
+.pushregnav li a {
+  color: white !important;
 }

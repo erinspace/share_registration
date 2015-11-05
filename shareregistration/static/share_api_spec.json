@@ -102,7 +102,7 @@
         },
         "/share/data": {
             "post": {
-                "description": "POST endpoint for sending pre-formatted data to SHARE. Requires an API key - contact us at share-support@osf.io for more information.",
+                "description": "POST endpoint for sending pre-formatted data to SHARE. Requires an API key - contact us at share-support@osf.io for more information. Note: Data will appear here after being pushed, but will not appear in the SHARE search endpoint immediately. Once you've been established as a provider, the data will be pulled into the SHARE search API on a nightly basis.",
                 "produces": [
                     "application/json"
                 ],
@@ -223,7 +223,8 @@
                         "description": "Structured or unstructured properties that don't fall into the general schema, and are for SHARE general use",
                         "schema": {
                             "$ref": "shareProperties"
-                        }
+                        },
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -461,9 +462,13 @@
                 "shareProperties": {
                     "type": "object",
                     "properties": {
-                        "collectionDateTime": {
+                        "source": {
                             "type": "string",
-                            "format": "date-time"
+                            "format": "string"
+                        },
+                        "docID": {
+                            "type": "string",
+                            "format": "string"
                         }
                     }
                 }
@@ -514,8 +519,21 @@
         "otherProperties": {
             "type": "object",
             "properties": {
-                "moreProperties": {
-                    "description": "Other properties gathered that do not fit into the main schema",
+                "property1": {
+                    "description": "A property provided that does not fit into the main schema",
+                    "type": "string"
+                },
+                "property2": {
+                    "description": "Another property provided that does not fit the main schema",
+                    "type": "string"
+                }
+            }
+        },
+        "shareProperties": {
+            "type": "object",
+            "properties": {
+                "docID": {
+                    "description": "A unique identifier for the document.",
                     "type": "string"
                 }
             }

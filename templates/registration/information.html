@@ -1,0 +1,26 @@
+{% extends "registration/registration_base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+        <div class="row-fluid">
+            <div class="well" style="width: 520px; margin-left: auto; margin-right: auto">
+                <div class="row-fluid">
+                    <div>
+                        <h3>SHARE Push API Provider Information</h3>
+                        <p>Use this information when pushing data to the SHARE API.</p>
+                        <br/>
+                        <p class="lead"><strong>Token:</strong> {{ token }}</p>
+                        <div><p class="lead"><strong>Provider Long Name:</strong> {{ longname }}</p></div>
+                        <div><p class="lead"><strong>Provider Short Name:</strong> {{ shortname }}</p></div>
+                        <div><p class="lead"><strong>Provider URL:</strong> {{ url }}</p></div>
+
+                        <p>For more information on the SHARE API and authenticaion, see
+                        the <a href="https://osf.io/api/v1/share/help" target="_blank">API Documentation</a>.</p>
+                    </div>
+                </div><!-- /row fluid -->
+            </div><!--/.well-->
+        </div><!-- /.row-fluid -->
+
+{% endblock %}

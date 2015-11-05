@@ -1,57 +1,58 @@
 import copy
 import json
+import mock
 
 import vcr
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
-from push_endpoint.views import DataList, EstablishedDataList, render_api_help
 from shareregistration.views import index as main_index
+from push_endpoint.views import DataList, EstablishedDataList, render_api_help, render_settings, provider_information
 
+from push_endpoint.models import Provider
 
 VALID_POST = {
-    "jsonData":
-        {
-      "creationDate": "2014-09-12",
-      "contributors": [
-        {
-          "name": "Roger Danger Ebert",
-          "sameAs": [
-            "https://osf.io/thing"
-          ],
-          "familyName": "Ebert",
-          "givenName": "Roger",
-          "additionalName": "Danger",
-          "email": "rogerebert@example.com"
+    "jsonData": {
+        "creationDate": "2014-09-12",
+        "contributors": [
+            {
+                "name": "Roger Danger Ebert",
+                "sameAs": [
+                    "https://osf.io/thing"
+                ],
+                "familyName": "Ebert",
+                "givenName": "Roger",
+                "additionalName": "Danger",
+                "email": "rogerebert@example.com"
+            },
+            {
+                "name": "Roger Madness Ebert"
+            }
+        ],
+        "language": "eng",
+        "description": "This is a thing",
+        "directLink": "https://www.example.com/stuff",
+        "providerUpdatedDateTime": "2014-12-12T00:00:00Z",
+        "freeToRead": {
+            "startDate": "2014-09-12",
+            "endDate": "2014-10-12"
+      },
+        "licenseRef": [
+            {
+                "uri": "http://www.mitlicense.com",
+                "startDate": "2014-10-12",
+                "endDate": "2014-11-12"
+            }
+        ],
+        "notificationLink": "http://myresearch.com/",
+        "publisher": {
+            "name": "Roger Ebert Inc",
+            "email": "roger@example.com"
         },
-        {
-          "name": "Roger Madness Ebert"
-        }
-      ],
-      "language": "eng",
-      "description": "This is a thing",
-      "directLink": "https://www.example.com/stuff",
-      "providerUpdatedDateTime": "2014-12-12T00:00:00Z",
-      "freeToRead": {
-        "startDate": "2014-09-12",
-        "endDate": "2014-10-12"
-      },
-      "licenseRef": [
-        {
-          "uri": "http://www.mitlicense.com",
-          "startDate": "2014-10-12",
-          "endDate": "2014-11-12"
-        }
-      ],
-      "notificationLink": "http://myresearch.com/",
-      "publisher": {
-        "name": "Roger Ebert Inc",
-        "email": "roger@example.com"
-      },
-      "raw": "http://osf.io/raw/thisdocument/",
-      "relation": [
-        "http://otherresearch.com/this"
-      ],
+        "raw": "http://osf.io/raw/thisdocument/",
+        "relation": [
+            "http://otherresearch.com/this"
+        ],
       "resourceIdentifier": "http://landingpage.com/this",
       "revisionTime": "2014-02-12T15:25:02Z",
       "source": "Big government",
@@ -70,9 +71,12 @@ VALID_POST = {
       "title": "Interesting research",
       "journalArticleVersion": "AO",
       "versionOfRecord": "http://example.com/this/now/",
-      "uris": {
-        "canonicalUri": "http://example.com"
-      }
+        "uris": {
+            "canonicalUri": "http://example.com"
+      },
+        "shareProperties": {
+            "docID": "012"
+        }
     }
 
 }
@@ -179,6 +183,23 @@ class APIPostTests(TestCase):
         self.assertEqual(data['detail'], "'contributors' is a required property")
         self.assertEqual(response.status_code, 400)
 
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
+    def test_missing_shareProperties_fails(self):
+        view = DataList.as_view()
+        invalid_post = copy.deepcopy(VALID_POST)
+        invalid_post['jsonData'].pop('shareProperties')
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(invalid_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        data = response.data
+
+        self.assertEqual(data['detail'], "'shareProperties' is a required property")
+        self.assertEqual(response.status_code, 400)
+
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi3.yaml')
     def test_missing_uris(self):
         view = DataList.as_view()
@@ -256,3 +277,38 @@ class APIPostTests(TestCase):
         response = view(request)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_does_not_render_information(self):
+        view = render_settings
+        request = self.factory.get(
+            '/information/'
+        )
+        request.user = self.user
+        self.assertRaises(Provider.DoesNotExist, view, request)
+
+    def test_render_information(self):
+        view = render_settings
+        request = self.factory.get(
+            '/information/'
+        )
+        request.user = self.user
+        Provider.objects.create(user=self.user)
+
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_render_provider_form(self):
+        view = provider_information
+        favicon_image = open('shareregistration/static/img/share.png')
+        request = self.factory.post(
+            '/provider_information/', {
+                'longname': 'Dudley Boyz Strike Back',
+                'shortname': 'dbsb',
+                'url': 'http://url.com',
+                'favicon_image': favicon_image
+            }
+        )
+        mock.MagicMock(spec=request.FILES)
+        request.user = self.user
+        response = view(request)
+        self.assertEqual(response.status_code, 302)
