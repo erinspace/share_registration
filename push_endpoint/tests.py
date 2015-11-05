@@ -5,9 +5,10 @@ import vcr
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.contrib.auth.models import AnonymousUser, User
-from push_endpoint.views import DataList, EstablishedDataList, render_api_help
 from shareregistration.views import index as main_index
+from push_endpoint.views import DataList, EstablishedDataList, render_api_help, render_settings, provider_information
 
+from push_endpoint.models import Provider
 
 VALID_POST = {
     "jsonData": {
@@ -274,4 +275,22 @@ class APIPostTests(TestCase):
         )
         response = view(request)
 
+        self.assertEqual(response.status_code, 200)
+
+    def test_render_information(self):
+        view = render_settings
+        request = self.factory.get(
+            '/information/'
+        )
+        request.user = self.user
+
+        self.assertRaises(Provider.DoesNotExist, view, request)
+
+    def test_render_provider_form(self):
+        view = provider_information
+        request = self.factory.get(
+            '/provider_information/'
+        )
+        request.user = self.user
+        response = view(request)
         self.assertEqual(response.status_code, 200)
