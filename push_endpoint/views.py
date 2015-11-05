@@ -1,3 +1,4 @@
+import io
 from dateutil.parser import parse
 from django.shortcuts import render, redirect
 
@@ -7,6 +8,7 @@ from django.contrib.auth.models import User
 from rest_framework_bulk import ListBulkCreateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
+from push_endpoint.forms import ProviderForm
 from push_endpoint.models import PushedData, Provider
 from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
@@ -116,41 +118,66 @@ def render_api_help(request):
 
 
 @xframe_options_exempt
-def gather_provider_information(request):
+def render_settings(request):
     user = request.user
+    provider_obj = Provider.objects.get(user=user)
 
-    if request.method == 'POST':
-        longname = request.POST.get('longname')
-        shortname = request.POST.get('shortname')
-        url = request.POST.get('url')
+    longname = provider_obj.longname
+    shortname = provider_obj.shortname
+    url = provider_obj.url
+    token = request.user.auth_token
 
-        try:
-            provider_obj = Provider.objects.get(user=user)
-        except Provider.DoesNotExist:
-            provider_obj = Provider.objects.create(user=user)
-
-        provider_obj.longname = longname
-        provider_obj.shortname = shortname
-        provider_obj.url = url
-
-        provider_obj.save()
-
-    return redirect('/provider_information/')
+    return render(
+        request,
+        'registration/information.html', {
+            'longname': longname,
+            'shortname': shortname,
+            'url': url,
+            'token': token
+        }
+    )
 
 
 @xframe_options_exempt
 def provider_information(request):
     user = request.user
+    url = None
+    shortname = None
+    longname = None
+    favicon = None
+    form = None
 
-    provider_details = Provider.objects.get(user=user)
+    if request.method == 'POST':
+        form = ProviderForm(request.POST, request.FILES)
+        longname = request.POST.get('longname')
+        shortname = request.POST.get('shortname')
+        url = request.POST.get('url')
+        favicon = request.FILES['favicon_image']
+        if form.is_valid():
+            try:
+                provider_obj = Provider.objects.get(user=user)
+            except Provider.DoesNotExist:
+                provider_obj = Provider.objects.create(user=user)
 
-    url = provider_details.url
-    shortname = provider_details.shortname
-    longname = provider_details.longname
-    token = request.user.auth_token
+            provider_obj.longname = longname
+            provider_obj.shortname = shortname
+            provider_obj.url = url
+            provider_obj.favicon = favicon
+            favicon_binary = provider_obj.favicon.read()
+            provider_obj.favicon_bytes = favicon_binary
+            provider_obj.save()
 
-    return render(
-        request,
-        'registration/preferences.html',
-        {'request': request, 'shortname': shortname, 'longname': longname, 'url': url, 'auth_token': token}
-    )
+            return redirect('render_settings')
+
+    try:
+        Provider.objects.get(user=user)
+    except Provider.DoesNotExist:
+        form = ProviderForm(form)
+        return render(
+            request,
+            'registration/gather_information.html', {
+            'request': request,
+            'form': form
+            }
+        )
+    return redirect('render_settings')
