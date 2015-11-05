@@ -277,14 +277,24 @@ class APIPostTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_does_not_render_information(self):
+        view = render_settings
+        request = self.factory.get(
+            '/information/'
+        )
+        request.user = self.user
+        self.assertRaises(Provider.DoesNotExist, view, request)
+
     def test_render_information(self):
         view = render_settings
         request = self.factory.get(
             '/information/'
         )
         request.user = self.user
+        Provider.objects.create(user=self.user)
 
-        self.assertRaises(Provider.DoesNotExist, view, request)
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_render_provider_form(self):
         view = provider_information
