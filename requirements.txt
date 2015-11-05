@@ -16,6 +16,7 @@ jsonschema==2.4.0
 lxml==3.4.2
 mock==1.0.1
 psycopg2==2.6
+Pillow==3.0.0
 python-dateutil==2.4.1
 requests==2.5.3
 sh==1.11
