@@ -66,8 +66,8 @@ class EstablishedDataList(ListBulkCreateAPIView):
         queryset = PushedData.fetch_established()
         filter = {}
 
-        from_date = self.request.QUERY_PARAMS.get('from')
-        to_date = self.request.QUERY_PARAMS.get('to')
+        from_date = self.request.query_params.get('from')
+        to_date = self.request.query_params.get('to')
 
         if from_date:
             filter['collectionDateTime__gte'] = parse(from_date)
