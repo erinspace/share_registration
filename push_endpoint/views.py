@@ -1,4 +1,5 @@
-import io
+import re
+from furl import furl
 from dateutil.parser import parse
 from django.shortcuts import render, redirect
 
@@ -150,7 +151,6 @@ def provider_information(request):
     if request.method == 'POST':
         form = ProviderForm(request.POST, request.FILES)
         longname = request.POST.get('longname')
-        shortname = request.POST.get('shortname')
         url = request.POST.get('url')
         favicon = request.FILES['favicon_image']
         if form.is_valid():
@@ -158,6 +158,9 @@ def provider_information(request):
                 provider_obj = Provider.objects.get(user=user)
             except Provider.DoesNotExist:
                 provider_obj = Provider.objects.create(user=user)
+
+            pathstr = furl(url).pathstr
+            shortname = re.findall('[a-z]+[^\.]?', pathstr)[-2]
 
             provider_obj.longname = longname
             provider_obj.shortname = shortname
