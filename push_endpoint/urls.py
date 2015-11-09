@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'', include([
         url(r'^$', views.DataList.as_view()),
         url(r'^established/$', views.EstablishedDataList.as_view()),
+        url(r'^provider_list/$', views.ProviderList.as_view()),
         url(r'^sources/$', views.UserList.as_view()),
         url(r'^(?P<pk>[0-9]+)/$', views.DataDetail.as_view(), name='data-detail'),
         url(r'^get-api-key/$', views.render_api_form, name='get-api-key'),
