@@ -1,4 +1,3 @@
-import re
 from furl import furl
 from dateutil.parser import parse
 from django.shortcuts import render, redirect
@@ -159,8 +158,9 @@ def provider_information(request):
             except Provider.DoesNotExist:
                 provider_obj = Provider.objects.create(user=user)
 
-            pathstr = furl(url).pathstr
-            shortname = re.findall('[a-z]+[^\.]?', pathstr)[-2]
+            host = furl(url).host
+            part_list = host.split('.')
+            shortname = part_list[-2]
 
             provider_obj.longname = longname
             provider_obj.shortname = shortname
