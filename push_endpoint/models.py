@@ -15,7 +15,7 @@ class Provider(models.Model):
     established = models.BooleanField(default=False)
     url = models.URLField(max_length=255, null=True)
     shortname = models.CharField(max_length=50, null=True)
-    longname = models.CharField(max_length=255, null=True)
+    longname = models.CharField(max_length=255, null=True, verbose_name="Name")
     favicon_image = models.ImageField(upload_to='shareregistration/static/img/favicons', null=True)
     favicon_bytes = models.BinaryField(null=True)
 
