@@ -28,7 +28,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProviderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Provider
         fields = ('id', 'longname', 'shortname', 'url', 'favicon_dataurl')
