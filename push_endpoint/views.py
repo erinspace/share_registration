@@ -1,3 +1,5 @@
+import base64
+from six.moves import urllib_parse
 from furl import furl
 from dateutil.parser import parse
 from django.shortcuts import render, redirect
@@ -12,7 +14,7 @@ from push_endpoint.forms import ProviderForm
 from push_endpoint.models import PushedData, Provider
 from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
-from push_endpoint.serializers import PushedDataSerializer
+from push_endpoint.serializers import PushedDataSerializer, ProviderSerializer
 
 
 class DataList(ListBulkCreateAPIView):
@@ -100,6 +102,18 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
+class ProviderList(generics.ListAPIView):
+    """
+    List all providers and their information.
+    """
+    serializer_class = ProviderSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = Provider.objects.filter(established=True)
+        return queryset
+
+
 def render_api_form(request):
     token = request.user.auth_token
     return render(
@@ -158,16 +172,15 @@ def provider_information(request):
             except Provider.DoesNotExist:
                 provider_obj = Provider.objects.create(user=user)
 
-            host = furl(url).host
-            part_list = host.split('.')
-            shortname = part_list[-2]
+            url_list = url.split('.')
+            shortname = url_list[-2]
 
             provider_obj.longname = longname
             provider_obj.shortname = shortname
             provider_obj.url = url
             provider_obj.favicon = favicon
             favicon_binary = provider_obj.favicon.read()
-            provider_obj.favicon_bytes = favicon_binary
+            provider_obj.favicon_dataurl = 'data:image/png;base64,' + urllib_parse.quote(base64.encodestring(favicon_binary))
             provider_obj.save()
 
             return redirect('render_settings')

@@ -16,8 +16,8 @@ class Provider(models.Model):
     url = models.URLField(max_length=255, null=True)
     shortname = models.CharField(max_length=50, null=True)
     longname = models.CharField(max_length=255, null=True, verbose_name="Name")
-    favicon_image = models.ImageField(upload_to='shareregistration/static/img/favicons', null=True)
-    favicon_bytes = models.BinaryField(null=True)
+    favicon_image = models.ImageField(upload_to='shareregistration/static/img/favicons', null=True, blank=True)
+    favicon_dataurl = models.TextField(null=True, verbose_name="Favicon Data URL")
 
 
 class PushedData(models.Model):

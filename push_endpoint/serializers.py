@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_bulk import BulkSerializerMixin, BulkListSerializer
 
-from push_endpoint.models import PushedData
+from push_endpoint.models import PushedData, Provider
 from push_endpoint.validators import JsonSchema
 
 
@@ -25,3 +25,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'data')
+
+
+class ProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Provider
+        fields = ('id', 'longname', 'shortname', 'url', 'favicon_dataurl')
