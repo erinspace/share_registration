@@ -92,16 +92,6 @@ class DataDetail(generics.RetrieveAPIView):
                           IsOwnerOrReadOnly)
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 class ProviderList(generics.ListAPIView):
     """
     List all providers and their information.
