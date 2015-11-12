@@ -36,7 +36,7 @@ VALID_POST = {
         "freeToRead": {
             "startDate": "2014-09-12",
             "endDate": "2014-10-12"
-      },
+        },
         "licenseRef": [
             {
                 "uri": "http://www.mitlicense.com",
@@ -53,29 +53,28 @@ VALID_POST = {
         "relation": [
             "http://otherresearch.com/this"
         ],
-      "resourceIdentifier": "http://landingpage.com/this",
-      "revisionTime": "2014-02-12T15:25:02Z",
-      "source": "Big government",
-      "sponsorship": [
-        {
-          "award": {
-            "awardName": "Participation",
-            "awardIdentifier": "http://example.com"
-          },
-          "sponsor": {
-            "sponsorName": "Orange",
-            "sponsorIdentifier": "http://example.com/orange"
-          }
-        }
-      ],
-      "title": "Interesting research",
-      "journalArticleVersion": "AO",
-      "versionOfRecord": "http://example.com/this/now/",
+        "resourceIdentifier": "http://landingpage.com/this",
+        "revisionTime": "2014-02-12T15:25:02Z",
+        "source": "Big government",
+        "sponsorship": [{
+            "award": {
+                "awardName": "Participation",
+                "awardIdentifier": "http://example.com"
+            },
+            "sponsor": {
+                "sponsorName": "Orange",
+                "sponsorIdentifier": "http://example.com/orange"
+            }
+        }],
+        "title": "Interesting research",
+        "journalArticleVersion": "AO",
+        "versionOfRecord": "http://example.com/this/now/",
         "uris": {
-            "canonicalUri": "http://example.com"
-      },
-        "shareProperties": {
-            "docID": "012"
+            "canonicalUri": "http://example.com",
+            "providerUris": [
+                'http://provideruri1.source.com/doc1',
+                'http://provideruri2.source.com/doc1'
+            ]
         }
     }
 
@@ -184,10 +183,10 @@ class APIPostTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
-    def test_missing_shareProperties_fails(self):
+    def test_missing_providerUri_fails(self):
         view = DataList.as_view()
         invalid_post = copy.deepcopy(VALID_POST)
-        invalid_post['jsonData'].pop('shareProperties')
+        invalid_post['jsonData']['uris'].pop('providerUris')
         request = self.factory.post(
             '/pushed_data/',
             json.dumps(invalid_post),
@@ -197,7 +196,7 @@ class APIPostTests(TestCase):
         response = view(request)
         data = response.data
 
-        self.assertEqual(data['detail'], "'shareProperties' is a required property")
+        self.assertEqual(data['detail'], "'providerUris' is a required property")
         self.assertEqual(response.status_code, 400)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi3.yaml')
