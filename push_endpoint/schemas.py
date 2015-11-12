@@ -183,8 +183,7 @@ share = {
         "title",
         "contributors",
         "uris",
-        "providerUpdatedDateTime",
-        "shareProperties"
+        "providerUpdatedDateTime"
     ],
     "type": "object",
     "properties": {
@@ -222,17 +221,6 @@ share = {
             "type": "string",
             "description": "The title and any sub-titles of the resource."
         },
-        "shareProperties": {
-            "type": "object",
-            "description": "Properties that are generated and/or organized by the SHARE system (e.g., timestamps of when SHARE processes data). These properities are used internally and are not guaranteed to remain consistent.",
-            "required": ["docID"],
-            "properties": {
-                "docID": {
-                    "type": "string",
-                    "description": "A service-unique identifier for the document"
-                }
-            }
-        },
         "otherProperties": {
             "items": {
                 "$ref": "#/definitions/otherProperties"
@@ -249,7 +237,7 @@ share = {
         },
         "uris": {
             "type": "object",
-            "required": ["canonicalUri"],
+            "required": ["canonicalUri", "providerUris"],
             "properties": {
                 "canonicalUri": {
                     "type": "string",
