@@ -1,18 +1,15 @@
 import base64
 from six.moves import urllib_parse
-from furl import furl
 from dateutil.parser import parse
 from django.shortcuts import render, redirect
 
 from rest_framework import generics
 from rest_framework import permissions
-from django.contrib.auth.models import User
 from rest_framework_bulk import ListBulkCreateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from push_endpoint.forms import ProviderForm
 from push_endpoint.models import PushedData, Provider
-from push_endpoint.serializers import UserSerializer
 from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer, ProviderSerializer
 
