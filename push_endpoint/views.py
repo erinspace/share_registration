@@ -1,3 +1,4 @@
+import json
 import base64
 from six.moves import urllib_parse
 from dateutil.parser import parse
@@ -42,7 +43,8 @@ class DataList(ListBulkCreateAPIView):
             filter['updated__lte'] = parse(updated_to)
 
         queryset = queryset.filter(**filter)
-
+        for data in queryset:
+            data.jsonData = json.dumps(data.jsonData)
         return queryset
 
 
