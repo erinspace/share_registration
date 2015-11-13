@@ -11,6 +11,7 @@ from push_endpoint.validators import JsonSchema
 class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSerializer):
     source = serializers.ReadOnlyField(source='source.username')
     docID = serializers.ReadOnlyField()
+    status = serializers.ReadOnlyField()
 
     class Meta:
         model = PushedData
