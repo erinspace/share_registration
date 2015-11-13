@@ -14,7 +14,7 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSeri
 
     class Meta:
         model = PushedData
-        fields = ('id', 'collectionDateTime', 'docID', 'source', 'jsonData')
+        fields = ('id', 'updated', 'docID', 'source', 'jsonData', 'status')
         list_serializer_class = BulkListSerializer
 
         validators = [
@@ -29,6 +29,12 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSeri
             'source': validated_data['source'].username,
             'docID': json_data['uris']['providerUris'][0]
         }
+
+        try:
+            PushedData.objects.get(source=validated_data['source'], docID=json_data['uris']['providerUris'][0])
+            validated_data['status'] = 'updated'
+        except PushedData.DoesNotExist:
+            pass
 
         validated_data['jsonData'] = json_data
         validated_data['docID'] = json_data['uris']['providerUris'][0]

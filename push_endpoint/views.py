@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework_bulk import ListBulkCreateAPIView
+from rest_framework_bulk import ListBulkCreateUpdateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from push_endpoint.forms import ProviderForm
@@ -14,7 +14,7 @@ from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer, ProviderSerializer
 
 
-class DataList(ListBulkCreateAPIView):
+class DataList(ListBulkCreateUpdateAPIView):
     """
     List all pushed data, or push to the API.
 
@@ -37,16 +37,16 @@ class DataList(ListBulkCreateAPIView):
         updated_to = self.request.query_params.get('to')
 
         if updated_from:
-            filter['providerUpdatedDateTime__gte'] = parse(updated_from)
+            filter['updated__gte'] = parse(updated_from)
         if updated_to:
-            filter['providerUpdatedDateTime__lte'] = parse(updated_to)
+            filter['updated__lte'] = parse(updated_to)
 
         queryset = queryset.filter(**filter)
 
         return queryset
 
 
-class EstablishedDataList(ListBulkCreateAPIView):
+class EstablishedDataList(generics.ListAPIView):
     """
     List all pushed data that comes from an established provider.
 
@@ -55,10 +55,8 @@ class EstablishedDataList(ListBulkCreateAPIView):
     Note: If your data shows up in this list, it will be pulled into SHARE when the data is harvested.
     """
     serializer_class = PushedDataSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(source=self.request.user)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly)
 
     def get_queryset(self):
         queryset = PushedData.fetch_established()
@@ -68,10 +66,10 @@ class EstablishedDataList(ListBulkCreateAPIView):
         to_date = self.request.query_params.get('to')
 
         if from_date:
-            filter['collectionDateTime__gte'] = parse(from_date)
+            filter['updated__gte'] = parse(from_date)
 
         if to_date:
-            filter['collectionDateTime__lte'] = parse(to_date)
+            filter['updated__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
 

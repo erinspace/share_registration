@@ -25,8 +25,7 @@ class PushedData(models.Model):
     docID = models.TextField()
     source = models.ForeignKey('auth.User', related_name='data')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, default='created')
 
     @property
     def established(self):
