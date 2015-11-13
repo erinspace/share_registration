@@ -33,14 +33,21 @@ class DataList(ListBulkCreateAPIView):
         filter = {}
         queryset = PushedData.objects.all()
 
-        from_date = self.request.query_params.get('from')
-        to_date = self.request.query_params.get('to')
+        first_added_from_date = self.request.query_params.get('first_added_from')
+        first_added_to_date = self.request.query_params.get('first_added_to')
 
-        if from_date:
-            filter['collectionDateTime__gte'] = parse(from_date)
+        updated_from_date = self.request.query_params.get('updated_from')
+        updated_to_date = self.request.query_params.get('updated_to')
 
-        if to_date:
-            filter['collectionDateTime__lte'] = parse(to_date)
+        if first_added_from_date:
+            filter['firstCollectionDateTime__gte'] = parse(first_added_from_date)
+        if first_added_to_date:
+            filter['firstCollectionDateTime__lte'] = parse(first_added_to_date)
+
+        if updated_from_date:
+            filter['providerUpdatedDateTime__gte'] = parse(updated_from_date)
+        if updated_to_date:
+            filter['providerUpdatedDateTime__lte'] = parse(updated_to_date)
 
         queryset = queryset.filter(**filter)
 
