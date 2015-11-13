@@ -24,8 +24,8 @@ class PushedData(models.Model):
     jsonData = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
     docID = models.TextField()
     source = models.ForeignKey('auth.User', related_name='data')
-    firstCollectionDateTime = models.DateTimeField(auto_now_add=True)
-    providerUpdatedDateTime = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=100)
 
     @property
