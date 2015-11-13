@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework_bulk import ListBulkCreateUpdateAPIView
+from rest_framework_bulk import ListBulkCreateAPIView
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from push_endpoint.forms import ProviderForm
@@ -14,7 +14,7 @@ from push_endpoint.permissions import IsOwnerOrReadOnly
 from push_endpoint.serializers import PushedDataSerializer, ProviderSerializer
 
 
-class DataList(ListBulkCreateUpdateAPIView):
+class DataList(ListBulkCreateAPIView):
     """
     List all pushed data, or push to the API.
 
