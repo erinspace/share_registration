@@ -23,7 +23,8 @@ class Provider(models.Model):
 class PushedData(models.Model):
     jsonData = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
     docID = models.TextField()
-    source = models.ForeignKey('auth.User', related_name='data')
+    provider = models.ForeignKey(Provider, related_name='data')
+    source = models.CharField(max_length=100)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=100, default='created')
 
