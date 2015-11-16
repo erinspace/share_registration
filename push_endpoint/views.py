@@ -153,7 +153,7 @@ def provider_information(request):
         form = ProviderForm(request.POST, request.FILES)
         longname = request.POST.get('longname')
         url = request.POST.get('url')
-        favicon = request.FILES['favicon_image']
+        favicon = request.FILES.get('favicon_image')
         if form.is_valid():
             try:
                 provider_obj = Provider.objects.get(user=user)
@@ -163,12 +163,14 @@ def provider_information(request):
             url_list = url.split('.')
             shortname = url_list[-2].replace('http://', '').replace('https://', '')
 
+            if favicon:
+                provider_obj.favicon = favicon
+                favicon_binary = provider_obj.favicon.read()
+                provider_obj.favicon_dataurl = 'data:image/png;base64,' + urllib_parse.quote(base64.encodestring(favicon_binary))
+
             provider_obj.longname = longname
             provider_obj.shortname = shortname
             provider_obj.url = url
-            provider_obj.favicon = favicon
-            favicon_binary = provider_obj.favicon.read()
-            provider_obj.favicon_dataurl = 'data:image/png;base64,' + urllib_parse.quote(base64.encodestring(favicon_binary))
             provider_obj.save()
 
             return redirect('render_settings')
