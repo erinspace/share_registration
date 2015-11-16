@@ -30,11 +30,11 @@ class PushedData(models.Model):
 
     @property
     def established(self):
-        return self.source.provider.established
+        return self.provider.user.established
 
     @classmethod
     def fetch_established(cls):
-        return cls.objects.all().filter(source__provider__established=True)
+        return cls.objects.all().filter(provider__established=True)
 
     class Meta:
         verbose_name = 'Data Object'
