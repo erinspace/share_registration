@@ -55,7 +55,6 @@ VALID_POST = {
         ],
         "resourceIdentifier": "http://landingpage.com/this",
         "revisionTime": "2014-02-12T15:25:02Z",
-        "source": "Big government",
         "sponsorship": [{
             "award": {
                 "awardName": "Participation",
@@ -103,15 +102,11 @@ class APIPostTests(TestCase):
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
     def test_established_view(self):
         view = EstablishedDataList.as_view()
-        request = self.factory.post(
-            '/pushed_data/established',
-            json.dumps(VALID_POST),
-            content_type='application/json'
-        )
-        request.user = self.user
+        request = self.factory.get(
+            '/pushed_data/established',)
         response = view(request)
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_established_view(self):
         view = EstablishedDataList.as_view()
