@@ -80,7 +80,7 @@ class EstablishedDataList(generics.ListAPIView):
 
 class DataDetail(generics.RetrieveAPIView):
     """
-    Retrieve, update or delete pushed data
+    Retrieve pushed data
     """
     queryset = PushedData.objects.all()
     serializer_class = PushedDataSerializer
@@ -159,7 +159,7 @@ def provider_information(request):
                 provider_obj = Provider.objects.create(user=user)
 
             url_list = url.split('.')
-            shortname = url_list[-2]
+            shortname = url_list[-2].replace('http://', '').replace('https://', '')
 
             provider_obj.longname = longname
             provider_obj.shortname = shortname
