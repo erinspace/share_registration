@@ -215,16 +215,6 @@
                         "schema": {
                             "$ref": "otherProperties"
                         }
-                    },
-                    {
-                        "name": "shareProperties",
-                        "type": "object",
-                        "in": "body",
-                        "description": "Structured or unstructured properties that don't fall into the general schema, and are for SHARE general use",
-                        "schema": {
-                            "$ref": "shareProperties"
-                        },
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -322,12 +312,14 @@
                         "canonicalUri": {
                             "type": "string", 
                             "description": "The preferred persistent HTTP URI that represents the research object. This should be repeated in exactly one other field in the uris object.", 
-                            "format": "uri"
+                            "format": "uri",
+                            "required": true
                         }, 
                         "providerUris": {
                             "items": {
                                 "type": "string",
-                                "format": "uri"
+                                "format": "uri",
+                                "required": true
                             }, 
                             "type": "array",
                             "description": "The persistent HTTP URI that points to the object's record at the SHARE provider regardless of format."
