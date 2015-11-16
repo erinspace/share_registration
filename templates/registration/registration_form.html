@@ -8,20 +8,31 @@
 
 <div class="col-md-12">
     <h2>Register for the SHARE push API</h2>
+    <br/>
     <form method="post" action="">
         {% csrf_token %}
 
-        <p>{{ form.username.label_tag }}</p>
+        {# <p>{{ form.username.label_tag }}</p> #}
+        <p><strong>Username</strong></p>
+        <p>You'll use this to log back into the SHARE push API staging area to retrieve your API credentials.
         <p> {{ form.username.errors }}</p>
         <p>{{ form.username }}</p>
 
+        <br/>
+
         <p>{{ form.email.label_tag }}</p>
+        <p>Please provide an email address where we can contact you with questions. Note: You won't recieve a confirmation
+            email once your API account has been created, and we won't send you an email unless we have a question.</p>
         <p> {{ form.email.errors }}</p>
         <p>{{ form.email }}</p>
+
+        <br/>
 
         <p>{{ form.password1.label_tag }} </p>
         <p> {{ form.password1.errors }}</p>
         <p>{{ form.password1 }}</p>
+
+        <br/>
 
         <p>{{ form.password2.label_tag }} </p>
         <p>{{ form.password2.errors }}</p>
