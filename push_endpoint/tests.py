@@ -88,6 +88,7 @@ class APIPostTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi1.yaml')
     def test_valid_submission(self):
+        Provider.objects.create(user=self.user, shortname='devooonnnn')
         view = DataList.as_view()
         request = self.factory.post(
             '/pushed_data/',
@@ -98,6 +99,7 @@ class APIPostTests(TestCase):
         response = view(request)
 
         self.assertEqual(response.status_code, 201)
+        Provider.objects.all().delete()
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
     def test_established_view(self):
@@ -212,6 +214,7 @@ class APIPostTests(TestCase):
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
     def test_missing_description_is_ok(self):
+        Provider.objects.create(user=self.user, shortname='devooonnnn')
         view = DataList.as_view()
         invalid_post = copy.deepcopy(VALID_POST)
         invalid_post['jsonData'].pop('description')
@@ -224,6 +227,7 @@ class APIPostTests(TestCase):
         response = view(request)
 
         self.assertEqual(response.status_code, 201)
+        Provider.objects.all().delete()
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi.yaml')
     def test_anonomous_user_can_view(self):
@@ -250,7 +254,8 @@ class APIPostTests(TestCase):
         self.assertEqual(response.status_code, 401)
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi2.yaml')
-    def test_source_is_same_as_user(self):
+    def test_source_is_same_as_shortname(self):
+        Provider.objects.create(user=self.user, shortname='devooonnnn')
         view = DataList.as_view()
         request = self.factory.post(
             '/pushed_data/',
@@ -261,7 +266,9 @@ class APIPostTests(TestCase):
         response = view(request)
         data = response.data
 
-        self.assertEqual(data['source'], request.user.username)
+        self.assertEqual(data['source'], 'devooonnnn')
+
+        Provider.objects.all().delete()
 
     def test_render_index(self):
         view = main_index
