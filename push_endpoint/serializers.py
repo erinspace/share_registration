@@ -8,8 +8,8 @@ from push_endpoint.models import PushedData, Provider
 from push_endpoint.validators import JsonSchema
 
 
-class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSerializer):
-    source = serializers.ReadOnlyField(source='source.username')
+class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    source = serializers.ReadOnlyField(source='provider.shortname')
     docID = serializers.ReadOnlyField()
     status = serializers.ReadOnlyField()
 
@@ -27,18 +27,19 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.HyperlinkedModelSeri
         json_data = json.loads(json_text)
 
         json_data['shareProperties'] = {
-            'source': validated_data['source'].username,
+            'source': validated_data['source'].provider.shortname,
             'docID': json_data['uris']['providerUris'][0]
         }
 
-        try:
-            PushedData.objects.get(source=validated_data['source'], docID=json_data['uris']['providerUris'][0])
+        if PushedData.objects.filter(source=validated_data['source'].provider.shortname, docID=json_data['uris']['providerUris'][0]).exists():
             validated_data['status'] = 'updated'
-        except PushedData.DoesNotExist:
+        else:
             pass
 
         validated_data['jsonData'] = json_data
         validated_data['docID'] = json_data['uris']['providerUris'][0]
+        validated_data['provider'] = validated_data['source'].provider
+        validated_data['source'] = validated_data['source'].provider.shortname
         return PushedData.objects.create(**validated_data)
 
 
