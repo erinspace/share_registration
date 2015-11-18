@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import jsonschema
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, ValidationError
 
 from push_endpoint import schemas
 
@@ -14,7 +14,12 @@ class JsonSchema(object):
         # TODO - figure out why this isn't a dict automatically - this is
         # problematic with pushed data with single quotes in it!!
         json_text = json_text.replace("u'", '"').replace("'", '"')
-        json_data = json.loads(json_text)
+        try:
+            json_data = json.loads(json_text)
+        except ValueError as e:
+            raise ValidationError(
+                'Error: {} Please make sure your jsonData field is valid JSON.'.format(e)
+            )
 
         try:
             jsonschema.validate(json_data, schemas.share)
