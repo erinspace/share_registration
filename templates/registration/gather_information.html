@@ -12,7 +12,7 @@
         <li><strong>URL: </strong>The URL linking back to the homepage of your provider</li>
         <li><strong>Favicon: </strong>The favicon image that you'd like to represent your provider</li>
     </ul>
-    <form action="/provider_information/" method="post" enctype="multipart/form-data">
+    <form action="{% url 'profile_information' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{ form.as_p }}
