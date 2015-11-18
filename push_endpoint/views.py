@@ -132,6 +132,7 @@ def render_settings(request):
     return render(
         request,
         'registration/information.html', {
+            'username': user.username,
             'longname': longname,
             'shortname': shortname,
             'url': url,
