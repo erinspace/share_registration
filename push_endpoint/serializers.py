@@ -2,6 +2,7 @@ import json
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework.exceptions import ValidationError
 from rest_framework_bulk import BulkSerializerMixin, BulkListSerializer
 
 from push_endpoint.models import PushedData, Provider
@@ -26,9 +27,16 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         json_text = validated_data.get('jsonData').replace("u'", '"').replace("'", '"')
         json_data = json.loads(json_text)
 
+        try:
+            docID = json_data['uris']['providerUris'][0]
+        except IndexError:
+            raise ValidationError(
+                'providerUris are a required field, please include a list of providerUris in your uris object.'
+            )
+
         json_data['shareProperties'] = {
             'source': validated_data['source'].provider.shortname,
-            'docID': json_data['uris']['providerUris'][0]
+            'docID': docID
         }
 
         if PushedData.objects.filter(source=validated_data['source'].provider.shortname, docID=json_data['uris']['providerUris'][0]).exists():
