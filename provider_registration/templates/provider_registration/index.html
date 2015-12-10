@@ -39,7 +39,7 @@
         <h3>{{ number_of_providers }} Current Providers</h3>
         <ul>
         {% for key, value in providers.iteritems %}
-            <li id="provider_list"><img src={{ value.favicon }}>  <a href="{{ value.url }}">{{value.long_name}}</a> </li>
+            <li id="provider_list"><img src={{ value.favicon }}>  <a href="{{ value.url }}" target="_blank">{{value.long_name}}</a> </li>
         {% endfor %}
         </ul>
     </div>
