@@ -22,6 +22,7 @@ class JsonSchema(object):
             )
 
         try:
-            jsonschema.validate(json_data, schemas.share)
+            format_checker = jsonschema.FormatChecker()
+            jsonschema.validate(json_data, schemas.share, format_checker=format_checker)
         except jsonschema.exceptions.ValidationError as error:
             raise ParseError(detail=error.message)
