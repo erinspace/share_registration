@@ -18,7 +18,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                 'oai_provider',
                 'provider_short_name',
                 'provider_long_name',
-                'rate_limit'
+                'rate_limit',
             ]
         }),
         ('Harvester', {
@@ -26,6 +26,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                 'base_url',
                 'property_list',
                 'approved_sets',
+                'all_sets',
                 'per_request_rate_limit',
                 'active_provider'
             ]
