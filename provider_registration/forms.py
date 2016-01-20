@@ -52,7 +52,7 @@ class OAIProviderForm(forms.ModelForm):
     class Meta:
         model = RegistrationInfo
         fields = ['provider_long_name', 'base_url',
-                  'property_list', 'approved_sets', 'reg_id']
+                  'property_list', 'approved_sets', 'reg_id', 'all_sets']
 
 
 class SimpleOAIProviderForm(forms.ModelForm):
