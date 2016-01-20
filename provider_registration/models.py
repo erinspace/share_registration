@@ -33,6 +33,7 @@ class RegistrationInfo(models.Model):
     property_list = models.TextField(default='None')
     active_provider = models.BooleanField(default=False)
     approved_sets = models.TextField(blank=True, default='')
+    all_sets = models.BooleanField(default=False)
 
     # Added automatically
     registration_date = models.DateTimeField('date registered')
