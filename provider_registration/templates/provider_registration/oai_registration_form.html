@@ -30,14 +30,17 @@
             <br/>
             <div class="field_entry">
                 <p class="lead">
-                    <strong>Approved Sets</strong>
-                    <button id="select-all" class="btn btn-xs" style="margin-left: 10px;">Select All</button>
-                    <button id="deselect-all" class="btn btn-xs">Deselect All</button>
+                    <strong>Approved Sets</strong><br/><br/>
+                    If you'd like to use all available sets from your provider, check here: {{ form.all_sets }}
+                    <hr/>
                 </p>
-                <p>Check the sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets" target="_blank">ListSets API endpoint</a>. Displayed here are the setNames for the corresponding setSpec options in your publically accessable database.</p>
+                <p>Otherwise, check the sets that you'd like to appear in SHARE Notify. These options are automatically generated from your provider's <a href="{{ base_url }}?verb=ListSets" target="_blank">ListSets API endpoint</a>. Displayed here are the setNames for the corresponding setSpec options in your publically accessable database.</p>
                 <p>If you'd rather enter the approved sets manually, click here to access the <a href="/provider_registration/simple_oai_registration/">simple OAI registration form</a>.</p>
 
                 <p>Sets that you specify will be included in SHARE, and sets that you do not specify will be  ignored and not processed by SHARE.</p>
+                    <button id="select-all" class="btn btn-xs" style="margin-left: 10px;">Select All</button>
+                    <button id="deselect-all" class="btn btn-xs">Deselect All</button>
+                <br/>
                 <br/>
                 {{ form.approved_sets }}
             </div>

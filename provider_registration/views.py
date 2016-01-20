@@ -275,8 +275,10 @@ def update_oai_entry(request):
     choices = {(item, item) for item in request.POST['approved_sets']}
     form_data = OAIProviderForm(request.POST, choices=choices)
     object_to_update = RegistrationInfo.objects.get(id=request.POST['reg_id'])
+    import ipdb; ipdb.set_trace()
 
     object_to_update.property_list = form_data['property_list'].value()
+    object_to_update.all_sets = form_data['all_sets'].value()
     object_to_update.approved_sets = str(form_data['approved_sets'].value())
     object_to_update.registration_complete = True
 
