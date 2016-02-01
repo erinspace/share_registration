@@ -43,8 +43,6 @@ class DataList(ListBulkCreateAPIView):
             filter['updated__lte'] = parse(updated_to)
 
         queryset = queryset.filter(**filter)
-        for data in queryset:
-            data.jsonData = json.dumps(data.jsonData)
         return queryset
 
 
@@ -183,8 +181,8 @@ def provider_information(request):
         return render(
             request,
             'registration/gather_information.html', {
-            'request': request,
-            'form': form
+                'request': request,
+                'form': form
             }
         )
     return redirect('render_settings')
