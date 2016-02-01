@@ -72,8 +72,6 @@ class EstablishedDataList(generics.ListAPIView):
             filter['updated__lte'] = parse(to_date)
 
         queryset = queryset.filter(**filter)
-        for data in queryset:
-            data.jsonData = json.dumps(data.jsonData)
 
         return queryset
 
