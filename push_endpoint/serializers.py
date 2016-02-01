@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
@@ -13,6 +11,7 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
     source = serializers.ReadOnlyField(source='provider.shortname')
     docID = serializers.ReadOnlyField()
     status = serializers.ReadOnlyField()
+    jsonData = serializers.JSONField()
 
     class Meta:
         model = PushedData
@@ -24,8 +23,7 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        json_text = validated_data.get('jsonData').replace("u'", '"').replace("'", '"')
-        json_data = json.loads(json_text)
+        json_data = validated_data.get('jsonData')
 
         try:
             docID = json_data['uris']['providerUris'][0]
@@ -41,8 +39,6 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
         if PushedData.objects.filter(source=validated_data['source'].provider.shortname, docID=json_data['uris']['providerUris'][0]).exists():
             validated_data['status'] = 'updated'
-        else:
-            pass
 
         validated_data['jsonData'] = json_data
         validated_data['docID'] = json_data['uris']['providerUris'][0]
