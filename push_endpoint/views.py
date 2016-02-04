@@ -38,7 +38,7 @@ class DataList(ListBulkCreateAPIView):
         source = self.request.query_params.get('source')
 
         if updated_from:
-            filter['updated__gte'] = parse(updated_from).replace(hour=23, minute=59)
+            filter['updated__gte'] = parse(updated_from)
         if updated_to:
             filter['updated__lte'] = parse(updated_to).replace(hour=23, minute=59)
 
@@ -69,7 +69,7 @@ class EstablishedDataList(generics.ListAPIView):
         source = self.request.query_params.get('source')
 
         if from_date:
-            filter['updated__gte'] = parse(from_date).replace(hour=23, minute=59)
+            filter['updated__gte'] = parse(from_date)
         if to_date:
             filter['updated__lte'] = parse(to_date).replace(hour=23, minute=59)
 
