@@ -6,7 +6,7 @@ from lxml.etree import XMLSyntaxError
 
 from django.utils import timezone
 from django.shortcuts import render
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from provider_registration import utils
