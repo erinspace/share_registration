@@ -69,7 +69,7 @@ def update_deleted_documents(apps, schema_editor):
     # Takes strings, lieral evals them into python Dicts
     PushedData = apps.get_model("push_endpoint", "PushedData")
     for item in PushedData.objects.all():
-        if item.jsonData['uris']['providerUris'][0] in LIST_OF_DOCIDS:
+        if item.docID in LIST_OF_DOCIDS:
             item.status = 'deleted'
             item.save()
 
