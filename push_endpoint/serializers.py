@@ -40,6 +40,12 @@ class PushedDataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         if PushedData.objects.filter(source=validated_data['source'].provider.shortname, docID=json_data['uris']['providerUris'][0]).exists():
             validated_data['status'] = 'updated'
 
+        # Look for a status property in otherProperties for "deleted"
+        if json_data.get('otherProperties', None):
+            for prop in json_data['otherProperties']:
+                if prop['properties'].get('status', None) == ['deleted']:
+                    validated_data['status'] = 'deleted'
+
         validated_data['jsonData'] = json_data
         validated_data['docID'] = json_data['uris']['providerUris'][0]
         validated_data['provider'] = validated_data['source'].provider

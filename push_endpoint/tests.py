@@ -9,7 +9,7 @@ from django.contrib.auth.models import AnonymousUser, User
 from shareregistration.views import index as main_index
 from push_endpoint.views import DataList, EstablishedDataList, render_api_help, render_settings, provider_information
 
-from push_endpoint.models import Provider
+from push_endpoint.models import Provider, PushedData
 
 VALID_POST = {
     "jsonData": {
@@ -99,6 +99,36 @@ class APIPostTests(TestCase):
         response = view(request)
 
         self.assertEqual(response.status_code, 201)
+        Provider.objects.all().delete()
+
+    @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi1.yaml')
+    def test_valid_with_deleted_status(self):
+        Provider.objects.create(user=self.user, shortname='devooonnnn')
+        view = DataList.as_view()
+        deleted_status_post = copy.deepcopy(VALID_POST)
+        deleted_status_post['jsonData']['uris']['providerUris'][0] = 'http://thisshouldbedeleted.now'
+        deleted_status_post['jsonData']['otherProperties'] = [
+            {
+                "name": "status",
+                "properties": {
+                    "status": ["deleted"]
+                }
+            }
+        ]
+
+        request = self.factory.post(
+            '/pushed_data/',
+            json.dumps(deleted_status_post),
+            content_type='application/json'
+        )
+        request.user = self.user
+        response = view(request)
+        self.assertEqual(response.status_code, 201)
+
+        new_data = view(self.factory.get('/pushed_data/'))
+        self.assertEqual(len(new_data.data['results']), 1)
+        self.assertEqual(new_data.data['results'][0]['status'], 'deleted')
+
         Provider.objects.all().delete()
 
     @vcr.use_cassette('provider_registration/test_utils/vcr_cassettes/doi4.yaml')
