@@ -44,7 +44,7 @@ class DataList(ListBulkCreateAPIView):
 
         if source:
             filter['source'] = source
-        queryset = queryset.filter(**filter)
+        queryset = queryset.filter(**filter).order_by('id')
         return queryset
 
 
@@ -76,7 +76,7 @@ class EstablishedDataList(generics.ListAPIView):
         if source:
             filter['source'] = source
 
-        queryset = queryset.filter(**filter)
+        queryset = queryset.filter(**filter).order_by('id')
 
         return queryset
 
